@@ -22,14 +22,15 @@ const Layout = (props) => {
   const login = () => {
     setLoading(true);
     let info = {};
-    info.username = "1009249";
-    info.password = "1212232345455656";
+     info.username = "1007297";
+     info.password = "Wolf@652667#";
 
     // info.username = "conv_user";
     // info.password = "12122323";
 
     
-
+    console.log(info);
+    debugger;
     baseService
       .postWithUrl("https://totalapi.saipacorp.com/api/Authenticate/Login", info)
       .then((res) => {

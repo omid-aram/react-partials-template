@@ -110,6 +110,7 @@ const PopupCurd = (props) => {
         var url = editMode ? urls.editUrl : urls.createUrl;
         let newData = null;
         const access = user.access.find(x => x.appType === Enums.ApplicationType);
+        debugger;
         if (access.code === Enums.RoleAccess.User) {
 
             const companyId = access.companyId;
