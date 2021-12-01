@@ -21,7 +21,6 @@ import Enums from '../pages/Convention/Partials/Enums';
 import { connect } from "react-redux";
 
 const PopupCurd = (props) => {
-
     const { title, columns, urls, form, searchForm, key, initFormValues, user, backButton, moreColumn } = props
     const [filter, setFilter] = useState({
         page: 1,
