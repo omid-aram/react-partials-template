@@ -12,22 +12,32 @@ import InputNumber from "../../../partials/editors/InputNumber";
 const AuditorReport = (prop) => {
   const columns = [
     {
-      field: "PERSON",
+      field: "FIGURESNO",
       title: "شماره بند",
       width: 70,
     },
     {
-      field: "PERSIANFROMDATE",
-      title: "متن گزارش",
-      width: 80,
-    },
-    {
-      field: "PERSIANTODATE",
+      field: "CREATEDATEPERSIAN",
       title: "تاریخ ایجاد",
       width: 80,
     },
     {
-      field: "DESCRIPTION",
+      field: "CONVENTIONASSIGNMENT",
+      title: "تکلیف مجمع",
+      width: 80,
+    },
+    {
+      field: "PROCEEDINGS",
+      title: "اقدامات صورت گرفته",
+      width: 70,
+    },
+    {
+      field: "FIGURESTYPETITLE",
+      title: "ماهیت ارقام",
+      width: 70,
+    },
+    {
+      field: "AMOUNT",
       title: "مبلغ",
       width: 70,
     },
@@ -41,7 +51,7 @@ const AuditorReport = (prop) => {
         name="companyId"
         value={prop.approvalState.CompanyId}
       />
-      
+
       <Row>
         <Col sm={3}>
           <InputText
@@ -84,9 +94,9 @@ const AuditorReport = (prop) => {
         </Col>
         <Col sm={3}>
           <InputNumber
-           name="AMOUNT"
-           label="مبلغ"
-           rules={{ require: "اجباری است" }}
+            name="AMOUNT"
+            label="مبلغ"
+            rules={{ require: "اجباری است" }}
           />
         </Col>
       </Row>
@@ -101,7 +111,7 @@ const AuditorReport = (prop) => {
         title="گزارش حسابرس"
         urls={{
           GetId: prop.approvalState.Id,
-          //readUrl: "/AuditorReport/Show",
+          readUrl: "/AuditorReport/Show",
           createUrl: "/AuditorReport/Create",
           deleteUrl: "/AuditorReport/Delete",
           editUrl: "/AuditorReport/Update",
