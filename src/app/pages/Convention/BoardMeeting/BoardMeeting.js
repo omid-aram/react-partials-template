@@ -11,7 +11,7 @@ const BoardMeeting = (props) => {
     // const app = props.user.access[0].applicationId;
     // const companyId = props.user.access[0].companyId;
     const access = props.user.access.find(x => x.appType === Enums.ApplicationType);
-
+    
     const role = access.code;
     const app = access.applicationId;
     const companyId = access.companyId;
