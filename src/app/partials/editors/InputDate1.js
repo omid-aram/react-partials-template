@@ -4,15 +4,15 @@ import { Controller, useFormContext } from "react-hook-form"
 import objectPath from "object-path";
 import DatePicker from "react-datepicker2";
 import moment from "moment-jalaali"
-import { toPersianDateTime } from "../../utils/helper";
+import { setDate } from "date-fns";
+import { useDispatch } from "react-redux";
+import { customActions } from "../../store/ducks/custom.duck";
+
+const InputDate1 = (props) => {
+    const { name, label, time, onChange, ...rest } = props
+    const { control, errors } = useFormContext();
 
 
-
-const InputDate = (props) => {
-    const { name, label, time,...rest } = props
-   // const { control, errors } = useFormContext();
-    const { control, errors, values } = useFormContext();
-    
     //simple name : "title" 
     //path name : "items[1].title"
     let namePath = name.replace(/\[(\w+)\]/g, '.$1') //items[1] => items.1
@@ -24,7 +24,7 @@ const InputDate = (props) => {
 
     // const handleInnerChange = (event) => {
     //     console.log(event)
-    //     return event[0].target.value.gVal;
+    //     props.onChange(event);
     // }
 
     return (<>
@@ -45,12 +45,13 @@ const InputDate = (props) => {
                         style={{ direction: "ltr" }}
                         inputProps={{ showTime: (time == true) }}
                         inputComponent={DatePickerCustom}
+                        id={name}
+
                     />
                 }
                 control={control}
                 name={name}
-                defaultValue={objectPath.get(values, namePath)}
-                //onChange={handleInnerChange}
+                //defaultValue={''}                
                 {...rest}
 
             />
@@ -64,14 +65,15 @@ const InputDate = (props) => {
 
 
 function DatePickerCustom(props) {
-    const { inputRef, onChange, showTime, value } = props;
-   
+    const { inputRef, onChange, showTime, value, onConfirm, ...rest } = props;
+    const [date, setDate] = useState()
     //just for init value
+    const dispatch = useDispatch();
     const [initValue, setInitValue] = useState();
-    useEffect(() =>{
+    useEffect(() => {
         setInitValue(value ? moment(value) : null);
-    },[value])
-   
+    }, [])
+    console.log(initValue)
     return (
         <DatePicker
             value={initValue}
@@ -79,13 +81,21 @@ function DatePickerCustom(props) {
             isGregorian={false}
             ref={r => inputRef(r != null ? r.input : null)}
             onChange={(val) => {
-                if(!val){
+                if (!val) {
                     return;
                 }
                 let jVal = val.format('jYYYY/jM/jD');
-                let gVal = val.format('YYYY/M/D HH:mm:ss');
-                console.log("jVal" ,jVal)
-                console.log("gVal" ,gVal)
+                let gVal = val.format('YYYY/MM/DD HH:mm:ss');
+                let gVal1 = val.format('jYYYYjMMjDD');
+                setDate(val.format('YYYY/MM/DD HH:mm:ss'))
+                console.log("gVal", val.format('jYYYYjMMjDD'))
+
+                if (props.name == "froM_DATE")
+                    dispatch(customActions.setFromDate(gVal1))
+                else if (props.name == "tO_DATE")
+                    dispatch(customActions.setToDate(gVal1))
+
+                console.log('name', props.name);
                 onChange(gVal);
                 //older version
                 // onChange({
@@ -100,4 +110,4 @@ function DatePickerCustom(props) {
     );
 }
 
-export default InputDate;
+export default InputDate1;

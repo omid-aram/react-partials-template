@@ -3,6 +3,14 @@ import { Redirect, Route, Switch } from "react-router-dom";
 
 import HomePage from "./home/HomePage";
 
+import CompanyType from "./Common/CompanyType";
+
+import AsmDocType from "./Assemblies/BaseInfo/AsmDocType";
+import AsmTaskType from "./Assemblies/BaseInfo/AsmTaskType";
+import AsmFundType from "./Assemblies/BaseInfo/AsmFundType";
+import Person from "./Assemblies/Person/Person";
+
+///////////////////////////////////
 import UserCharts from "./Secretariat/UserCharts";
 
 import MeetingRequest from "./Secretariat/MeetingRequest";
@@ -16,7 +24,6 @@ import CommunicationParagraph from "./Secretariat/CommunicationParagraph";
 
 import Proceeding from "./Secretariat/Proceeding";
 import ProceedingParagraph from "./Secretariat/ProceedingParagraph";
-
 
 import ProductionLine from "./Convention/Common/ProductionLine";
 import CorpBase from "./Convention/Company/CorpBase";
@@ -52,6 +59,15 @@ export default function PagesRoute({ baseUrl }) {
       }
 
       <Route path="/home" component={HomePage} />
+
+      <Route path="/CompanyType" component={CompanyType} />
+
+      <Route path="/AsmDocType" component={AsmDocType} />
+      <Route path="/AsmTaskType" component={AsmTaskType} />
+      <Route path="/AsmFundType" component={AsmFundType} />
+      <Route path="/Person" component={Person} />
+
+      {/* -------------------- */}
       <Route path="/UserCharts" component={UserCharts} />
 
       <Route path="/MeetingRequest" component={MeetingRequest} />
@@ -65,8 +81,6 @@ export default function PagesRoute({ baseUrl }) {
 
       <Route path="/Proceeding" component={Proceeding} />
       <Route path="/ProceedingParagraph" component={ProceedingParagraph} />
-
-
 
       <Route path="/AgendaType" component={AgendaType} />
       <Route path="/Individual" component={Individual} />

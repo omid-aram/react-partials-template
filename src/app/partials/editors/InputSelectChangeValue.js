@@ -5,12 +5,13 @@ import { Controller, useFormContext } from "react-hook-form"
 import objectPath from "object-path"
 
 
-const InputSelect = (props) => {
+const InputSelectChangeValue = (props) => {
  
-    const { enumType, lookupType, name, label, ...rest } = props
+    const {changeVal, enumType, lookupType, name, label, ...rest } = props
     const [data, setData] = useState([])
     const [loading, setLoading] = useState(false);
     const { control, errors, values } = useFormContext()
+    
     useEffect(() => {
         setLoading(true)
         if (enumType) {
@@ -35,13 +36,24 @@ const InputSelect = (props) => {
     let error = objectPath.get(errors, namePath);
     let hasError = !!error;
      let value = values ? objectPath.get(values, namePath) : null;
-
+     const handleChange = (e) => {
+        
+         
+        changeVal(e.target.value);
+      
+        // setFolderName(event.target.value);
+      };
     return (<>
         <FormControl variant="outlined" style={{ width: "100%" }} size="small">
             <InputLabel error={hasError}>{label}</InputLabel>
             <Controller
-                as={
-                    <Select label={label}  error={hasError}>
+                render={({ onChange, value, onBlur, name }) => (
+                    <Select  onChange={(e) => {
+                        onChange(e)
+                      handleChange(e)
+                      }} label={label}  
+                      value={value ? value : ""}
+                      error={hasError}>
                         <MenuItem value={null}>
                             &nbsp;
                         </MenuItem>
@@ -49,7 +61,8 @@ const InputSelect = (props) => {
                             <MenuItem value={item.id} key={item.id}>{item.desc}</MenuItem>
                         )}
                     </Select>
-                }
+                )}
+                onChange={() => console.log("hellow")}
                 name={name}
                 control={control}
                  defaultValue={value}
@@ -65,4 +78,4 @@ const InputSelect = (props) => {
     </>);
 
 }
-export default InputSelect;
+export default InputSelectChangeValue;
