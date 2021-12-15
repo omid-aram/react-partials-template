@@ -39,6 +39,7 @@ import Approval from "./Convention/Meeting/Approval";
 import CapitalChange from "./Convention/Meeting/CapitalChange";
 import BoardofDirectors from "./Convention/Meeting/BoardofDirectors";
 import Inspector from "./Convention/Meeting/Inspector";
+import AuditorReport from "./Convention/Meeting/AuditorReport";
 import CapitalChangeDetail from "./Convention/Meeting/CapitalChangeDetail";
 import Announcement from "./Convention/Meeting/Announcement";
 import BoardMeeting from "./Convention/BoardMeeting/BoardMeeting";
@@ -88,6 +89,7 @@ export default function PagesRoute({ baseUrl }) {
       <Route path="/Agenda" component={Agenda} />
       <Route path="/Approval" component={Approval} />
       <Route path="/Inspector" component={Inspector} />
+      <Route path="/AuditorReport" component={AuditorReport} />
       <Route path="/BoardofDirectors" component={BoardofDirectors} />
       <Route path="/CapitalChange" component={CapitalChange} />
       <Route path="/CapitalChangeDetail" component={CapitalChangeDetail} />
