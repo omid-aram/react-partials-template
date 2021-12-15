@@ -8,8 +8,6 @@ import InputRadio from "../../../partials/editors/InputRadio";
 
 const ActualAgent = () => {
 
-
-
     const columns = [
         {
             field: "COMPANY",

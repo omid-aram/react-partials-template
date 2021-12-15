@@ -8,8 +8,6 @@ import InputRadio from "../../../partials/editors/InputRadio";
 
 const LegalAgent = () => {
 
-
-
     const columns = [
         {
             field: "COMPANY",

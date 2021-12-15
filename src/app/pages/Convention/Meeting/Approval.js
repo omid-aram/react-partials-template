@@ -46,9 +46,10 @@ const Approval = (props) => {
                 <MatBtn variant="outlined" size="small" onClick={() => detailHandler(item.ID, item.COMPANYID, "CapitalChange")} color="primary">تغییرات سرمایه</MatBtn>
                 <MatBtn variant="outlined" size="small" onClick={() => detailHandler(item.ID, item.COMPANYID, "BoardofDirectors")} color="primary">تعیین اعضای هیئت مدیره</MatBtn>
                 <MatBtn variant="outlined" size="small" onClick={() => detailHandler(item.ID, item.COMPANYID, "Inspector")} color="primary">بازرسان</MatBtn>
+                <MatBtn variant="outlined" size="small" onClick={() => detailHandler(item.ID, item.COMPANYID, "AuditorReport")} color="primary">گزارش حسابرس</MatBtn>
             </>
         ),
-        width: 100
+        width: 150
     })
 
 
