@@ -18,7 +18,8 @@ const MeetingBase = (props) => {
 
     return (
         <>
-            {role === Enums.RoleAccess.Admin && Enums.ApplicationId === app ? <Admin /> : role === Enums.RoleAccess.User && Enums.ApplicationId === app ? <User companyId={companyId} /> : null}
+         <Admin />
+            {/* {role === Enums.RoleAccess.Admin && Enums.ApplicationId === app ? <Admin /> : role === Enums.RoleAccess.User && Enums.ApplicationId === app ? <User companyId={companyId} /> : null} */}
         </>
     )
 
