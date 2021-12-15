@@ -9,9 +9,14 @@ import { useDispatch, useSelector } from "react-redux";
 import GlobalLoader from "../../app/partials/layout/GlobalLoader";
 import GlobalSnackbar from "../../app/partials/layout/GlobalSnackbar";
 import { useHistory } from "react-router-dom";
+import TextField from '@material-ui/core/TextField';
 
 const Layout = (props) => {
   const [loading, setLoading] = useState(false);
+  const [textFieldValue, setTextFieldValue] = useState("");
+  const [textPassValue, setTextPassValue] = useState("");
+
+
   var auth = useSelector((store) => store.auth);
   const isAuthorized =
     auth.user != null && parseInt(auth.expireDate) > new Date().getTime();
@@ -22,16 +27,10 @@ const Layout = (props) => {
   const login = () => {
     setLoading(true);
     let info = {};
-    info.username = "1009249";
-    info.password = "1212232345455656";
-
-    // info.username = "conv_user";
-    // info.password = "12122323";
-
-    
-
+    info.username = { textFieldValue };
+    info.password = { textPassValue };
     baseService
-      .postWithUrl("https://totalapi.saipacorp.com/api/Authenticate/Login", info)
+      .postWithUrl("https://totalapi.saipacorp.com/api/Authenticate/Login", { username: textFieldValue, password: textPassValue })
       .then((res) => {
         if (res.succeed) {
           console.log("login : ", res);
@@ -48,31 +47,63 @@ const Layout = (props) => {
       pathname: "/",
     });
   };
-
+  const handleTextFieldChange = (e) => {
+    console.log("e", e.target.value)
+    setTextFieldValue(e.target.value)
+  }
+  const handleTextPassChange = (e) => {
+    console.log("w", e.target.value)
+    setTextPassValue(e.target.value)
+  }
   return (
     <>
       <div className="container">
         <Row>
-          <Col sm={3} style={{lineHeight:'1',maxWidth:'276px'}} className="menucol">
+          <Col sm={2} className="menucol">
             <Box m={1}>
               <h4
                 style={{
                   textAlign: "center",
                   padding: "10px",
                   borderBottom: "1px solid",
-                  color: '#c1baff'
                 }}
               >
                 منو
               </h4>
             </Box>
             <ul id="myMenu">
-              <li className="parentMenu">
-                <span className="caret">
-                  <Box m={1} className="menulink">اطلاعات پایه</Box>
-                </span>
+              <li className="parentMenu"> <span className="caret"><Box m={1} className="menulink"> اطلاعات پایه</Box> </span>
                 <ul className="nested">
+                <li>
+                    <Box m={1} className="menulink">
+                      <Link to='/AsmDocType' >ثبت انواع مستندات</Link>
+                    </Box>
+                  </li>
                   <li>
+                    <Box m={1} className="menulink">
+                      <Link to='/AsmTaskType' >تعريف وظايف و مسئوليتها</Link>
+                    </Box>
+                  </li>
+                  <li>
+                    <Box m={1} className="menulink">
+                      <Link to='/Person' >تعريف اشخاص</Link>
+                    </Box>
+                  </li>
+                  <li>
+                    <Box m={1} className="menulink">
+                      <Link to='/AsmFundType' >تعريف انواع سرمايه</Link>
+                    </Box>
+                  </li>
+                  <li>
+                    <Box m={1} className="menulink">
+                      <Link to='/CompanyType' >تعريف گروه شرکتها</Link>
+                    </Box>
+                  </li>
+
+
+
+
+                  {/* <li>
                     <Box m={1} className="menulink">
                       <Link to='/AgendaType' >نوع دستور جلسه</Link>
                     </Box>
@@ -91,7 +122,7 @@ const Layout = (props) => {
                     <Box m={1} className="menulink">
                       <Link to='/Individual' >اشخاص</Link>
                     </Box>
-                  </li>
+                  </li> */}
                 </ul>
               </li>
               <li className="parentMenu">
@@ -149,7 +180,7 @@ const Layout = (props) => {
                   </li>
                 </ul>
               </li>
-         
+
               <li className="parentMenu">
                 <span className="caret">
                   <Box m={1} className="menulink">گزارشات</Box>
@@ -170,7 +201,7 @@ const Layout = (props) => {
 
             </ul>
           </Col>
-          <Col sm={9}>
+          <Col sm={10}>
             <Box
               style={{ padding: "10px", alignItems: "center" }}
               p={1}
@@ -192,6 +223,23 @@ const Layout = (props) => {
                 )}
                 {!isAuthorized && (
                   <div>
+
+                    <TextField
+                      label="userName"
+                      className="loginfield"
+                      variant="outlined"
+                      value={textFieldValue}
+                      name="username"
+                      onChange={(e) => handleTextFieldChange(e)} />
+                    <TextField
+                      className="loginfield"
+                      label="password"
+                      defaultValue="Hello World"
+                      variant="outlined"
+                      value={textPassValue}
+                      name="password"
+                      onChange={(e) => handleTextPassChange(e)} />
+
                     <Button className="loginbtn" onClick={login}>
                       ورود
                     </Button>

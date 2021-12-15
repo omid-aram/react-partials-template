@@ -6,7 +6,7 @@ import objectPath from "object-path"
 
 
 const InputSelect = (props) => {
- 
+  
     const { enumType, lookupType, name, label, ...rest } = props
     const [data, setData] = useState([])
     const [loading, setLoading] = useState(false);
@@ -34,14 +34,14 @@ const InputSelect = (props) => {
     let namePath = name.replace(/\[(\w+)\]/g, '.$1') //items[1] => items.1
     let error = objectPath.get(errors, namePath);
     let hasError = !!error;
-     let value = values ? objectPath.get(values, namePath) : null;
+    let value = values ? objectPath.get(values, namePath) : null;
 
     return (<>
         <FormControl variant="outlined" style={{ width: "100%" }} size="small">
             <InputLabel error={hasError}>{label}</InputLabel>
             <Controller
                 as={
-                    <Select label={label}  error={hasError}>
+                    <Select label={label} size="small" error={hasError}>
                         <MenuItem value={null}>
                             &nbsp;
                         </MenuItem>
@@ -52,7 +52,7 @@ const InputSelect = (props) => {
                 }
                 name={name}
                 control={control}
-                 defaultValue={value}
+                defaultValue={value}
                 {...rest}
             />
             {loading && (
@@ -65,4 +65,5 @@ const InputSelect = (props) => {
     </>);
 
 }
+
 export default InputSelect;

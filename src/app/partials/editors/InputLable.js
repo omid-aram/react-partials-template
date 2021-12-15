@@ -4,33 +4,26 @@ import { Controller, useFormContext } from "react-hook-form"
 import objectPath from "object-path"
 
 
-const InputText = (props) => {
-    const { name, label, rows, disabled, ...rest } = props
+const InputLable = (props) => {
+    const { name, label, ...rest } = props
     const { control, errors, values } = useFormContext();
 
     //simple name : "title" 
     //path name : "items[1].title"
     let namePath = name.replace(/\[(\w+)\]/g, '.$1') //items[1] => items.1
-    let error = objectPath.get(errors, namePath);
+    let error = objectPath.get(errors, namePath);  
     let hasError = !!error;
-    //let value = values ? objectPath.get(values, namePath) : null;
-
+    let value = values ? objectPath.get(values, namePath) : null;
     return (<>
-        <FormControl variant="outlined" style={{ width: "100%" }} size="small">
+        <FormControl variant="outlined" style={{ width: "100%" }} size="small" line>
             <InputLabel error={hasError} >{label}</InputLabel>
             <Controller
                 as={
-                    <OutlinedInput
-                        type="text"
-                        label={label}
-                        multiline={Boolean(rows)}
-                        rows={rows || 0}
-                        error={hasError} 
-                        disabled={disabled}/>
+                    <OutlinedInput type="text" label={label} disabled={true} error={hasError}/>
                 }
                 control={control}
                 name={name}
-                //defaultValue={value || ''}
+                defaultValue={value || ''}
                 {...rest}
             />
             <FormHelperText>
@@ -41,4 +34,4 @@ const InputText = (props) => {
 
 }
 
-export default InputText;
+export default InputLable;

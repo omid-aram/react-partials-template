@@ -14,8 +14,7 @@ import { CircularProgress, Checkbox, TableContainer, TableSortLabel, LinearProgr
 import objectPath from 'object-path';
 import Pagination from '@material-ui/lab/Pagination';
 import { dynamicSort } from '../utils/helper'
-import enums from '../partials/enums';
-import { connect } from "react-redux";
+
 
 {/* <Grid
 filter={filter}
@@ -24,18 +23,18 @@ columns={columns}
 selectable={true}
 onSelectChange={handleSelectChange} /> */}
 
-const Grid = (props) => {
+export default function Grid(props) {
     const {
         columns, //required
         url, data, // one required 
         filter,
-        getId,
-        keyColumn,
+        
+        keyColumn,        
         selectable,
         selectedItems,
         singleSelect,
         onSelectChange,
-
+        
         defaultSort,
         itemInPage,
         fixHeight,
@@ -45,7 +44,7 @@ const Grid = (props) => {
     } = props;
     const classes = useStyles2();
     const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(itemInPage || 10);
+    const [rowsPerPage, setRowsPerPage] = useState(filter.pageSize || 10);
     const [records, setRecords] = useState([]); // records which showed to user
     const [offlineData, setOfflineData] = useState(data); // offlineData
     const [total, setTotal] = useState(0);
@@ -57,15 +56,6 @@ const Grid = (props) => {
     let offline = !!offlineData;
 
     //const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
-    const keysToLowerCase = (obj) => {
-
-        const x = {};
-        for (const [key, value] of Object.entries(obj)) {
-            x[key.toUpperCase()] = value;
-        }
-        return x;
-    }
-
 
     useEffect(() => {
         if (offline) {
@@ -82,40 +72,25 @@ const Grid = (props) => {
             setRecords(temp.sort(dynamicSort(orderby, orderDir)));
         } else {
             setLoading(true);
-            const access = props.user.access.find(x => x.appType === enums.ApplicationType);
-            const role = access.code;
             let f = { ...filter, ...localFilter }
-            f.getId = getId;
             f.page = page + 1;
             f.pageSize = isShowAll() ? 10000 : rowsPerPage;
-            f.role = role;
-            f.userId = props.user.id;
-
             if (orderby)
                 f.sort = orderby + ' ' + orderDir;
             baseService.post(url, f).then(({ data }) => {
                 if (data.errors) {
                     //alert or something
                 } else {
-
-                    let dataList = [];
-                    data.items.map((item, i) => (
-                        dataList.push(keysToLowerCase(item))
-
-                    ))
-
-
-
                     if (isShowAll()) {
 
                         //|| (localFilter == null && result.items.length == result.totalCount) it was very wrong
                         //if user select show all one time, for other request we use local Data
                         setTotal(data.totalCount);
-                        setOfflineData(dataList); // 
+                        setOfflineData(data.items); // 
                         setLocalFilter({});
 
                     } else {
-                        setRecords(dataList);
+                        setRecords(data.items);
                         setTotal(data.totalCount);
                     }
                 }
@@ -123,6 +98,7 @@ const Grid = (props) => {
         }
     }, [page, rowsPerPage, filter, orderby, orderDir, offlineData, forceUpdate, localFilter])
 
+    //console.log(selectedItems);
 
     useEffect(() => {
         setOfflineData(data);
@@ -170,10 +146,10 @@ const Grid = (props) => {
             {records.map((row, i) => (
                 <TableRow key={i} style={{ ...getStripedStyle(i) }}>
                     {selectable ? (<TableCell key={0} >
-                        {singleSelect ?
-                            <Radio onChange={(event) => { onSelectChange(row, event.target.checked) }} checked={selectedItems && selectedItems[keyColumn] == row[keyColumn]} />
-                            :
-                            <Checkbox onChange={(event) => { onSelectChange(row, event.target.checked) }} checked={selectedItems && selectedItems.some(x => x == row[keyColumn])} />
+                        {singleSelect ? 
+                            <Radio onChange={(event) => { onSelectChange(row, event.target.checked) }} checked={selectedItems && selectedItems[keyColumn] == row[keyColumn]}/>
+                        :
+                            <Checkbox onChange={(event) => { onSelectChange(row, event.target.checked) }} checked={selectedItems && selectedItems.some(x => x == row[keyColumn])}/>
                         }
                     </TableCell>) : null}
 
@@ -197,7 +173,7 @@ const Grid = (props) => {
                 </TableRow>
             )}
         </TableBody>
-    ), [records, selectedItems])
+    ), [records,selectedItems])
 
 
     return (
@@ -211,7 +187,7 @@ const Grid = (props) => {
             <Table stickyHeader={(fixHeight || data) ? true : false} className={classes.table} style={{ tableLayout: 'fixed' }} size="small">
                 <TableHead>
                     <TableRow className={classes.header}>
-                        {selectable ? (<TableCell key={0} style={{ width: 1 }} >انتخاب</TableCell>) : null}
+                        {selectable ? (<TableCell key={0} style={{ width: 50 }} >انتخاب</TableCell>) : null}
 
                         {columns.map((col, i) =>
                             <TableCell
@@ -248,7 +224,7 @@ const Grid = (props) => {
                         <TableRow>
                             <TablePagination
                                 className={classes.header + " " + (fixHeight ? classes.stickyFooter : {})}
-                                rowsPerPageOptions={hideRowsPerPage ? [] : [50, 100, 250]}
+                                rowsPerPageOptions={hideRowsPerPage ? [] : [10, 20, 50, 100, 250]}
                                 colSpan={columns.length + (selectable ? 1 : 0)}
                                 count={total}
                                 rowsPerPage={rowsPerPage}
@@ -264,13 +240,6 @@ const Grid = (props) => {
         </TableContainer>
     );
 }
-
-
-const mapStateToProps = ({ auth: { user } }) => ({
-    user
-});
-
-export default connect(mapStateToProps)(Grid);
 
 function TablePaginationActions(props) {
 
@@ -288,8 +257,9 @@ function TablePaginationActions(props) {
     //     window.addEventListener('resize', handleResize);
     //     return () => window.removeEventListener('resize', handleResize);
     // }, [containerWidth])
+    // console.log(containerWidth)
 
-    let pageCount = Math.ceil(count / rowsPerPage)
+    let pageCount = Math.ceil(count / (rowsPerPage === "All" ? 1 : rowsPerPage))
     const handleChange = (event, value) => {
         onChangePage(event, value - 1);
     };

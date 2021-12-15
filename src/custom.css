@@ -1,3 +1,9 @@
+
+.testApp1{
+    background-color:azure;
+    padding: 5px;
+}
+
 .MuiTypography-root {
     font-family: 'IRANSans'!important;
 }

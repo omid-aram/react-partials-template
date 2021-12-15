@@ -22,7 +22,7 @@ const PopupCrud = (props) => {
     const { columns, urls, form, secondForm, searchForm, key, initFormValues } = props
     const [filter, setFilter] = useState({
         page: 1,
-        pageSize: 10
+        pageSize: 20
     });
     const [showModal, setShowModal] = useState(false);
     const [showSecondModal, setshowSecondModal] = useState(false);

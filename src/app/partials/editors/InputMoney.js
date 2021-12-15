@@ -7,8 +7,8 @@ import NumberFormat from "react-number-format";
 
 
 
-const InputDate = (props) => {
-  const { name, label, time, size, ...rest } = props
+const InputMoney = (props) => {
+  const { name, label,defultValues, time, size, ...rest } = props
   const { control, errors } = useFormContext();
 
 
@@ -17,12 +17,10 @@ const InputDate = (props) => {
   let namePath = name.replace(/\[(\w+)\]/g, '.$1') //items[1] => items.1
   let error = objectPath.get(errors, namePath);
   let hasError = !!error;
-  let value = values ? objectPath.get(values, namePath) : null;
-
+  // let valuess =  objectPath.get()  ;
+  // let defultValue = valuess ? objectPath.get(valuess, namePath) : defultValues;
 
   const handleChange = (event) => {
-    console.log(event)
-
     return event[0].target.value;
   }
 
@@ -31,17 +29,27 @@ const InputDate = (props) => {
     <FormControl variant="outlined" style={{ width: "100%" }} size={size || "small"}>
       <InputLabel error={hasError} >{label}</InputLabel>
       <Controller
+        // render={({ onChange, value }) => (
+
+        //   <OutlinedInput
+        //     type="text" label={label} error={hasError}
+        //     style={{ direction: "ltr" }}
+        //     inputProps={{ value: value, onChange: onChange }}
+        //     inputComponent={NumberCustom} />
+        // )}
+
         as={
           <OutlinedInput
             type="text" label={label} error={hasError}
             style={{ direction: "ltr" }}
             //inputProps={ {value : value }}
+           
             inputComponent={NumberCustom}
           />
         }
         control={control}
         name={name}
-        //defaultValue={value}
+        defaultValue={defultValues }
         //onChange={handleChange}
         {...rest}
 
@@ -63,7 +71,6 @@ function NumberCustom(props) {
   useEffect(() => {
     setInitValue(value);
   }, [])
-  console.log('val', value);
 
   return (
     <NumberFormat
@@ -79,4 +86,4 @@ function NumberCustom(props) {
   );
 }
 
-export default InputDate;
+export default InputMoney;

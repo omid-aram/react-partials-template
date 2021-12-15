@@ -12,66 +12,52 @@ import { snackbarActions } from "../store/ducks/snackbar.duck";
 import Alert from "@material-ui/lab/Alert";
 import confirmService from "../partials/content/ConfirmService";
 import objectPath from "object-path";
-import { Button } from "react-bootstrap";
-import { useHistory } from "react-router-dom";
-import { IconButton } from "@material-ui/core";
-import ShowMoreModal from "./ShowMoreModal";
-import { MoreVert } from "@material-ui/icons";
-import Enums from '../pages/Convention/Partials/Enums';
-import { connect } from "react-redux";
+
 
 const PopupCurd = (props) => {
 
-    const { title, columns, urls, form, searchForm, key, initFormValues, user, backButton, moreColumn } = props
+    const { title, columns, urls, form, searchForm, key, sortItem, initFormValues, pageSize, modalSize, initSearchValues } = props
     const [filter, setFilter] = useState({
         page: 1,
-        pageSize: 10
+        pageSize: pageSize || 10,
+        sort: sortItem || null,
+        ...initSearchValues,
     });
     const [showModal, setShowModal] = useState(false);
     const [modalTitle, setModalTitle] = useState("");
     const [formError, setFormError] = useState("");
-    const [showMoreModal, setShowMoreModal] = useState(false);
-    //const [formValues, setFormValues] = useState();
+    const [formValues, setFormValues] = useState();
     const [editMode, setEditMode] = useState(false);
-    const [moreData, setmoreData] = useState();
     const searchMethods = useForm();
     const formMethods = useForm();
-    let history = useHistory();
+
     const classes = useStyle();
+
     const formRef = useRef();
 
     const dispatch = useDispatch();
 
-    const keysToLowerCase = (obj) => {
-
-        const x = {};
-        for (const [key, value] of Object.entries(obj)) {
-            x[key.toUpperCase()] = value;
-        }
-        return x;
-    }
     const editHandler = (item) => {
+
+        //debugger;
         setEditMode(true);
         setModalTitle("به روز رسانی");
+
         if (urls.getUrl) { //which means data is complexer than grid data and needs to be fetch
             dispatch(loaderActions.show())
-            baseService.post(urls.getUrl, { ID: item.ID }).then(res => {
+            baseService.post(urls.getUrl, { id: item.id }).then(res => {
+
                 //setFormValues(res.data);
-                let ob = keysToLowerCase(res.data);
-                formMethods.reset(ob);
+                formMethods.reset(res.data)
+
                 dispatch(loaderActions.hide())
                 setShowModal(true);
             });
         } else {
-            //setFormValues(item);
+            //  setFormValues(item);
             formMethods.reset({ ...item })
             setShowModal(true);
         }
-    }
-
-    const showMoreHandler = (item) => {
-        setmoreData(item)
-        setShowMoreModal(true);
     }
 
     const deleteHandler = (item) => {
@@ -79,7 +65,7 @@ const PopupCurd = (props) => {
 
             if (isConfirmed) {
                 dispatch(loaderActions.show())
-                baseService.post(urls.deleteUrl, { ID: item.ID }).then((result) => {
+                baseService.post(urls.deleteUrl, { id: item.id }).then((result) => {
                     if (result.succeed) {
                         setShowModal(false);
                         dispatch(snackbarActions.success("با موفقیت حذف شد"))
@@ -107,38 +93,28 @@ const PopupCurd = (props) => {
 
     const formSubmitHandler = (data) => {
 
+        //debugger;
         var url = editMode ? urls.editUrl : urls.createUrl;
-        let newData = null;
-        const access = user.access.find(x => x.appType === Enums.ApplicationType);
-        if (access.code === Enums.RoleAccess.User) {
-
-            const companyId = access.companyId;
-            newData = { ...data, companyId }
-
-        } else {
-            newData = { ...data }
-        }
-
         setFormError(null);
-        dispatch(loaderActions.show());
-
-        baseService.post(url, newData).then((result) => {
+        dispatch(loaderActions.show())
+        baseService.post(url, data).then((result) => {
+            //debugger;
             if (result.succeed) {
                 setShowModal(false);
                 dispatch(snackbarActions.success("با موفقیت ثبت شد"))
                 forceGridUpdate();
 
             } else {
-                setFormError(result.errorMessage);
+                //setFormError(result.errorMessage);
+                dispatch(snackbarActions.error(result.errorMessage))
             }
             dispatch(loaderActions.hide())
-
         })
     }
     const addNewHandler = () => {
         let initVal = { ...initFormValues };
-        let k = key ? key : "ID";
-        objectPath.set(initVal, k, 0);//null ID => server validation error
+        let k = key ? key : "id";
+        objectPath.set(initVal, k, 0);//null id => server validation error
         //setFormValues(initVal);
         formMethods.reset(initVal)
         setFormError(null);
@@ -161,7 +137,6 @@ const PopupCurd = (props) => {
 
 
     let finalColumns = [...columns]
-
     if (urls.editUrl) {
         finalColumns.push({
             title: "",
@@ -170,7 +145,7 @@ const PopupCurd = (props) => {
                     <EditButton onClick={() => editHandler(item)} />
                 </>
             ),
-            width: 10
+            width: 40
         })
     }
     if (urls.deleteUrl) {
@@ -181,55 +156,31 @@ const PopupCurd = (props) => {
                     <DeleteButton onClick={() => deleteHandler(item)} />
                 </>
             ),
-            width: 10
+            width: 40
         })
     }
 
-
-    if (moreColumn) {
-        finalColumns.push({
-            title: "",
-            template: (item) => (
-                <>
-                    <IconButton style={{ float: "left" }} size="small" onClick={() => showMoreHandler(item)} component="span">
-                        <MoreVert />
-                    </IconButton>
-                </>
-
-            ),
-            width: 10
-        })
-    }
 
     return (
         <>
-
-            <ShowMoreModal
-                moreColumn={moreColumn}
-                data={moreData}
-                isShow={showMoreModal}
-                onClose={() => setShowMoreModal(false)} />
             <Portlet>
-                {
-                    urls.createUrl !== "" ?
-                        <PortletHeader
-                            title={title}
-                            toolbar={
-                                (
-                                    <PortletHeaderToolbar>
-                                        <Button
-                                            onClick={addNewHandler}
-                                            variant="success"
-                                        >
-                                            <i className="fa fa-plus" />
-                                            ثبت مورد جدید
-                                        </Button>
-                                    </PortletHeaderToolbar>
-                                )}
-                        />
-                        : <></>
-                }
+                <PortletHeader
+                    title={title}
+                    toolbar={
+                        (
+                            <PortletHeaderToolbar>
+                                <button
+                                    onClick={addNewHandler}
+                                    type="button"
+                                    className="btn btn-clean btn-sm ng-star-inserted"
+                                >
+                                    <i className="fa fa-plus" />
+                                    ثبت مورد جدید
+                                </button>
+                            </PortletHeaderToolbar>
+                        )}
 
+                />
 
                 <PortletBody>
 
@@ -241,38 +192,27 @@ const PopupCurd = (props) => {
                         </FormProvider >
                     )}
 
+
                     <Grid
-                        getId={urls.GetId}
                         filter={filter}
                         url={urls.readUrl}
                         columns={finalColumns}
                     />
-                    {backButton ?
-                        <div className="clearfix" style={{ padding: '.5rem' }}>
-                            <button onClick={() => history.goBack()} className="btn btn-warning float-right">
-                                <i className="fa fa-angle-right" />
-                                بازگشت
-                            </button>
-                        </div>
-                        :
-                        null
-                    }
                 </PortletBody>
             </Portlet>
 
             <GenModal
                 title={modalTitle}
                 isShow={showModal}
-                onDismiss={() => setShowModal(false)}
+                size={modalSize}
+                onDismiss={() => { setShowModal(false) }}
                 onConfirm={modalConfirmHandler}>
                 {formError && (
                     <Alert severity="error">{formError}</Alert>
                 )}
 
-
-
                 {/* values={formValues} */}
-                <FormProvider {...formMethods}>
+                <FormProvider  {...formMethods}>
 
                     <form onSubmit={formMethods.handleSubmit(formSubmitHandler)} ref={formRef} >
                         {form(formMethods)}
@@ -290,8 +230,4 @@ const useStyle = makeStyles({
     }
 })
 
-const mapStateToProps = ({ auth: { user } }) => ({
-    user
-});
-
-export default connect(mapStateToProps)(PopupCurd);
+export default PopupCurd;
