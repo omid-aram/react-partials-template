@@ -9,19 +9,33 @@ import InputHidden from "../../../partials/editors/InputHidden";
 import InputSwitch from "../../../partials/editors/InputSwitch";
 import InputSelect from "../../../partials/editors/InputSelect";
 import InputCheckbox from "../../../partials/editors/InputCheckbox";
+import InputSelectApi from "../../../partials/editors/InputSelectApi";
 
 
-const AsmTaskType = () => {
+const AsmProdLine = () => {
+
+    //LayoutSubheader({ title: "سرویس ها" });
 
     const columns = [
         {
             field: "code",
             title: "کد",
-            width: 140
         },
         {
-            field: "name",
-            title: "شرح",
+            field: "saloon",
+            title: "سالن",
+            //filterable: true,
+        },
+        {
+            field: "location",
+            title: "موقعیت",
+            //filterable: true,
+        },
+        {
+            field: "company.codeName",
+            title: "شرکت",
+            // sortable: true,
+            // sortField: "company.code"
         },
         {
             field: "isActiveDesc",
@@ -29,12 +43,24 @@ const AsmTaskType = () => {
         },
     ]
 
+
+
+
     const formfg = () => (
         <>
 
 
             <InputHidden name="id" />
             <Row>
+                <Col sm={6}>
+                    <InputSelectApi
+                        name="companyId"
+                        label="شرکت"
+                        readUrl="/AsmProdLine/GetCompanies"
+                        textField="codeName"
+                        valueField="id"
+                    />
+                </Col>
                 <Col sm={6}>
                     <InputText
                         name="code"
@@ -45,8 +71,15 @@ const AsmTaskType = () => {
                 </Col>
                 <Col sm={6}>
                     <InputText
-                        name="name"
-                        label="شرح"
+                        name="saloon"
+                        label="سالن"
+                        rules={{ required: "اجباری است" }}
+                    />
+                </Col>
+                <Col sm={6}>
+                    <InputText
+                        name="location"
+                        label="موقعیت"
                         rules={{ required: "اجباری است" }}
                     />
                 </Col>
@@ -65,13 +98,13 @@ const AsmTaskType = () => {
         <PopupCurd
             columns={columns}
             pageSize={50}
-            title="تعريف انواع دستور جلسه"
-            sortItem="code desc, id desc"
+            title="ثبت خطوط تولید"
+            sortItem="company.code, code, id"
             urls={{
-                readUrl: "/AsmTaskType/GetPaginated",
-                createUrl: "/AsmTaskType/Create",
-                //deleteUrl: "/AsmTaskType/Delete",
-                editUrl: "/AsmTaskType/Update",
+                readUrl: "/AsmProdLine/GetPaginated",
+                createUrl: "/AsmProdLine/Create",
+                //deleteUrl: "/AsmProdLine/Delete",
+                editUrl: "/AsmProdLine/Update",
             }}
             form={formfg}
         //searchForm={searchForm}
@@ -80,4 +113,4 @@ const AsmTaskType = () => {
     </>);
 }
 
-export default AsmTaskType;
+export default AsmProdLine;
