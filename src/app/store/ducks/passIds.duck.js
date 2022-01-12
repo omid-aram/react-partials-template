@@ -8,7 +8,8 @@ export const actionTypes = {
     FetchApprovalId: '[FetchApprovalId] Action',
     FetchCapitalChangeId: '[FetchCapitalChangeId] Action',
     FetchBoardMeetingId: '[FetchBoardMeetingId] Action',
-    FetchBoardAgendaId: '[FetchBoardAgendaId] Action'
+    FetchBoardAgendaId: '[FetchBoardAgendaId] Action',
+    FetchEditData: '[FetchEditData] Action',
 };
 
 // // // // // // // // // // // // // // // // // // // //
@@ -40,6 +41,10 @@ export const passIdsActions = {
         type: actionTypes.FetchBoardAgendaId,
         payload: item
     }),
+    fetchEditData: item => ({
+        type: actionTypes.FetchEditData,
+        payload: item
+    }),
 };
 
 // // // // // // // // // // // // // // // // // // // //
@@ -51,7 +56,8 @@ const initialState = {
     agendaState: (0),
     approvalState: (0),
     capitalChangeState: (0),
-    boardMeetingState: (0)
+    boardMeetingState: (0),
+    editData:null
 };
 
 // // // // // // // // // // // // // // // // // // // //
@@ -78,6 +84,10 @@ export const reducer = (state = initialState, action) => {
         case actionTypes.FetchBoardAgendaId: {
             return { ...state, boardAgendaState: action.payload };
         }
+        case actionTypes.FetchEditData: {
+            return { ...state, editData: action.payload };
+        }
+       
         default:
             return state;
     }

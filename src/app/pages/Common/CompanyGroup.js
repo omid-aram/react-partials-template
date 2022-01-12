@@ -68,10 +68,10 @@ const ServiceCrud = () => {
             title="تعريف گروه شرکتها"
             sortItem="code desc, id desc"
             urls={{
-                readUrl: "/CompanyType/GetPaginated",
-                createUrl: "/CompanyType/Create",
-                //deleteUrl: "/CompanyType/Delete",
-                editUrl: "/CompanyType/Update",
+                readUrl: "/CompanyGroup/GetPaginated",
+                createUrl: "/CompanyGroup/Create",
+                //deleteUrl: "/CompanyGroup/Delete",
+                editUrl: "/CompanyGroup/Update",
             }}
             form={formfg}
         //searchForm={searchForm}

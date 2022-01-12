@@ -1,6 +1,6 @@
-import React, { useState, useRef } from "react"
+import React, { useState, useRef, useEffect } from "react"
 import Grid from "../partials/grid"
-import { DeleteButton, EditButton } from "../partials/content/UIHelper";
+import { DeleteButton, EditButton, DetailButton } from "../partials/content/UIHelper";
 import { Portlet, PortletHeader, PortletHeaderToolbar, PortletBody } from "../partials/content/Portlet";
 import { makeStyles } from "@material-ui/core";
 import { useForm, FormProvider } from 'react-hook-form'
@@ -12,22 +12,44 @@ import { snackbarActions } from "../store/ducks/snackbar.duck";
 import Alert from "@material-ui/lab/Alert";
 import confirmService from "../partials/content/ConfirmService";
 import objectPath from "object-path";
+import { passIdsActions } from "../store/ducks/passIds.duck";
+//import CompanyGroup from "../pages/Common/CompanyGroup";
 
 
 const PopupCurd = (props) => {
 
-    const { title, columns, urls, form, searchForm, key, sortItem, initFormValues, pageSize, modalSize, initSearchValues } = props
+    const { title, columns, keyColumn, urls, form, searchForm, detailForm, key, sortItem, initFormValues, pageSize, modalSize, detailSize, detailTitle, initSearchValues } = props
     const [filter, setFilter] = useState({
         page: 1,
+        //companyId:props.comid,
         pageSize: pageSize || 10,
         sort: sortItem || null,
         ...initSearchValues,
     });
+
+    const firstUpdate = useRef(true);
+    useEffect(() => {
+        if (firstUpdate.current) {//To prevent running on initial render
+            firstUpdate.current = false;
+            return;
+        }
+
+        setFilter({
+            page: 1,
+            //companyId:props.comid,
+            pageSize: pageSize || 10,
+            sort: sortItem || null,
+            ...initSearchValues,
+        })
+    }, [initSearchValues, pageSize, sortItem])
+
     const [showModal, setShowModal] = useState(false);
     const [modalTitle, setModalTitle] = useState("");
     const [formError, setFormError] = useState("");
     const [formValues, setFormValues] = useState();
     const [editMode, setEditMode] = useState(false);
+    const [detailMode, setDetailMode] = useState(false);
+    const [detailItem, setDetailItem] = useState([]);
     const searchMethods = useForm();
     const formMethods = useForm();
 
@@ -39,9 +61,59 @@ const PopupCurd = (props) => {
 
     const editHandler = (item) => {
 
+        dispatch(passIdsActions.fetchEditData(item));
         //debugger;
         setEditMode(true);
         setModalTitle("به روز رسانی");
+
+        if (urls.getUrl) { //which means data is complexer than grid data and needs to be fetch
+            dispatch(loaderActions.show())
+            baseService.post(urls.getUrl, { id: item.id }).then(res => {
+
+                //setFormValues(res.data);
+                formMethods.reset(res.data)
+
+                dispatch(loaderActions.hide())
+                setShowModal(true);
+            });
+        } else {
+            //  setFormValues(item);
+            formMethods.reset({ ...item })
+            setShowModal(true);
+        }
+    }
+
+    //let lastDetailItemId = -1;
+    const [lastDetailItemId, setLastDetailItemId] = useState(-1);
+    const detailHandler = (item) => {
+
+        setDetailItem(item);
+        setDetailMode(true);
+
+        if (urls.detailUrl === "sub") {
+            //debugger;
+            if (lastDetailItemId === item[_keyColumn]) {
+                setDetailItem({});
+                //lastDetailItemId = -1;
+                setLastDetailItemId(-1);
+            } else {
+                //lastDetailItemId = item[_keyColumn];
+                setLastDetailItemId(item[_keyColumn]);
+            }
+            return;
+        }
+
+        let detailTitleText = "";
+        const detailTitleWords = detailTitle ? detailTitle.split(' ') : [];
+        for (let i = 0; i < detailTitleWords.length; i++) {
+            let word = detailTitleWords[i];
+
+            if (word[0] === '@') {//we should get value from item
+                word = item[word.substr(1)];
+            }
+            detailTitleText += word + ' ';
+        }
+        setModalTitle(detailTitleText);
 
         if (urls.getUrl) { //which means data is complexer than grid data and needs to be fetch
             dispatch(loaderActions.show())
@@ -135,7 +207,7 @@ const PopupCurd = (props) => {
     }
 
 
-
+    let _keyColumn = keyColumn || "id";
     let finalColumns = [...columns]
     if (urls.editUrl) {
         finalColumns.push({
@@ -154,6 +226,17 @@ const PopupCurd = (props) => {
             template: (item) => (
                 <>
                     <DeleteButton onClick={() => deleteHandler(item)} />
+                </>
+            ),
+            width: 40
+        })
+    }
+    if (urls.detailUrl) {
+        finalColumns.push({
+            title: "",
+            template: (item) => (
+                <>
+                    <DetailButton onClick={() => detailHandler(item)} />
                 </>
             ),
             width: 40
@@ -192,33 +275,48 @@ const PopupCurd = (props) => {
                         </FormProvider >
                     )}
 
-
                     <Grid
                         filter={filter}
                         url={urls.readUrl}
                         columns={finalColumns}
+                        keyColumn={_keyColumn}
+                        clickedRowId={detailItem[_keyColumn] || -1}
                     />
                 </PortletBody>
             </Portlet>
 
+            {urls.detailUrl === 'sub' && detailItem[_keyColumn] ?
+                <>
+                    {React.cloneElement(detailForm, { ...detailItem })}
+                </>
+                :
+                <></>
+            }
+
             <GenModal
                 title={modalTitle}
                 isShow={showModal}
-                size={modalSize}
-                onDismiss={() => { setShowModal(false) }}
+                size={detailMode ? detailSize : modalSize}
+                onDismiss={() => { setShowModal(false); setDetailMode(false); setFormError(""); setDetailItem({}); setLastDetailItemId(-1); }}
                 onConfirm={modalConfirmHandler}>
                 {formError && (
                     <Alert severity="error">{formError}</Alert>
                 )}
 
                 {/* values={formValues} */}
-                <FormProvider  {...formMethods}>
+                {detailMode ?
+                    <>
+                        {/* {console.log('item', detailItem)} */}
+                        {React.cloneElement(detailForm, { ...detailItem })}
+                    </>
+                    :
+                    <FormProvider  {...formMethods}>
 
-                    <form onSubmit={formMethods.handleSubmit(formSubmitHandler)} ref={formRef} >
-                        {form(formMethods)}
-                    </form>
-                </FormProvider >
-
+                        <form onSubmit={formMethods.handleSubmit(formSubmitHandler)} ref={formRef} >
+                            {form(formMethods)}
+                        </form>
+                    </FormProvider >
+                }
             </GenModal >
         </>
     );
