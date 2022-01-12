@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableHead from '@material-ui/core/TableHead';
-import TableCell from '@material-ui/core/TableCell';
-import TableFooter from '@material-ui/core/TableFooter';
-import TablePagination from '@material-ui/core/TablePagination';
-import TableRow from '@material-ui/core/TableRow';
+import { Table, TableBody, TableHead, TableRow, TableCell, TableFooter, TablePagination } from '@material-ui/core';
+// import Table from '@material-ui/core/Table';
+// import TableBody from '@material-ui/core/TableBody';
+// import TableHead from '@material-ui/core/TableHead';
+// import TableCell from '@material-ui/core/TableCell';
+// import TableFooter from '@material-ui/core/TableFooter';
+// import TablePagination from '@material-ui/core/TablePagination';
+// import TableRow from '@material-ui/core/TableRow';
 
 import baseService from '../services/base.service'
 import { CircularProgress, Checkbox, TableContainer, TableSortLabel, LinearProgress, Button, IconButton, Radio } from '@material-ui/core';
@@ -28,13 +29,15 @@ export default function Grid(props) {
         columns, //required
         url, data, // one required 
         filter,
-        
-        keyColumn,        
+
+        keyColumn,
         selectable,
         selectedItems,
         singleSelect,
         onSelectChange,
-        
+
+        clickedRowId,
+
         defaultSort,
         itemInPage,
         fixHeight,
@@ -61,7 +64,6 @@ export default function Grid(props) {
         if (offline) {
             let temp = [...offlineData];
 
-
             if (localFilter) {
                 for (var field in localFilter) {
                     //temp = temp.filter(x => (x[field] + '').indexOf(localFilter[field]) > -1)
@@ -72,11 +74,21 @@ export default function Grid(props) {
             setRecords(temp.sort(dynamicSort(orderby, orderDir)));
         } else {
             setLoading(true);
-            let f = { ...filter, ...localFilter }
+
+            let omidFilters = []
+            for (var field in localFilter) {
+                omidFilters.push({
+                    Field: field[0].toUpperCase() + field.substr(1),
+                    Value: localFilter[field],
+                });
+            }
+
+            let f = { ...filter, ...localFilter, Filters: omidFilters }
             f.page = page + 1;
             f.pageSize = isShowAll() ? 10000 : rowsPerPage;
             if (orderby)
                 f.sort = orderby + ' ' + orderDir;
+            //console.log("fffffffffff" , f)
             baseService.post(url, f).then(({ data }) => {
                 if (data.errors) {
                     //alert or something
@@ -98,6 +110,11 @@ export default function Grid(props) {
         }
     }, [page, rowsPerPage, filter, orderby, orderDir, offlineData, forceUpdate, localFilter])
 
+    useEffect(() => {
+        let temp = [...records];
+        setRecords(temp);
+    }, [clickedRowId])
+
     //console.log(selectedItems);
 
     useEffect(() => {
@@ -117,8 +134,8 @@ export default function Grid(props) {
         setPage(0);
     };
 
-    const getStripedStyle = (index) => {
-        return { background: index % 2 ? '#f5f5f5' : 'white' };
+    const getStripedStyle = (index, rowId) => {
+        return { background: rowId === props.clickedRowId ? 'gold' : index % 2 ? '#f5f5f5' : 'white' };
     }
 
     const sortHandler = (field) => {
@@ -144,12 +161,12 @@ export default function Grid(props) {
     const dataBody = useMemo(() => (
         <TableBody>
             {records.map((row, i) => (
-                <TableRow key={i} style={{ ...getStripedStyle(i) }}>
+                <TableRow key={i} style={{ ...getStripedStyle(i, row[keyColumn]) }}>
                     {selectable ? (<TableCell key={0} >
-                        {singleSelect ? 
-                            <Radio onChange={(event) => { onSelectChange(row, event.target.checked) }} checked={selectedItems && selectedItems[keyColumn] == row[keyColumn]}/>
-                        :
-                            <Checkbox onChange={(event) => { onSelectChange(row, event.target.checked) }} checked={selectedItems && selectedItems.some(x => x == row[keyColumn])}/>
+                        {singleSelect ?
+                            <Radio onChange={(event) => { onSelectChange(row, event.target.checked) }} checked={selectedItems && selectedItems[keyColumn] == row[keyColumn]} />
+                            :
+                            <Checkbox onChange={(event) => { onSelectChange(row, event.target.checked) }} checked={selectedItems && selectedItems.some(x => x == row[keyColumn])} />
                         }
                     </TableCell>) : null}
 
@@ -173,7 +190,7 @@ export default function Grid(props) {
                 </TableRow>
             )}
         </TableBody>
-    ), [records,selectedItems])
+    ), [records, selectedItems])
 
 
     return (
@@ -197,9 +214,9 @@ export default function Grid(props) {
                                 {col.sortable ?
                                     (
                                         <TableSortLabel
-                                            active={orderby === col.field}
-                                            direction={orderby === col.field ? orderDir : 'asc'}
-                                            onClick={() => sortHandler(col.field)}
+                                            active={orderby === col.sortField || col.field}
+                                            direction={orderby === (col.sortField || col.field) ? orderDir : 'asc'}
+                                            onClick={() => sortHandler(col.sortField || col.field)}
                                         >
                                             {col.title}
                                         </TableSortLabel>
@@ -224,7 +241,7 @@ export default function Grid(props) {
                         <TableRow>
                             <TablePagination
                                 className={classes.header + " " + (fixHeight ? classes.stickyFooter : {})}
-                                rowsPerPageOptions={hideRowsPerPage ? [] : [10, 20, 50, 100, 250]}
+                                rowsPerPageOptions={hideRowsPerPage ? [] : [5, 10, 20, 50, 100, 250]}
                                 colSpan={columns.length + (selectable ? 1 : 0)}
                                 count={total}
                                 rowsPerPage={rowsPerPage}
@@ -343,5 +360,6 @@ const useStyles2 = makeStyles({
         height: '20px',
         borderRadius: '4px',
         border: '1px solid #dedcdc'
-    }
+    },
+    
 });

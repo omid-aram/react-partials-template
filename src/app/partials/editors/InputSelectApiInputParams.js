@@ -8,11 +8,17 @@ import baseService from "../../services/base.service"
 
 const InputSelectApiInputParams = (props) => {
  
-    const {txnCodes, readUrl, defultValues, param, valueField, textField, options, name, label, placeholder, ...rest } = props
+    const {changeVal, txnCodes, readUrl, defultValues, param, valueField, textField, options, name, label, placeholder, ...rest } = props
     const [data, setData] = useState(options)
     const [loading, setLoading] = useState(false);
     const { control, errors, values } = useFormContext()
     const noChache = true;// they dont like cache
+
+    const handleChange = (e) => {
+      debugger;
+      changeVal(e.target.value);
+    };
+  
     useEffect(() => {
         setLoading(true)
 
@@ -37,20 +43,22 @@ const InputSelectApiInputParams = (props) => {
             }
         }
     }, [param]);
-
+ 
     //simple name : "title" 
     //path name : "items[1].title"
     let namePath = name.replace(/\[(\w+)\]/g, '.$1') //items[1] => items.1
     let error = objectPath.get(errors, namePath);
     let hasError = !!error;
      let value = values ? objectPath.get(values, namePath) : null;
-
+// console.log("vvvvvvvvvvvv" , value)
+// console.log("sssssssss" , values)
     return (<>
         <FormControl variant="outlined" style={{ width: "100%" }} size="small">
             <InputLabel error={hasError}>{label}</InputLabel>
             <Controller
                 as={
-                  <Select label={label} size="small">
+                  //  <Select onChange={(e) => { handleChange(e) }} label={label} size="small">
+                   <Select   label={label} size="small"> 
                   {placeholder ?
                       <MenuItem value="" disabled>
                           {placeholder}
@@ -67,9 +75,13 @@ const InputSelectApiInputParams = (props) => {
                   )}
               </Select>
                 }
+                onChange={e => {
+                  console.log(e[0].target.value)
+                  return e[0].target.value
+                }}
                 name={name}
                 control={control}
-                 defaultValue={value}
+                 defaultValue={value}                 
                 {...rest}
             />
             {loading && (

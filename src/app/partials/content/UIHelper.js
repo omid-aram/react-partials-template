@@ -25,6 +25,16 @@ export const EditButton = (props) => {
     );
 }
 
+export const DetailButton = (props) => {
+    return (
+        <Tooltip title="جزئیات">
+            <IconButton {...props} size="small">
+                <i className="fa fa-list-alt"></i>
+            </IconButton>
+        </Tooltip>
+    );
+}
+
 export const IconBButton = (props) => {
     let btn =
         <BButton className="bbtn-icon" {...props}>
