@@ -8,16 +8,13 @@ import baseService from "../../services/base.service"
 
 const InputSelectApiChangeValue = (props) => {
 
-  const {changeVal, txnCodes, readUrl, defultValues, param, valueField, textField, options, name, label, placeholder, ...rest } = props
+  const { changeVal, txnCodes, readUrl, defultValues, param, valueField, textField, options, name, label, placeholder, ...rest } = props
   const [data, setData] = useState(options)
   const [loading, setLoading] = useState(false);
   const { control, errors, values } = useFormContext()
   const noChache = true;// they dont like cache
   const handleChange = (e) => {
- 
-    changeVal(e.target.value);
-
-    // setFolderName(event.target.value);
+    changeVal(e.target.value, e.currentTarget.innerText);
   };
   useEffect(() => {
     setLoading(true)
@@ -54,11 +51,11 @@ const InputSelectApiChangeValue = (props) => {
     <FormControl variant="outlined" style={{ width: "100%" }} size="small">
       <InputLabel error={hasError}>{label}</InputLabel>
       <Controller
-           render={({ onChange, value, onBlur, name }) =>(
-          <Select  onChange={(e) => {
+        render={({ onChange, value, onBlur, name }) => (
+          <Select onChange={(e) => {
 
             handleChange(e)
-          }}  label={label} size="small"   >
+          }} label={label} size="small"   >
 
             {placeholder ?
               <MenuItem value="" disabled>
@@ -75,7 +72,7 @@ const InputSelectApiChangeValue = (props) => {
 
             )}
           </Select>
-           )}
+        )}
         name={name}
         control={control}
         defaultValue={value}

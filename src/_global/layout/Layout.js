@@ -74,14 +74,14 @@ const Layout = (props) => {
             <ul id="myMenu">
               <li className="parentMenu"> <span className="caret"><Box m={1} className="menulink"> اطلاعات پایه</Box> </span>
                 <ul className="nested">
-                <li>
+                  <li>
                     <Box m={1} className="menulink">
                       <Link to='/AsmDocType' >ثبت انواع مستندات</Link>
                     </Box>
                   </li>
                   <li>
                     <Box m={1} className="menulink">
-                      <Link to='/AsmTaskType' >تعريف وظايف و مسئوليتها</Link>
+                      <Link to='/AsmTaskType' >تعريف انواع دستور جلسه</Link>
                     </Box>
                   </li>
                   <li>
@@ -96,7 +96,12 @@ const Layout = (props) => {
                   </li>
                   <li>
                     <Box m={1} className="menulink">
-                      <Link to='/CompanyType' >تعريف گروه شرکتها</Link>
+                      <Link to='/CompanyGroup' >تعريف گروه شرکتها</Link>
+                    </Box>
+                  </li>
+                  <li>
+                    <Box m={1} className="menulink">
+                      <Link to='/AsmProdLine' >ثبت خطوط تولید</Link>
                     </Box>
                   </li>
 
@@ -123,6 +128,20 @@ const Layout = (props) => {
                       <Link to='/Individual' >اشخاص</Link>
                     </Box>
                   </li> */}
+                </ul>
+              </li>
+              <li className="parentMenu"> <span className="caret"><Box m={1} className="menulink"> عملیات جاری</Box> </span>
+                <ul className="nested">
+                  <li>
+                    <Box m={1} className="menulink">
+                      <Link to='/Company' >اطلاعات شرکت ها</Link>
+                    </Box>
+                  </li>
+                  <li>
+                    <Box m={1} className="menulink">
+                      <Link to='/AssemInfo' >اطلاعات مجامع</Link>
+                    </Box>
+                  </li>
                 </ul>
               </li>
               <li className="parentMenu">
@@ -233,6 +252,7 @@ const Layout = (props) => {
                       onChange={(e) => handleTextFieldChange(e)} />
                     <TextField
                       className="loginfield"
+                      type="password"
                       label="password"
                       defaultValue="Hello World"
                       variant="outlined"

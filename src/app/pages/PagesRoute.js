@@ -3,12 +3,20 @@ import { Redirect, Route, Switch } from "react-router-dom";
 
 import HomePage from "./home/HomePage";
 
-import CompanyType from "./Common/CompanyType";
+import CompanyGroup from "./Common/CompanyGroup";
+import Company from "./Common/Company";
 
 import AsmDocType from "./Assemblies/BaseInfo/AsmDocType";
+import AsmProdLine from "./Assemblies/BaseInfo/AsmProdLine";
 import AsmTaskType from "./Assemblies/BaseInfo/AsmTaskType";
 import AsmFundType from "./Assemblies/BaseInfo/AsmFundType";
 import Person from "./Assemblies/Person/Person";
+
+// import CompAddress from "./Assemblies/Company/CompAddress";
+// import CompCapacity from "./Assemblies/Company/CompCapacity";
+// import CompShareholder from "./Assemblies/Company/CompShareholder";
+
+import AssemInfo from "./Assemblies/Assembly/AssemInfo";
 
 ///////////////////////////////////
 import UserCharts from "./Secretariat/UserCharts";
@@ -61,12 +69,20 @@ export default function PagesRoute({ baseUrl }) {
 
       <Route path="/home" component={HomePage} />
 
-      <Route path="/CompanyType" component={CompanyType} />
+      <Route path="/CompanyGroup" component={CompanyGroup} />
+      <Route path="/Company" component={Company} />
 
       <Route path="/AsmDocType" component={AsmDocType} />
+      <Route path="/AsmProdLine" component={AsmProdLine} />
       <Route path="/AsmTaskType" component={AsmTaskType} />
       <Route path="/AsmFundType" component={AsmFundType} />
       <Route path="/Person" component={Person} />
+
+      {/* <Route path="/CompAddress" component={CompAddress} />
+      <Route path="/CompCapacity" component={CompCapacity} />
+      <Route path="/CompShareholder" component={CompShareholder} /> */}
+
+      <Route path="/AssemInfo" component={AssemInfo} />
 
       {/* -------------------- */}
       <Route path="/UserCharts" component={UserCharts} />
