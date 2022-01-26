@@ -142,6 +142,11 @@ const Layout = (props) => {
                       <Link to='/AssemInfo' >اطلاعات مجامع</Link>
                     </Box>
                   </li>
+                  <li>
+                    <Box m={1} className="menulink">
+                      <Link to='/MeetInfo' >جلسات هیئت مدیره</Link>
+                    </Box>
+                  </li>
                 </ul>
               </li>
               <li className="parentMenu">
