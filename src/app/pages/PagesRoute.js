@@ -17,6 +17,7 @@ import Person from "./Assemblies/Person/Person";
 // import CompShareholder from "./Assemblies/Company/CompShareholder";
 
 import AssemInfo from "./Assemblies/Assembly/AssemInfo";
+import MeetInfo from "./Assemblies/Meeting/MeetInfo";
 
 ///////////////////////////////////
 import UserCharts from "./Secretariat/UserCharts";
@@ -83,6 +84,7 @@ export default function PagesRoute({ baseUrl }) {
       <Route path="/CompShareholder" component={CompShareholder} /> */}
 
       <Route path="/AssemInfo" component={AssemInfo} />
+      <Route path="/MeetInfo" component={MeetInfo} />
 
       {/* -------------------- */}
       <Route path="/UserCharts" component={UserCharts} />
