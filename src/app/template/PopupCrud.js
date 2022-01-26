@@ -249,7 +249,8 @@ const PopupCurd = (props) => {
             <Portlet>
                 <PortletHeader
                     title={title}
-                    toolbar={
+                    toolbar= {
+                        urls.createUrl ?
                         (
                             <PortletHeaderToolbar>
                                 <button
@@ -261,7 +262,7 @@ const PopupCurd = (props) => {
                                     ثبت مورد جدید
                                 </button>
                             </PortletHeaderToolbar>
-                        )}
+                        ) : null}
 
                 />
 
