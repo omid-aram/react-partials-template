@@ -8,7 +8,7 @@ import { toPersianDateTime } from "../../utils/helper";
 
 
 
-const InputDate = (props) => { //JUST FOR TEST3
+const InputDate = (props) => { //JUST FOR TEST, March, 11
     const { name, label, time,...rest } = props
    // const { control, errors } = useFormContext();
     const { control, errors, values } = useFormContext();
