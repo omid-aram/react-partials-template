@@ -8,11 +8,11 @@ import { toPersianDateTime } from "../../utils/helper";
 
 
 
-const InputDate = (props) => { //JUST FOR TEST, March, 11
+const InputDate = (props) => {
     const { name, label, time,...rest } = props
-   // const { control, errors } = useFormContext();
-    const { control, errors, values } = useFormContext();
-    
+    const { control, errors } = useFormContext();
+
+
     //simple name : "title" 
     //path name : "items[1].title"
     let namePath = name.replace(/\[(\w+)\]/g, '.$1') //items[1] => items.1
@@ -49,7 +49,7 @@ const InputDate = (props) => { //JUST FOR TEST, March, 11
                 }
                 control={control}
                 name={name}
-                defaultValue={objectPath.get(values, namePath)}
+                defaultValue={''}
                 //onChange={handleInnerChange}
                 {...rest}
 
@@ -65,7 +65,7 @@ const InputDate = (props) => { //JUST FOR TEST, March, 11
 
 function DatePickerCustom(props) {
     const { inputRef, onChange, showTime, value } = props;
-   
+
     //just for init value
     const [initValue, setInitValue] = useState();
     useEffect(() =>{
@@ -84,8 +84,7 @@ function DatePickerCustom(props) {
                 }
                 let jVal = val.format('jYYYY/jM/jD');
                 let gVal = val.format('YYYY/M/D HH:mm:ss');
-                console.log("jVal" ,jVal)
-                console.log("gVal" ,gVal)
+                
                 onChange(gVal);
                 //older version
                 // onChange({

@@ -4,18 +4,9 @@ import { useForm, FormProvider } from 'react-hook-form'
 import PopupCurd from "../../../template/PopupCrud"
 import { Row, Col } from "react-bootstrap";
 
-import InputText from "../../../partials/editors/InputText";
-import InputNumber from "../../../partials/editors/InputNumber";
-import InputMoney from "../../../partials/editors/InputMoney";
 import InputHidden from "../../../partials/editors/InputHidden";
 import SimpleInputHidden from "../../../partials/editors/SimpleInputHidden";
-import InputDate from "../../../partials/editors/InputDate";
 import InputSelect from "../../../partials/editors/InputSelect";
-import InputSelectApi from "../../../partials/editors/InputSelectApi";
-import InputSelectApiChangeValue from "../../../partials/editors/InputSelectApiChangeValue";
-import InputSelectApiInputParams from "../../../partials/editors/InputSelectApiInputParams";
-
-import InputCheckbox from "../../../partials/editors/InputCheckbox";
 
 const AssemBoard = (props) => {
 
@@ -45,13 +36,19 @@ const AssemBoard = (props) => {
                     />
                 </Col>
                 <Col sm={12}>
-                    <InputSelectApi
+                    <InputSelect
                         name="personId"
                         label="نام شخص"
-                        readUrl="/AssemBoard/GetPersons"
+                        // readUrl="/AssemBoard/GetPersons"
+                        // textField="fullName"
+                        // valueField="id"
+                        serverBinding={{
+                            url: '/AssemBoard/GetPersons',
+                            filter: {},
+                            textField: 'fullName',
+                            valueField: 'id'
+                        }}
 
-                        textField="fullName"
-                        valueField="id"
                     />
                 </Col>
             </Row>

@@ -6,14 +6,11 @@ import { makeStyles, useTheme } from '@material-ui/core/styles/makeStyles';
 
 import InputText from "../../../partials/editors/InputText";
 import InputHidden from "../../../partials/editors/InputHidden";
-import InputSwitch from "../../../partials/editors/InputSwitch";
 import InputSelect from "../../../partials/editors/InputSelect";
-import InputSelectApi from "../../../partials/editors/InputSelectApi";
-import InputSelectApiChangeValue from "../../../partials/editors/InputSelectApiChangeValue";
-import InputSelectApiInputParams from "../../../partials/editors/InputSelectApiInputParams";
+import InputSelectApiChangeValue from "../../../partials/editors_old/InputSelectApiChangeValue";
+import InputSelectApiInputParams from "../../../partials/editors_old/InputSelectApiInputParams";
 import InputCheckbox from "../../../partials/editors/InputCheckbox";
 import InputDate from "../../../partials/editors/InputDate";
-import InputMoney from "../../../partials/editors/InputMoney";
 import SimpleInputHidden from "../../../partials/editors/SimpleInputHidden";
 import { filter } from 'lodash';
 import AssemDetails from "./AssemDetails";

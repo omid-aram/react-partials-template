@@ -6,10 +6,7 @@ import { makeStyles, useTheme } from '@material-ui/core/styles/makeStyles';
 
 import InputText from "../../partials/editors/InputText";
 import InputHidden from "../../partials/editors/InputHidden";
-import InputSwitch from "../../partials/editors/InputSwitch";
 import InputSelect from "../../partials/editors/InputSelect";
-import InputSelectApi from "../../partials/editors/InputSelectApi";
-import InputCheckbox from "../../partials/editors/InputCheckbox";
 import InputDate from "../../partials/editors/InputDate";
 import InputMoney from "../../partials/editors/InputMoney";
 import CompDetails from "../Assemblies/Company/CompDetails";
@@ -95,12 +92,18 @@ const ServiceCrud = () => {
                     />
                 </Col>
                 <Col sm={3}>
-                    <InputSelectApi
+                    <InputSelect
                         name="companyGroupId"
                         label="گروه"
-                        readUrl="/CompanyGroup/GetAll"
-                        textField="name"
-                        valueField="id"
+                        // readUrl="/CompanyGroup/GetAll"
+                        // textField="name"
+                        // valueField="id"
+                        serverBinding={{
+                            url: '/CompanyGroup/GetAll',
+                            filter: {},
+                            textField: 'name',
+                            valueField: 'id'
+                        }}
                     />
                 </Col>
                 <Col sm={3}>

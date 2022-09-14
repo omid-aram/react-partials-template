@@ -10,9 +10,8 @@ import InputHidden from "../../../partials/editors/InputHidden";
 import SimpleInputHidden from "../../../partials/editors/SimpleInputHidden";
 import InputDate from "../../../partials/editors/InputDate";
 import InputSelect from "../../../partials/editors/InputSelect";
-import InputSelectApi from "../../../partials/editors/InputSelectApi";
-import InputSelectApiChangeValue from "../../../partials/editors/InputSelectApiChangeValue";
-import InputSelectApiInputParams from "../../../partials/editors/InputSelectApiInputParams";
+import InputSelectApiChangeValue from "../../../partials/editors_old/InputSelectApiChangeValue";
+import InputSelectApiInputParams from "../../../partials/editors_old/InputSelectApiInputParams";
 
 import InputCheckbox from "../../../partials/editors/InputCheckbox";
 

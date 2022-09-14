@@ -6,7 +6,6 @@ import { Switch } from "@material-ui/core";
 
 
 const InputCheckbox = (props) => {
-
     const { name, label, ...rest } = props
     const { control, errors, values } = useFormContext();
 
@@ -16,7 +15,6 @@ const InputCheckbox = (props) => {
     let error = objectPath.get(errors, namePath);
     let hasError = !!error;
     let value = values ? objectPath.get(values, namePath) : false;
-//console.log(values)
     return (<>
         <Controller
             render={({ onChange, value}) => (
@@ -32,7 +30,7 @@ const InputCheckbox = (props) => {
             defaultValue={value}
             {...rest}
         />
-        <FormHelperText component="span">
+        <FormHelperText>
             {hasError && (error.message)}
         </FormHelperText>
     </>);

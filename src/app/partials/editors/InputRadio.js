@@ -24,6 +24,8 @@ const InputRadio = (props) => {
     let error = objectPath.get(errors, namePath);
     let hasError = !!error;
     let value = values ? objectPath.get(values, namePath) : '';
+
+    // console.log("inputradio",props);
     return (<>
 
         <FormControl error={hasError} component="fieldset" variant="outlined" style={{ width: "100%" }} size="small">

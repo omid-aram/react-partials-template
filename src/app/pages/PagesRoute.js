@@ -20,45 +20,45 @@ import AssemInfo from "./Assemblies/Assembly/AssemInfo";
 import MeetInfo from "./Assemblies/Meeting/MeetInfo";
 
 ///////////////////////////////////
-import UserCharts from "./Secretariat/UserCharts";
+// import UserCharts from "./Secretariat/UserCharts";
 
-import MeetingRequest from "./Secretariat/MeetingRequest";
-import MeetingRequestParagraph from "./Secretariat/MeetingRequestParagraph";
+// import MeetingRequest from "./Secretariat/MeetingRequest";
+// import MeetingRequestParagraph from "./Secretariat/MeetingRequestParagraph";
 
-import Sec_Agenda from "./Secretariat/Sec_Agenda";
-import AgendaParagraph from "./Secretariat/AgendaParagraph";
+// import Sec_Agenda from "./Secretariat/Sec_Agenda";
+// import AgendaParagraph from "./Secretariat/AgendaParagraph";
 
-import Communication from "./Secretariat/Communication";
-import CommunicationParagraph from "./Secretariat/CommunicationParagraph";
+// import Communication from "./Secretariat/Communication";
+// import CommunicationParagraph from "./Secretariat/CommunicationParagraph";
 
-import Proceeding from "./Secretariat/Proceeding";
-import ProceedingParagraph from "./Secretariat/ProceedingParagraph";
+// import Proceeding from "./Secretariat/Proceeding";
+// import ProceedingParagraph from "./Secretariat/ProceedingParagraph";
 
-import ProductionLine from "./Convention/Common/ProductionLine";
-import CorpBase from "./Convention/Company/CorpBase";
-import Individual from "./Convention/Individual/Individual";
-import CorpDetail from "./Convention/Company/CorpDetail";
-import CountryDivision from "./Convention/Common/CountryDivision";
-import GroupAndType from "./Convention/Common/GroupAndType";
-import AgentDetail from "./Convention/Common/AgentDetail";
-import MeetingBase from "./Convention/Meeting/MeetingBase";
-import Directorate from "./Convention/Meeting/Directorate";
-import Agenda from "./Convention/Meeting/Agenda";
-import Approval from "./Convention/Meeting/Approval";
-import CapitalChange from "./Convention/Meeting/CapitalChange";
-import BoardofDirectors from "./Convention/Meeting/BoardofDirectors";
-import Inspector from "./Convention/Meeting/Inspector";
-import AuditorReport from "./Convention/Meeting/AuditorReport";
-import CapitalChangeDetail from "./Convention/Meeting/CapitalChangeDetail";
-import Announcement from "./Convention/Meeting/Announcement";
-import BoardMeeting from "./Convention/BoardMeeting/BoardMeeting";
-import BoardAgenda from "./Convention/BoardMeeting/BoardAgenda";
-import BoardApproval from "./Convention/BoardMeeting/BoardApproval";
-import Request from "./Convention/Request/Request";
-import AgendaRpt from "./Convention/Report/Agenda";
-import ConventionRpt from "./Convention/Report/Convention";
-import AgendaType from "./Convention/Common/AgendaType";
-import DirectoratePresentInMeeting from "./Convention/BoardMeeting/DirectoratePresentInMeeting";
+// import ProductionLine from "./Convention/Common/ProductionLine";
+// import CorpBase from "./Convention/Company/CorpBase";
+// import Individual from "./Convention/Individual/Individual";
+// import CorpDetail from "./Convention/Company/CorpDetail";
+// import CountryDivision from "./Convention/Common/CountryDivision";
+// import GroupAndType from "./Convention/Common/GroupAndType";
+// import AgentDetail from "./Convention/Common/AgentDetail";
+// import MeetingBase from "./Convention/Meeting/MeetingBase";
+// import Directorate from "./Convention/Meeting/Directorate";
+// import Agenda from "./Convention/Meeting/Agenda";
+// import Approval from "./Convention/Meeting/Approval";
+// import CapitalChange from "./Convention/Meeting/CapitalChange";
+// import BoardofDirectors from "./Convention/Meeting/BoardofDirectors";
+// import Inspector from "./Convention/Meeting/Inspector";
+// import AuditorReport from "./Convention/Meeting/AuditorReport";
+// import CapitalChangeDetail from "./Convention/Meeting/CapitalChangeDetail";
+// import Announcement from "./Convention/Meeting/Announcement";
+// import BoardMeeting from "./Convention/BoardMeeting/BoardMeeting";
+// import BoardAgenda from "./Convention/BoardMeeting/BoardAgenda";
+// import BoardApproval from "./Convention/BoardMeeting/BoardApproval";
+// import Request from "./Convention/Request/Request";
+// import AgendaRpt from "./Convention/Report/Agenda";
+// import ConventionRpt from "./Convention/Report/Convention";
+// import AgendaType from "./Convention/Common/AgendaType";
+// import DirectoratePresentInMeeting from "./Convention/BoardMeeting/DirectoratePresentInMeeting";
 
 export default function PagesRoute({ baseUrl }) {
 
@@ -87,7 +87,7 @@ export default function PagesRoute({ baseUrl }) {
       <Route path="/MeetInfo" component={MeetInfo} />
 
       {/* -------------------- */}
-      <Route path="/UserCharts" component={UserCharts} />
+      {/* <Route path="/UserCharts" component={UserCharts} />
 
       <Route path="/MeetingRequest" component={MeetingRequest} />
       <Route path="/MeetingRequestParagraph" component={MeetingRequestParagraph} />
@@ -125,7 +125,7 @@ export default function PagesRoute({ baseUrl }) {
       <Route path="/CorpBase" component={CorpBase} />
       <Route path="/ProductLine" component={ProductionLine} />
       <Route path="/MeetingBase" component={MeetingBase} />
-      <Route path="/DirectoratePresentInMeeting" component={DirectoratePresentInMeeting} />
+      <Route path="/DirectoratePresentInMeeting" component={DirectoratePresentInMeeting} /> */}
     </Switch>
   );
 }

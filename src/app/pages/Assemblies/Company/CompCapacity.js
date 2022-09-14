@@ -5,15 +5,11 @@ import PopupCurd from "../../../template/PopupCrud"
 import { Row, Col } from "react-bootstrap";
 
 import InputText from "../../../partials/editors/InputText";
-import InputNumber from "../../../partials/editors/InputNumber";
 import InputMoney from "../../../partials/editors/InputMoney";
 import InputHidden from "../../../partials/editors/InputHidden";
 import SimpleInputHidden from "../../../partials/editors/SimpleInputHidden";
-import InputDate from "../../../partials/editors/InputDate";
 import InputSelect from "../../../partials/editors/InputSelect";
-import InputSelectApi from "../../../partials/editors/InputSelectApi";
-import InputSelectApiChangeValue from "../../../partials/editors/InputSelectApiChangeValue";
-import InputSelectApiInputParams from "../../../partials/editors/InputSelectApiInputParams";
+import InputSelectApiInputParams from "../../../partials/editors_old/InputSelectApiInputParams";
 
 import InputCheckbox from "../../../partials/editors/InputCheckbox";
 
@@ -82,13 +78,18 @@ const CompCapacity = (props) => {
                     />
                 </Col>
                 <Col sm={4}>
-                    <InputSelectApi
+                    <InputSelect
                         name="measUnitCode"
                         label="واحد اندازه گیری"
-                        readUrl="/CompCapacity/GetMeasUnits"
-
-                        textField="name"
-                        valueField="code"
+                        // readUrl="/CompCapacity/GetMeasUnits"
+                        // textField="name"
+                        // valueField="code"
+                        serverBinding={{
+                            url: '/CompCapacity/GetMeasUnits',
+                            filter: {},
+                            textField: 'name',
+                            valueField: 'code'
+                        }}
                     />
                 </Col>
                 <Col sm={4}>

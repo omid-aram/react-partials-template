@@ -1,29 +1,31 @@
 import React from "react"
-import { InputLabel, FormControl,  FormHelperText } from "@material-ui/core"
+import { InputLabel, FormControl, OutlinedInput, FormHelperText } from "@material-ui/core"
 import { Controller, useFormContext } from "react-hook-form"
 import objectPath from "object-path"
 
 
 const InputTextArea = (props) => {
-    const { name, label, ...rest } = props
+    const { name, label,rows, ...rest } = props
     const { control, errors, values } = useFormContext();
 
     //simple name : "title" 
     //path name : "items[1].title"
-    let namePath = name.replace(/\[(\w+)\]/g, '.$1') //items[1] => items.1
-    let error = objectPath.get(errors, namePath);  
+     let namePath = name.replace(/\[(\w+)\]/g, '.$1') //items[1] => items.1
+     let error = objectPath.get(errors, namePath);  
     let hasError = !!error;
-    let value = values ? objectPath.get(values, namePath) : null;
-     return (<>
-        <FormControl variant="outlined" style={{ width: "100%" }} size="small" line>
+    //let value = values ? objectPath.get(values, namePath) : null;
+
+    return (<>
+        <FormControl variant="outlined" style={{ width: "100%" }} size="small">
             <InputLabel error={hasError} >{label}</InputLabel>
             <Controller
                 as={
-                    <textarea label={label} error={hasError}/>
+                    <OutlinedInput type="text" multiline
+                    rows={rows ? rows : 3} label={label} error={hasError}/>
                 }
                 control={control}
                 name={name}
-                defaultValue={value || ''}
+                //defaultValue={value || ''}
                 {...rest}
             />
             <FormHelperText>

@@ -5,16 +5,9 @@ import PopupCurd from "../../../template/PopupCrud"
 import { Row, Col } from "react-bootstrap";
 
 import InputText from "../../../partials/editors/InputText";
-import InputNumber from "../../../partials/editors/InputNumber";
-import InputMoney from "../../../partials/editors/InputMoney";
 import InputHidden from "../../../partials/editors/InputHidden";
 import SimpleInputHidden from "../../../partials/editors/SimpleInputHidden";
-import InputDate from "../../../partials/editors/InputDate";
 import InputSelect from "../../../partials/editors/InputSelect";
-import InputSelectApi from "../../../partials/editors/InputSelectApi";
-import InputSelectApiChangeValue from "../../../partials/editors/InputSelectApiChangeValue";
-import InputSelectApiInputParams from "../../../partials/editors/InputSelectApiInputParams";
-import InputCheckbox from "../../../partials/editors/InputCheckbox";
 
 import AssemApproval from "./AssemApproval";
 
@@ -48,13 +41,18 @@ const AssemAgenda = (props) => {
                     />
                 </Col>
                 <Col sm={12}>
-                    <InputSelectApi
+                    <InputSelect
                         name="taskTypeId"
                         label="دستور جلسه"
-                        readUrl="/AssemAgenda/GetTaskTypes"
-
-                        textField="codeName"
-                        valueField="id"
+                        // readUrl="/AssemAgenda/GetTaskTypes"
+                        // textField="codeName"
+                        // valueField="id"
+                        serverBinding={{
+                            url: '/AssemAgenda/GetTaskTypes',
+                            filter: {},
+                            textField: 'codeName',
+                            valueField: 'id'
+                        }}
                         rules={{ required: "اجباری است" }}
                     />
                 </Col>

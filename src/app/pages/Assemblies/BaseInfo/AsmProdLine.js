@@ -6,10 +6,8 @@ import { makeStyles, useTheme } from '@material-ui/core/styles/makeStyles';
 
 import InputText from "../../../partials/editors/InputText";
 import InputHidden from "../../../partials/editors/InputHidden";
-import InputSwitch from "../../../partials/editors/InputSwitch";
-import InputSelect from "../../../partials/editors/InputSelect";
 import InputCheckbox from "../../../partials/editors/InputCheckbox";
-import InputSelectApi from "../../../partials/editors/InputSelectApi";
+import InputSelect from "../../../partials/editors/InputSelect";
 
 
 const AsmProdLine = () => {
@@ -53,12 +51,18 @@ const AsmProdLine = () => {
             <InputHidden name="id" />
             <Row>
                 <Col sm={6}>
-                    <InputSelectApi
+                    <InputSelect
                         name="companyId"
                         label="شرکت"
-                        readUrl="/AsmProdLine/GetCompanies"
-                        textField="codeName"
-                        valueField="id"
+                        // readUrl="/AsmProdLine/GetCompanies"
+                        // textField="codeName"
+                        // valueField="id"
+                        serverBinding={{
+                            url: '/AsmProdLine/GetCompanies',
+                            filter: {},
+                            textField: 'codeName',
+                            valueField: 'id'
+                        }}
                     />
                 </Col>
                 <Col sm={6}>
