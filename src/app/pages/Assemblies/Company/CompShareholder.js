@@ -10,9 +10,7 @@ import InputMoney from "../../../partials/editors/InputMoney";
 import InputHidden from "../../../partials/editors/InputHidden";
 import SimpleInputHidden from "../../../partials/editors/SimpleInputHidden";
 import InputDate from "../../../partials/editors/InputDate";
-import InputSelectApiInputParams from "../../../partials/editors_old/InputSelectApiInputParams";
-
-import InputCheckbox from "../../../partials/editors/InputCheckbox";
+import InputSelect from "../../../partials/editors/InputSelect";
 
 const CompShareholder = (props) => {
     //console.log('CompAddress.parentItem', parentItem);
@@ -105,14 +103,19 @@ const CompShareholder = (props) => {
                     />
                 </Col>
                 <Col sm={4}>
-                    <InputSelectApiInputParams
+                    <InputSelect
                         name="compFiscalYearId"
                         label="سال مالی"
-                        readUrl="/CompShareholder/GetCompFiscalYears"
-                        param={{ CompanyId: props.parentItem.id }}
-
-                        textField="year"
-                        valueField="id"
+                        // readUrl="/CompShareholder/GetCompFiscalYears"
+                        // param={{ CompanyId: props.parentItem.id }}
+                        // textField="year"
+                        // valueField="id"
+                        serverBinding={{
+                            url: '/CompShareholder/GetCompFiscalYears',
+                            filter: { CompanyId: props.parentItem.id },
+                            textField: 'year',
+                            valueField: 'id'
+                        }}
                     />
                 </Col>
                 <Col sm={4}>

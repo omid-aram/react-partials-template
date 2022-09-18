@@ -11,9 +11,6 @@ import SimpleInputHidden from "../../../partials/editors/SimpleInputHidden";
 import InputDate from "../../../partials/editors/InputDate";
 import InputSelect from "../../../partials/editors/InputSelect";
 import InputSelectApiChangeValue from "../../../partials/editors_old/InputSelectApiChangeValue";
-import InputSelectApiInputParams from "../../../partials/editors_old/InputSelectApiInputParams";
-
-import InputCheckbox from "../../../partials/editors/InputCheckbox";
 
 const CompAddress = (props) => {
     //console.log('CompAddress.parentItem', parentItem);
@@ -121,14 +118,19 @@ const CompAddress = (props) => {
                     />
                 </Col>
                 <Col sm={4}>
-                     <InputSelectApiInputParams
+                     <InputSelect
                         name="cityId"
                         label="شهر"
-                        readUrl="/CompAddress/GetCities"
-                        param={{ CountryId: countryVal, StateId: stateVal }}
-
-                        textField="name"
-                        valueField="id"
+                        // readUrl="/CompAddress/GetCities"
+                        // param={{ CountryId: countryVal, StateId: stateVal }}
+                        // textField="name"
+                        // valueField="id"
+                        serverBinding={{
+                            url: '/CompAddress/GetCities',
+                            filter: { CountryId: countryVal, StateId: stateVal },
+                            textField: 'name',
+                            valueField: 'id'
+                        }}
                     /> 
                      {/* <InputSelectApiChangeValue
                          name="cityId"

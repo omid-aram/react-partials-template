@@ -8,7 +8,6 @@ import InputText from "../../../partials/editors/InputText";
 import InputHidden from "../../../partials/editors/InputHidden";
 import InputSelect from "../../../partials/editors/InputSelect";
 import InputSelectApiChangeValue from "../../../partials/editors_old/InputSelectApiChangeValue";
-import InputSelectApiInputParams from "../../../partials/editors_old/InputSelectApiInputParams";
 import InputCheckbox from "../../../partials/editors/InputCheckbox";
 import InputDate from "../../../partials/editors/InputDate";
 import SimpleInputHidden from "../../../partials/editors/SimpleInputHidden";
@@ -77,14 +76,19 @@ const AssemInfo = () => {
                     />
                 </Col>
                 <Col sm={3}>
-                    <InputSelectApiInputParams
+                    <InputSelect
                         name="fiscalYearId"
                         label="سال مالی"
-                        readUrl="/AssemInfo/GetCompFiscalYears"
-                        param={{ CompanyId: company.id }}
-
-                        textField="year"
-                        valueField="id"
+                        // readUrl="/AssemInfo/GetCompFiscalYears"
+                        // param={{ CompanyId: company.id }}
+                        // textField="year"
+                        // valueField="id"
+                        serverBinding={{
+                            url: '/AssemInfo/GetCompFiscalYears',
+                            filter: { CompanyId: company.id },
+                            textField: 'year',
+                            valueField: 'id'
+                        }}
                     />
                 </Col>
                 <Col sm={6}>
@@ -137,14 +141,19 @@ const AssemInfo = () => {
                         valueField="id"
                         changeVal={companyChanged}
                     />
-                    {/* <InputSelectApiInputParams
+                    {/* <InputSelect
                         name="companyId"
                         label="شرکت"
-                        readUrl="/AssemInfo/GetCompanies"
-
-                        textField="codeName"
-                        valueField="id"
-                       // changeVal={companyChanged}
+                        // readUrl="/AssemInfo/GetCompanies"
+                        // textField="codeName"
+                        // valueField="id"
+                        serverBinding={{
+                            url: '/AssemInfo/GetCompanies',
+                            filter: {},
+                            textField: 'codeName',
+                            valueField: 'id'
+                        }}
+                        changeVal={companyChanged}
                     /> */}
                 </Col>
             </Row>

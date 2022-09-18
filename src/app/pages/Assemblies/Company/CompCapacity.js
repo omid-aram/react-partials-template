@@ -9,9 +9,6 @@ import InputMoney from "../../../partials/editors/InputMoney";
 import InputHidden from "../../../partials/editors/InputHidden";
 import SimpleInputHidden from "../../../partials/editors/SimpleInputHidden";
 import InputSelect from "../../../partials/editors/InputSelect";
-import InputSelectApiInputParams from "../../../partials/editors_old/InputSelectApiInputParams";
-
-import InputCheckbox from "../../../partials/editors/InputCheckbox";
 
 const CompCapacity = (props) => {
     //console.log('CompAddress.parentItem', parentItem);
@@ -60,14 +57,19 @@ const CompCapacity = (props) => {
             <SimpleInputHidden name="companyId" value={props.parentItem.id} />
             <Row>
                 <Col sm={8}>
-                    <InputSelectApiInputParams
+                    <InputSelect
                         name="asmProdLineId"
                         label="خط تولید"
-                        readUrl="/CompCapacity/GetProdLines"
-                        param={{ CompanyId: props.parentItem.id }}
-
-                        textField="saloonLocation"
-                        valueField="id"
+                        // readUrl="/CompCapacity/GetProdLines"
+                        // param={{ CompanyId: props.parentItem.id }}
+                        // textField="saloonLocation"
+                        // valueField="id"
+                        serverBinding={{
+                            url: '/CompCapacity/GetProdLines',
+                            filter: { CompanyId: props.parentItem.id },
+                            textField: 'saloonLocation',
+                            valueField: 'id'
+                        }}
                     />
                 </Col>
                 <Col sm={4}>
@@ -100,14 +102,19 @@ const CompCapacity = (props) => {
                     />
                 </Col>
                 <Col sm={4}>
-                    <InputSelectApiInputParams
+                    <InputSelect
                         name="compFiscalYearId"
                         label="سال مالی"
-                        readUrl="/CompCapacity/GetCompFiscalYears"
-                        param={{ CompanyId: props.parentItem.id }}
-
-                        textField="year"
-                        valueField="id"
+                        // readUrl="/CompCapacity/GetCompFiscalYears"
+                        // param={{ CompanyId: props.parentItem.id }}
+                        // textField="year"
+                        // valueField="id"
+                        serverBinding={{
+                            url: '/CompCapacity/GetCompFiscalYears',
+                            filter: { CompanyId: props.parentItem.id },
+                            textField: 'year',
+                            valueField: 'id'
+                        }}
                     />
                 </Col>
                 <Col sm={12}>
