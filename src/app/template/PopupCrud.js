@@ -159,6 +159,7 @@ const PopupCurd = (props) => {
         setFilter(prev => ({
             page: 1,
             pageSize: prev.pageSize,
+            sort: sortItem || null,
             ...data
         }));
     }
