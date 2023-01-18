@@ -108,4 +108,4 @@ class BaseService2 {
 }
 
 
-export default new BaseService2;
+export default new BaseService2();

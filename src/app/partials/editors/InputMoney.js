@@ -20,9 +20,9 @@ const InputDate = (props) => {
   //let value = values ? objectPath.get(values, namePath) : null;
 
 
-  const handleChange = (event) => {
-    return event[0].target.value;
-  }
+  // const handleChange = (event) => {
+  //   return event[0].target.value;
+  // }
 
   return (<>
 
@@ -60,7 +60,7 @@ function NumberCustom(props) {
   const [initValue, setInitValue] = useState();
   useEffect(() => {
     setInitValue(value);
-  }, [])
+  }, [value])
 
   return (
     <NumberFormat

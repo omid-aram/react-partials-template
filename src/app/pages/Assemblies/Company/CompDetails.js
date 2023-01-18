@@ -11,7 +11,7 @@ import CompActivity from "./CompActivity";
 import CompDocument from "./CompDocument";
 
 const CompDetails = (parentItem) => {
-    console.log('parentItem', parentItem)
+    //console.log('parentItem', parentItem)
     return (
         <>
             <Tabs defaultActiveKey="address" id="uncontrolled-tab-example">

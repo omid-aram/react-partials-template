@@ -8,9 +8,8 @@ import InputHidden from "../../../partials/editors/InputHidden";
 import SimpleInputHidden from "../../../partials/editors/SimpleInputHidden";
 import InputDate from "../../../partials/editors/InputDate";
 import InputSelect from "../../../partials/editors/InputSelect";
-import InputCheckbox from "../../../partials/editors/InputCheckbox";
 
-const _Person = () => {
+const PersonTab = () => {
 
     const columns = [
         {
@@ -189,4 +188,4 @@ const _Person = () => {
 
     </>);
 }
-export default _Person;
+export default PersonTab;

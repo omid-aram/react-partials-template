@@ -1,5 +1,4 @@
-import React, { useState, useRef } from 'react'
-import { useForm, FormProvider } from 'react-hook-form'
+import React from 'react'
 
 import PopupCurd from "../../../template/PopupCrud"
 import { Row, Col } from "react-bootstrap";
@@ -9,8 +8,6 @@ import InputHidden from "../../../partials/editors/InputHidden";
 import SimpleInputHidden from "../../../partials/editors/SimpleInputHidden";
 import InputDate from "../../../partials/editors/InputDate";
 import InputSelect from "../../../partials/editors/InputSelect";
-
-import InputCheckbox from "../../../partials/editors/InputCheckbox";
 
 const AssemAnnounce = (props) => {
 

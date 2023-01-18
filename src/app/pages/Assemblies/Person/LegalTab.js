@@ -5,10 +5,8 @@ import { Row, Col } from "react-bootstrap";
 import InputText from "../../../partials/editors/InputText";
 import InputHidden from "../../../partials/editors/InputHidden";
 import SimpleInputHidden from "../../../partials/editors/SimpleInputHidden";
-import InputSelect from "../../../partials/editors/InputSelect";
-import InputCheckbox from "../../../partials/editors/InputCheckbox";
 
-const _Legal = () => {
+const LegalTab = () => {
 
     const columns = [
         {
@@ -101,4 +99,4 @@ const _Legal = () => {
 
     </>);
 }
-export default _Legal;
+export default LegalTab;

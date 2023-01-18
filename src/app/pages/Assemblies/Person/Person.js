@@ -1,8 +1,8 @@
 import React from 'react'
 import { Tab, Tabs } from "react-bootstrap"
 
-import _Person from "./_Person";
-import _Legal from "./_Legal";
+import PersonTab from "./PersonTab";
+import LegalTab from "./LegalTab";
 
 const Person = () => {
 
@@ -10,10 +10,10 @@ const Person = () => {
         <>
             <Tabs defaultActiveKey="person" id="uncontrolled-tab-example">
                 <Tab eventKey="person" title="اشخاص حقیقی">
-                    <_Person />
+                    <PersonTab />
                 </Tab>
                 <Tab eventKey="legal" title="اشخاص حقوقی">
-                    <_Legal />
+                    <LegalTab />
                 </Tab>
             </Tabs>
         </>

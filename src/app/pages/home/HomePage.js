@@ -1,7 +1,4 @@
-import React, { useRef, useEffect } from "react";
-import { Row, Col } from "react-bootstrap";
-import { Box, Paper } from "@material-ui/core";
-import { Chart } from "chart.js";
+import React from "react";
 
 export default function HomePage() {
   // useEffect(() => {

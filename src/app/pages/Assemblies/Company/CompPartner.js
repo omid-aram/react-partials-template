@@ -1,5 +1,4 @@
-import React, { useState, useRef } from 'react'
-import { useForm, FormProvider } from 'react-hook-form'
+import React from 'react'
 
 import PopupCurd from "../../../template/PopupCrud"
 import { Row, Col } from "react-bootstrap";
@@ -8,8 +7,6 @@ import InputText from "../../../partials/editors/InputText";
 import InputHidden from "../../../partials/editors/InputHidden";
 import SimpleInputHidden from "../../../partials/editors/SimpleInputHidden";
 import InputDate from "../../../partials/editors/InputDate";
-
-import InputCheckbox from "../../../partials/editors/InputCheckbox";
 
 const CompPartner = (props) => {
     //console.log('CompAddress.parentItem', parentItem);
@@ -30,15 +27,15 @@ const CompPartner = (props) => {
         },
     ]
 
-    const [countryVal, setCountryVal] = useState(0);
-    const countryChanged = (val) => {
-        setCountryVal(val);
-    }
+    // const [countryVal, setCountryVal] = useState(0);
+    // const countryChanged = (val) => {
+    //     setCountryVal(val);
+    // }
 
-    const [stateVal, setStateVal] = useState(0);
-    const stateChanged = (val) => {
-        setStateVal(val);
-    }
+    // const [stateVal, setStateVal] = useState(0);
+    // const stateChanged = (val) => {
+    //     setStateVal(val);
+    // }
 
     const formfg = () => (
         <>

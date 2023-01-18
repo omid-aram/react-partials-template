@@ -13,7 +13,7 @@ const InputSelect = (props) => {
         name, label, ...rest } = props
     const [data, setData] = useState([])
     const [loading, setLoading] = useState(false);
-    const { control, errors, values } = useFormContext()
+    const { control, errors/*, values*/ } = useFormContext()
     useEffect(() => {
         setLoading(true)
         if (enumType) {
@@ -61,7 +61,7 @@ const InputSelect = (props) => {
             alert("wrong usage of dropdown")
         }
 
-    }, [enumType, lookupType]);
+    }, [enumType, inAcc, lookupType, serverBinding]);
 
     //simple name : "title" 
     //path name : "items[1].title"
