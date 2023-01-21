@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import GlobalLoader from "../../app/partials/layout/GlobalLoader";
 import GlobalSnackbar from "../../app/partials/layout/GlobalSnackbar";
 import { useHistory } from "react-router-dom";
-import TextField from '@material-ui/core/TextField';
+import { TextField } from '@material-ui/core';
 
 const Layout = (props) => {
   const [loading, setLoading] = useState(false);
@@ -33,7 +33,7 @@ const Layout = (props) => {
       .postWithUrl("https://totalapi.saipacorp.com/api/Authenticate/Login", { username: textFieldValue, password: textPassValue })
       .then((res) => {
         if (res.succeed) {
-          console.log("login : ", res);
+          //console.log("login : ", res);
           dispatch(debugAuthActions.login(res.data));
         } else {
           alert("اطلاعات بدرستی وارد نشده است !!!");
@@ -48,11 +48,11 @@ const Layout = (props) => {
     });
   };
   const handleTextFieldChange = (e) => {
-    console.log("e", e.target.value)
+    //console.log("e", e.target.value)
     setTextFieldValue(e.target.value)
   }
   const handleTextPassChange = (e) => {
-    console.log("w", e.target.value)
+    //console.log("w", e.target.value)
     setTextPassValue(e.target.value)
   }
   return (
