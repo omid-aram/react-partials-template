@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react"
+import React, { useState, useRef/*, useEffect*/ } from "react"
 import Grid from "../partials/grid"
 import { DeleteButton, EditButton, DetailButton } from "../partials/content/UIHelper";
 import { Portlet, PortletHeader, PortletHeaderToolbar, PortletBody } from "../partials/content/Portlet";
@@ -18,7 +18,8 @@ import { passIdsActions } from "../store/ducks/passIds.duck";
 
 const PopupCurd = (props) => {
 
-    const { title, columns, keyColumn, urls, form, searchForm, detailForm, key, sortItem, initFormValues, pageSize, modalSize, detailSize, detailTitle, initSearchValues } = props
+    const { title, columns, keyColumn, urls, form, searchForm, detailForm, key, sortItem, initFormValues,
+        pageSize, modalSize, detailSize, detailTitle, initSearchValues, onEditButtonClicked, onNewButtonClicked } = props
     const [filter, setFilter] = useState({
         page: 1,
         //companyId:props.comid,
@@ -27,26 +28,27 @@ const PopupCurd = (props) => {
         ...initSearchValues,
     });
 
-    const firstUpdate = useRef(true);
-    useEffect(() => {
-        if (firstUpdate.current) {//To prevent running on initial render
-            firstUpdate.current = false;
-            return;
-        }
+    // //const firstUpdate = useRef(true);
+    // useEffect(() => {
+    //     // if (firstUpdate.current) {//To prevent running on initial render
+    //     //     firstUpdate.current = false;
+    //     //     return;
+    //     // }
 
-        setFilter({
-            page: 1,
-            //companyId:props.comid,
-            pageSize: pageSize || 10,
-            sort: sortItem || null,
-            ...initSearchValues,
-        })
-    }, [initSearchValues, pageSize, sortItem])
+    //     debugger;
+    //     setFilter({
+    //         page: 1,
+    //         companyId:props.comid,
+    //         pageSize: pageSize || 10,
+    //         sort: sortItem || null,
+    //         ...initSearchValues,
+    //     })
+    // }, [initSearchValues, pageSize, sortItem])
 
     const [showModal, setShowModal] = useState(false);
     const [modalTitle, setModalTitle] = useState("");
     const [formError, setFormError] = useState("");
-    const [formValues, setFormValues] = useState();
+    //const [formValues, setFormValues] = useState();
     const [editMode, setEditMode] = useState(false);
     const [detailMode, setDetailMode] = useState(false);
     const [detailItem, setDetailItem] = useState([]);
@@ -71,14 +73,26 @@ const PopupCurd = (props) => {
             baseService.post(urls.getUrl, { id: item.id }).then(res => {
 
                 //setFormValues(res.data);
-                formMethods.reset(res.data)
+                //formMethods.reset(res.data)
+                const data = { ...res.data, ...item };
+                formMethods.reset(data);
+
+                if (typeof (onEditButtonClicked) === "function") {
+                    onEditButtonClicked(data);
+                }
 
                 dispatch(loaderActions.hide())
                 setShowModal(true);
             });
         } else {
             //  setFormValues(item);
-            formMethods.reset({ ...item })
+            const data = { ...item };
+            formMethods.reset(data);
+
+            if (typeof (onEditButtonClicked) === "function") {
+                onEditButtonClicked(data);
+            }
+
             setShowModal(true);
         }
     }
@@ -189,7 +203,12 @@ const PopupCurd = (props) => {
         let k = key ? key : "id";
         objectPath.set(initVal, k, 0);//null id => server validation error
         //setFormValues(initVal);
-        formMethods.reset(initVal)
+        formMethods.reset(initVal);
+
+        if (typeof (onNewButtonClicked) === "function") {
+            onNewButtonClicked(initVal);
+        }
+
         setFormError(null);
 
         setEditMode(false);
@@ -250,20 +269,20 @@ const PopupCurd = (props) => {
             <Portlet>
                 <PortletHeader
                     title={title}
-                    toolbar= {
+                    toolbar={
                         urls.createUrl ?
-                        (
-                            <PortletHeaderToolbar>
-                                <button
-                                    onClick={addNewHandler}
-                                    type="button"
-                                    className="btn btn-clean btn-sm ng-star-inserted"
-                                >
-                                    <i className="fa fa-plus" />
-                                    ثبت مورد جدید
-                                </button>
-                            </PortletHeaderToolbar>
-                        ) : null}
+                            (
+                                <PortletHeaderToolbar>
+                                    <button
+                                        onClick={addNewHandler}
+                                        type="button"
+                                        className="btn btn-clean btn-sm ng-star-inserted"
+                                    >
+                                        <i className="fa fa-plus" />
+                                        ثبت مورد جدید
+                                    </button>
+                                </PortletHeaderToolbar>
+                            ) : null}
 
                 />
 

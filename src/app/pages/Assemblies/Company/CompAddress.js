@@ -117,7 +117,7 @@ const CompAddress = (props) => {
                     />
                 </Col>
                 <Col sm={4}>
-                     <InputSelect
+                    <InputSelect
                         name="cityId"
                         label="شهر"
                         // readUrl="/CompAddress/GetCities"
@@ -130,8 +130,8 @@ const CompAddress = (props) => {
                             textField: 'name',
                             valueField: 'id'
                         }}
-                    /> 
-                     {/* <InputSelectApiChangeValue
+                    />
+                    {/* <InputSelectApiChangeValue
                          name="cityId"
                          label="شهر"
                          readUrl="/CompAddress/GetCities"
@@ -199,6 +199,13 @@ const CompAddress = (props) => {
         </>
     );
 
+    const onEditButtonClicked = (data) => {
+        if (!data) data = {};
+
+        setCountryVal(data.countryId || 0);
+        setStateVal(data.stateId || 0);
+    };
+
     return (<>
 
         <PopupCurd
@@ -215,6 +222,8 @@ const CompAddress = (props) => {
             form={formfg}
             searchForm={searchForm}
             initSearchValues={{ companyId: props.parentItem.id }}
+            onEditButtonClicked={onEditButtonClicked}
+            onNewButtonClicked={onEditButtonClicked}
         />
 
     </>);

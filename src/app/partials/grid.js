@@ -11,18 +11,11 @@ import { Table, TableBody, TableHead, TableRow, TableCell, TableFooter, TablePag
 // import TableRow from '@material-ui/core/TableRow';
 
 import baseService from '../services/base.service'
-import { CircularProgress, Checkbox, TableContainer, TableSortLabel, LinearProgress, Button, IconButton, Radio } from '@material-ui/core';
+import { /*CircularProgress,*/ Checkbox, TableContainer, TableSortLabel, LinearProgress, /*Button,*/ IconButton, Radio } from '@material-ui/core';
 import objectPath from 'object-path';
 import Pagination from '@material-ui/lab/Pagination';
 import { dynamicSort } from '../utils/helper'
 
-
-{/* <Grid
-filter={filter}
-url="/auctionResponse/getItems"
-columns={columns}
-selectable={true}
-onSelectChange={handleSelectChange} /> */}
 
 export default function Grid(props) {
     const {
@@ -39,7 +32,7 @@ export default function Grid(props) {
         clickedRowId,
 
         defaultSort,
-        itemInPage,
+        //itemInPage,
         fixHeight,
         hideRowsPerPage,
         paginationBtnCount,
@@ -61,6 +54,10 @@ export default function Grid(props) {
     //const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
     useEffect(() => {
+        const isShowAll = () => {
+            return rowsPerPage === 'All';
+        }
+
         if (offline) {
             let temp = [...offlineData];
 
@@ -76,10 +73,10 @@ export default function Grid(props) {
             setLoading(true);
 
             let omidFilters = []
-            for (var field in localFilter) {
+            for (var field2 in localFilter) {
                 omidFilters.push({
-                    Field: field[0].toUpperCase() + field.substr(1),
-                    Value: localFilter[field],
+                    Field: field2[0].toUpperCase() + field2.substr(1),
+                    Value: localFilter[field2],
                 });
             }
 
@@ -88,7 +85,7 @@ export default function Grid(props) {
             f.pageSize = isShowAll() ? 10000 : rowsPerPage;
             if (orderby)
                 f.sort = orderby + ' ' + orderDir;
-            //console.log("fffffffffff" , f)
+
             baseService.post(url, f).then(({ data }) => {
                 if (data.errors) {
                     //alert or something
@@ -108,7 +105,7 @@ export default function Grid(props) {
                 }
             }).finally(() => setLoading(false));
         }
-    }, [page, rowsPerPage, filter, orderby, orderDir, offlineData, forceUpdate, localFilter])
+    }, [page, rowsPerPage, filter, orderby, orderDir, offlineData, forceUpdate, localFilter, offline, url])
 
     useEffect(() => {
         let temp = [...records];
@@ -152,10 +149,6 @@ export default function Grid(props) {
         });
     }
 
-    const isShowAll = () => {
-        return rowsPerPage == 'All';
-    }
-
     const emptyRows = addEmptyRow ? (rowsPerPage - records.length) : 0;
 
     const dataBody = useMemo(() => (
@@ -164,9 +157,9 @@ export default function Grid(props) {
                 <TableRow key={i} style={{ ...getStripedStyle(i, row[keyColumn]) }}>
                     {selectable ? (<TableCell key={0} >
                         {singleSelect ?
-                            <Radio onChange={(event) => { onSelectChange(row, event.target.checked) }} checked={selectedItems && selectedItems[keyColumn] == row[keyColumn]} />
+                            <Radio onChange={(event) => { onSelectChange(row, event.target.checked) }} checked={selectedItems && selectedItems[keyColumn] === row[keyColumn]} />
                             :
-                            <Checkbox onChange={(event) => { onSelectChange(row, event.target.checked) }} checked={selectedItems && selectedItems.some(x => x == row[keyColumn])} />
+                            <Checkbox onChange={(event) => { onSelectChange(row, event.target.checked) }} checked={selectedItems && selectedItems.some(x => x === row[keyColumn])} />
                         }
                     </TableCell>) : null}
 
@@ -260,7 +253,7 @@ export default function Grid(props) {
 
 function TablePaginationActions(props) {
 
-    const { count, page, rowsPerPage, onChangePage, loading, refreshHandler, btnCount } = props;
+    const { count, page, rowsPerPage, onChangePage, loading, refreshHandler/*, btnCount*/ } = props;
 
     // const ref = useRef()
     // const [containerWidth, setContainerWidth] = useState(0);
@@ -331,7 +324,7 @@ const useStyles2 = makeStyles({
     header: {
         fontSize: "1.1rem",
         background: "rgb(236,236,236)",
-        background: "linear-gradient(0deg, rgba(236,236,236,1) 0%, rgba(250,250,250) 60%, rgba(242,242,242,1) 100%)",
+        //background: "linear-gradient(0deg, rgba(236,236,236,1) 0%, rgba(250,250,250) 60%, rgba(242,242,242,1) 100%)",
     },
     headerCell: {
         lineHeight: '1rem',
@@ -361,5 +354,5 @@ const useStyles2 = makeStyles({
         borderRadius: '4px',
         border: '1px solid #dedcdc'
     },
-    
+
 });

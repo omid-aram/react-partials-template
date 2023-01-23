@@ -1,13 +1,13 @@
 import React, { useState } from "react"
 import { FormHelperText } from "@material-ui/core"
-import { Controller, useFormContext } from "react-hook-form"
+import { /*Controller,*/ useFormContext } from "react-hook-form"
 import objectPath from "object-path"
 import RichTextEditor from 'react-rte';
 
 
 const InputRichText = (props) => {
-    const { name, label, ...rest } = props
-    const { control, register, setValue, getValues, errors } = useFormContext();
+    const { name/*, label, ...rest*/ } = props
+    const { /*control,*/ register, setValue, getValues, errors } = useFormContext();
     const [rteValue, setRteValue] = useState(RichTextEditor.createValueFromString(getValues(name), 'html'))
     //simple name : "title" 
     //path name : "items[1].title"
@@ -41,7 +41,7 @@ const InputRichText = (props) => {
 
     React.useEffect(() => {
         register(name); // custom register
-    }, [register])
+    }, [name, register])
 
     const handleChange = (value) => {
         setRteValue(value);

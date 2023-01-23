@@ -6,7 +6,7 @@ import objectPath from "object-path"
 
 const InputNumber = (props) => {
     const { name, label, rows, ...rest } = props
-    const { control, errors, values } = useFormContext();
+    const { control, errors/*, values*/ } = useFormContext();
 
     //simple name : "title" 
     //path name : "items[1].title"
