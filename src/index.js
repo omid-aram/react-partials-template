@@ -6,20 +6,20 @@ import "react-app-polyfill/ie11";
 import "react-app-polyfill/stable";
 import React from "react";
 import ReactDOM from "react-dom";
-import axios from "axios";
-import { setupAxios } from "./_global";
+// import axios from "axios";
+// import { setupAxios } from "./_global";
 import store, { persistor } from "./app/store/store";
-import App from "./App";
+// import App from "./App";
 //import "./index.scss"; // Standard version
 import "./sass/style.react.rtl.css"; // RTL version
 //import "socicon/css/socicon.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
-import { BrowserRouter } from "react-router-dom";
-import { Provider } from "react-redux";
-import { PersistGate } from "redux-persist/integration/react";
+// import { BrowserRouter } from "react-router-dom";
+// import { Provider } from "react-redux";
+// import { PersistGate } from "redux-persist/integration/react";
 import AppLocal from "./AppLocal";
 import { devTheme } from "./_global/layout/MaterialThemeProvider";
-import { persistStore } from "redux-persist";
+// import { persistStore } from "redux-persist";
 /**
  * Base URL of the website.
  *
@@ -27,7 +27,7 @@ import { persistStore } from "redux-persist";
  */
 const { PUBLIC_URL } = process.env;
 
-if( process.env.NODE_ENV == 'development'){
+if( process.env.NODE_ENV === 'development'){
 /**
  * Inject metronic interceptors for axios.
  * @see https://github.com/axios/axios#interceptors

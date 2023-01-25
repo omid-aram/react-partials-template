@@ -42,7 +42,7 @@ const LegalTab = () => {
                         name="title"
                         label="عنوان"
                         rules={{ required: "اجباری است" }}
-                        value=""
+                    //value=""                        
                     />
                 </Col>
             </Row>
@@ -51,8 +51,6 @@ const LegalTab = () => {
                     <InputText
                         name="registerNo"
                         label="شماره ثبت"
-                        value=""
-                    //rules={{ required: "اجباری است" }}
                     />
                 </Col>
             </Row>
@@ -61,7 +59,7 @@ const LegalTab = () => {
                     <InputText
                         name="stockSymbol"
                         label="نماد بورسي"
-                        value=""                        
+                    //value=""
                     //rules={{ required: "اجباری است" }}
                     />
                 </Col>
@@ -77,6 +75,14 @@ const LegalTab = () => {
             </Row>
         </>
     );
+
+    // const onEditButtonClicked = (data) => {
+    //     const fields = ["id", "personType", "title", "registerNo", "stockSymbol", "address"];
+    //     if (!data) data = {};
+    //      fields.forEach(x => {
+    //          if (!data[x]) data[x] = "";
+    //      });
+    // }
 
     return (<>
 
@@ -94,7 +100,9 @@ const LegalTab = () => {
             form={formLegal}
             //searchForm={searchForm}
             initSearchValues={{ personType: 2 }}
+            initFormValues={{ personType: 2 }}
             modalSize="md"
+        //onEditButtonClicked={onEditButtonClicked}
         />
 
     </>);

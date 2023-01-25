@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useMemo/*, useRef*/ } from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core';
 import { Table, TableBody, TableHead, TableRow, TableCell, TableFooter, TablePagination } from '@material-ui/core';
 // import Table from '@material-ui/core/Table';
 // import TableBody from '@material-ui/core/TableBody';
@@ -29,7 +29,7 @@ export default function Grid(props) {
         singleSelect,
         onSelectChange,
 
-        clickedRowId,
+        //clickedRowId,
 
         defaultSort,
         //itemInPage,
@@ -62,7 +62,7 @@ export default function Grid(props) {
             let temp = [...offlineData];
 
             if (localFilter) {
-                for (var field in localFilter) {
+                for (let field in localFilter) {
                     //temp = temp.filter(x => (x[field] + '').indexOf(localFilter[field]) > -1)
                     temp = temp.filter(x => (x[field] + '').toLowerCase().startsWith(localFilter[field].toLowerCase()))
                 }
@@ -73,7 +73,7 @@ export default function Grid(props) {
             setLoading(true);
 
             let omidFilters = []
-            for (var field2 in localFilter) {
+            for (let field2 in localFilter) {
                 omidFilters.push({
                     Field: field2[0].toUpperCase() + field2.substr(1),
                     Value: localFilter[field2],
@@ -107,10 +107,10 @@ export default function Grid(props) {
         }
     }, [page, rowsPerPage, filter, orderby, orderDir, offlineData, forceUpdate, localFilter, offline, url])
 
-    useEffect(() => {
-        let temp = [...records];
-        setRecords(temp);
-    }, [clickedRowId])
+    // useEffect(() => {
+    //     let temp = [...records];
+    //     setRecords(temp);
+    // }, [clickedRowId])
 
     //console.log(selectedItems);
 
@@ -131,9 +131,9 @@ export default function Grid(props) {
         setPage(0);
     };
 
-    const getStripedStyle = (index, rowId) => {
-        return { background: rowId === props.clickedRowId ? 'gold' : index % 2 ? '#f5f5f5' : 'white' };
-    }
+    // const getStripedStyle = (index, rowId) => {
+    //     return { background: rowId === props.clickedRowId ? 'gold' : index % 2 ? '#f5f5f5' : 'white' };
+    // }
 
     const sortHandler = (field) => {
         const isAsc = orderby === field && orderDir === 'asc';
@@ -154,7 +154,8 @@ export default function Grid(props) {
     const dataBody = useMemo(() => (
         <TableBody>
             {records.map((row, i) => (
-                <TableRow key={i} style={{ ...getStripedStyle(i, row[keyColumn]) }}>
+                //<TableRow key={i} style={{ ...getStripedStyle(i, row[keyColumn]) }}>
+                <TableRow key={i} style={{ backgroundColor: row[keyColumn] === props.clickedRowId ? 'gold' : i % 2 ? '#f5f5f5' : 'white' }}>
                     {selectable ? (<TableCell key={0} >
                         {singleSelect ?
                             <Radio onChange={(event) => { onSelectChange(row, event.target.checked) }} checked={selectedItems && selectedItems[keyColumn] === row[keyColumn]} />
@@ -183,7 +184,8 @@ export default function Grid(props) {
                 </TableRow>
             )}
         </TableBody>
-    ), [records, selectedItems])
+    ), [columns, emptyRows, keyColumn, onSelectChange, props.clickedRowId, records, selectable, selectedItems, singleSelect])
+    //), [records, selectedItems])
 
 
     return (

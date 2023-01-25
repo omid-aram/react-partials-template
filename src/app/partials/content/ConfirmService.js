@@ -1,12 +1,7 @@
 //ali
 import React, { useState, useCallback, useEffect } from 'react';
 import { render } from "react-dom";
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import { DialogContentText } from '@material-ui/core';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, DialogContentText } from '@material-ui/core';
 
 let resolve;
 const Confirm = ({ refShow }) => {
@@ -35,7 +30,7 @@ const Confirm = ({ refShow }) => {
 
     useEffect(() => {
         refShow(showCb);
-    }, [showCb]);
+    }, [refShow, showCb]);
 
     return (
         <div>
@@ -43,8 +38,8 @@ const Confirm = ({ refShow }) => {
                 open={isOpen}
                 onClose={handleCancel}
                 aria-labelledby="confirm-dialog-title"
-                aria-labelledby="confirm-dialog-message"
-                
+                //aria-labelledby="confirm-dialog-message"
+
             >
                 <DialogTitle id="confirm-dialog-title">هشدار</DialogTitle>
                 <DialogContent style={{ minWidth: "300px" }}>
@@ -59,7 +54,7 @@ const Confirm = ({ refShow }) => {
                         color="default"
                     >
                         خیر
-          </Button>
+                    </Button>
                     <Button
                         variant="outlined"
                         onClick={handleConfirm}
@@ -67,7 +62,7 @@ const Confirm = ({ refShow }) => {
                         style={{ marginRight: "5px" }}
                     >
                         بله
-          </Button>
+                    </Button>
                 </DialogActions>
             </Dialog>
         </div>

@@ -45,7 +45,11 @@ const PersonTab = () => {
             field: "personStatusDesc",
             title: "وضعیت",
         },
-    ]
+    ];
+
+    const otherFormFields = ["id", "personType", "firstName", "lastName", "birthDate",
+        "birthPlace", "insuranceType", "insuranceStatus", "eduGrade", "university",
+        "graduationYear", "jobCompany", "jobTitle", "jobDateFrom", "jobDateTo"];
 
     const formfg = () => (
         <>
@@ -183,7 +187,9 @@ const PersonTab = () => {
             }}
             form={formfg}
             searchForm={searchForm}
-            initSearchValues={{personType: 1}}
+            initSearchValues={{ personType: 1 }}
+            initFormValues={{ personType: 1 }}
+            otherFormFields={otherFormFields}
         />
 
     </>);

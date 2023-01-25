@@ -4,7 +4,7 @@ import { Controller, useFormContext } from "react-hook-form"
 import objectPath from "object-path";
 import DatePicker from "react-datepicker2";
 import moment from "moment-jalaali"
-import { toPersianDateTime } from "../../utils/helper";
+//import { toPersianDateTime } from "../../utils/helper";
 
 
 
@@ -43,7 +43,7 @@ const InputDate = (props) => {
                     <OutlinedInput
                         type="text" label={label} error={hasError}
                         style={{ direction: "ltr" }}
-                        inputProps={{ showTime: (time == true) }}
+                        inputProps={{ showTime: (time === true) }}
                         inputComponent={DatePickerCustom}
                     />
                 }
@@ -69,7 +69,7 @@ function DatePickerCustom(props) {
     //just for init value
     const [initValue, setInitValue] = useState();
     useEffect(() =>{
-        setInitValue(value ? moment(value) : null);
+        setInitValue(value ? moment(value, 'YYYY/M/D HH:mm:ss') : null);
     },[value])
    
     return (
@@ -82,7 +82,7 @@ function DatePickerCustom(props) {
                 if(!val){
                     return;
                 }
-                let jVal = val.format('jYYYY/jM/jD');
+                //let jVal = val.format('jYYYY/jM/jD');
                 let gVal = val.format('YYYY/M/D HH:mm:ss');
                 
                 onChange(gVal);

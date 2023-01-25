@@ -1,21 +1,21 @@
 import moment from 'moment-jalaali'
 
 export function toPersianDate(date) {
-    if (!date || date == '0001-01-01T00:00:00')
+    if (!date || date === '0001-01-01T00:00:00')
         return ''
     var m = moment(date);
     return m.format('jYYYY/jMM/jDD');
 }
 
 export function toPersianDateTime(date) {
-    if (!date || date == '0001-01-01T00:00:00')
+    if (!date || date === '0001-01-01T00:00:00')
         return ''
     var m = moment(date);
     return m.format('jYYYY/jMM/jDD HH:mm');
 }
 
 export function moneyFormat(num){
-    if(num == 0) return num;
+    if(num === 0) return num;
     if(!num) return ""; //undefined or null
     num = Math.floor(num);
     return (''+num).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')

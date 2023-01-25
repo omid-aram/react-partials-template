@@ -3,17 +3,17 @@ import { InputLabel, FormControl, OutlinedInput, FormHelperText } from "@materia
 import { Controller, useFormContext } from "react-hook-form"
 import objectPath from "object-path"
 
-
 const InputText = (props) => {
     const { name, label, rows, ...rest } = props
-    const { control, errors/*, values*/ } = useFormContext();
-// console.log("props1" , props)
+    const { control, errors } = useFormContext();
+    // console.log("props1" , props)
     //simple name : "title" 
     //path name : "items[1].title"
     let namePath = name.replace(/\[(\w+)\]/g, '.$1') //items[1] => items.1
     let error = objectPath.get(errors, namePath);
     let hasError = !!error;
     //let value = values ? objectPath.get(values, namePath) : null;
+
     return (<>
         <FormControl variant="outlined" style={{ width: "100%" }} size="small">
             <InputLabel error={hasError} >{label}</InputLabel>
@@ -22,13 +22,13 @@ const InputText = (props) => {
                     <OutlinedInput
                         type="text"
                         label={label}
-                       // multiline={Boolean(rows)}
-                       // rows={rows || 0}
+                        multiline={Boolean(rows)}
+                        rows={rows || 0}
                         error={hasError} />
                 }
                 control={control}
                 name={name}
-                //defaultValue={value || ''}
+                //defaultValue={""}
                 {...rest}
             />
             <FormHelperText>

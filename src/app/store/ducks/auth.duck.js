@@ -1,7 +1,7 @@
 import { persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
-import { put, takeLatest } from "redux-saga/effects";
-import { getUserByToken } from "../../services/auth.service";
+// import { put, takeLatest } from "redux-saga/effects";
+// import { getUserByToken } from "../../services/auth.service";
 
 export const actionTypes = {
   Login: "[DEV Login] Action",

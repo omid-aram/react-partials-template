@@ -18,13 +18,13 @@ const InputCheckList = ({label,  fieldName,formMethods, optionsUrl }) => {
     }, [])
     useEffect(() =>{
         formMethods.setValue(fieldName, checked);
-    },[checked])
+    },[checked, fieldName, formMethods])
 
     const handleChange = (isChecked, id) => {
         if (isChecked) {
             setChecked(prev => [...prev, id])
         } else {
-            setChecked(prev => prev.filter(x => x != id))
+            setChecked(prev => prev.filter(x => x !== id))
         }
 
     }
@@ -39,7 +39,7 @@ const InputCheckList = ({label,  fieldName,formMethods, optionsUrl }) => {
             {data.map((item) => (
                 <div key={item.id}>
                 <FormControlLabel key={item.id}
-                    control={<Checkbox checked={Boolean(checked.find(x => x == item.id))} onChange={(e) => handleChange(e.target.checked, item.id)} />}
+                    control={<Checkbox checked={Boolean(checked.find(x => x === item.id))} onChange={(e) => handleChange(e.target.checked, item.id)} />}
                     label={item.name}
                 />
                 </div>

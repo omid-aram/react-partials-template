@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react"
-import { getEnumSelectData, getLookupSelectData } from "../../services/common.service"
 import { MenuItem, Select, InputLabel, FormControl, FormHelperText } from "@material-ui/core"
 import { Controller, useFormContext } from "react-hook-form"
 import objectPath from "object-path"
@@ -14,11 +13,6 @@ const InputSelectApiInputParams = (props) => {
     const { control, errors, values } = useFormContext()
     const noChache = true;// they dont like cache
 
-    const handleChange = (e) => {
-      debugger;
-      changeVal(e.target.value);
-    };
-  
     useEffect(() => {
         setLoading(true)
 
@@ -42,7 +36,8 @@ const InputSelectApiInputParams = (props) => {
                 })
             }
         }
-    }, [param]);
+    }, [noChache, options, param, readUrl]);
+    //}, [param]);
  
     //simple name : "title" 
     //path name : "items[1].title"

@@ -48,7 +48,8 @@ const InputSelectApiChangeValue = (props) => {
         })
       }
     }
-  }, [param]);
+  }, [noChache, options, param, readUrl, txnCodes]);
+  //}, [param]);
 
   return (<>
     <FormControl variant="outlined" style={{ width: "100%" }} size="small">

@@ -27,13 +27,8 @@ const AsmDocType = () => {
         },
     ]
 
-
-
-
     const formfg = () => (
         <>
-
-
             <InputHidden name="id" />
             <Row>
                 <Col sm={6}>

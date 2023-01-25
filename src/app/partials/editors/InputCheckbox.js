@@ -1,8 +1,8 @@
 import React from "react"
-import { InputLabel, FormControl, FormHelperText, FormControlLabel, Checkbox } from "@material-ui/core"
+import { /*InputLabel, FormControl,*/ FormHelperText, FormControlLabel, Checkbox } from "@material-ui/core"
 import { Controller, useFormContext } from "react-hook-form"
 import objectPath from "object-path"
-import { Switch } from "@material-ui/core";
+//import { Switch } from "@material-ui/core";
 
 
 const InputCheckbox = (props) => {

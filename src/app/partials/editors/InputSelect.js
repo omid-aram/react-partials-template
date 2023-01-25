@@ -4,12 +4,12 @@ import { MenuItem, Select, InputLabel, FormControl, FormHelperText } from "@mate
 import { Controller, useFormContext } from "react-hook-form"
 import objectPath from "object-path"
 import baseService from "../../services/base.service"
-import baseService2 from "../../services/base.service2"
+//import baseService2 from "../../services/base.service2"
 
 
 const InputSelect = (props) => {
     const {
-        enumType, lookupType,inAcc, serverBinding, /* one of this */
+        enumType, lookupType, serverBinding, /* one of this */
         name, label, ...rest } = props
     const [data, setData] = useState([])
     const [loading, setLoading] = useState(false);
@@ -27,21 +27,6 @@ const InputSelect = (props) => {
             })
             setLoading(false)
         } else if (serverBinding) {
-            if (inAcc) {
-            baseService2.post(serverBinding.url, serverBinding.filter || {}).then(res => {
-                setData(res.data.map(r => (
-                    {
-                        id: r[serverBinding.valueField],
-                        desc: r[serverBinding.textField]
-                    })
-                   
-                ));
-               
-                setLoading(false);
-               
-                
-            });
-        } else {
             baseService.post(serverBinding.url, serverBinding.filter || {}).then(res => {
                 setData(res.data.map(r => (
                     {
@@ -55,13 +40,11 @@ const InputSelect = (props) => {
                
                 
             });
-
-        }
         } else {
             alert("wrong usage of dropdown")
         }
 
-    }, [enumType, inAcc, lookupType, serverBinding]);
+    }, [enumType, lookupType, serverBinding]);
 
     //simple name : "title" 
     //path name : "items[1].title"
@@ -81,7 +64,8 @@ const InputSelect = (props) => {
                             &nbsp;
                         </MenuItem>
                         {data.map(item =>
-                            <MenuItem value={item.id}   defaultValue={item.id} key={item.id}>{item.desc}</MenuItem>
+                            <MenuItem value={item.id || ''} key={item.id}>{item.desc}</MenuItem>
+                            //<MenuItem value={item.id || ''}   defaultValue={item.id} key={item.id}>{item.desc}</MenuItem>
                         )}
                     </Select>
                 }

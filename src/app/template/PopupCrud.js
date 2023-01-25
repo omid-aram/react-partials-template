@@ -18,8 +18,9 @@ import { passIdsActions } from "../store/ducks/passIds.duck";
 
 const PopupCurd = (props) => {
 
-    const { title, columns, keyColumn, urls, form, searchForm, detailForm, key, sortItem, initFormValues,
-        pageSize, modalSize, detailSize, detailTitle, initSearchValues, onEditButtonClicked, onNewButtonClicked } = props
+    const { title, columns, keyColumn, urls, form, searchForm, detailForm, key, sortItem, initFormValues, otherFormFields,
+        pageSize, modalSize, detailSize, detailTitle, initSearchValues, onEditButtonClicked, onNewButtonClicked } = props;
+
     const [filter, setFilter] = useState({
         page: 1,
         //companyId:props.comid,
@@ -61,6 +62,32 @@ const PopupCurd = (props) => {
 
     const dispatch = useDispatch();
 
+    const setUndefinedToEmptyString = (data) => {
+
+        //debugger;
+        if (!data) data = {};
+
+        const columnFields = (columns || []).map(x => x.field);
+        const fields = [...columnFields, ...(otherFormFields || [])];
+
+        fields.forEach(x => {
+            //if (!data[x]) data[x] = "";
+            if (data[x] === null || data[x] === undefined) data[x] = "";
+        });
+    }
+
+    const setEmptyStringToUndefined = (data) => {
+
+        if (!data) data = {};
+
+        const columnFields = (columns || []).map(x => x.field);
+        const fields = [...columnFields, ...(otherFormFields || [])];
+
+        fields.forEach(x => {
+            if (data[x] === "") data[x] = undefined;
+        });
+    }
+
     const editHandler = (item) => {
 
         dispatch(passIdsActions.fetchEditData(item));
@@ -75,11 +102,13 @@ const PopupCurd = (props) => {
                 //setFormValues(res.data);
                 //formMethods.reset(res.data)
                 const data = { ...res.data, ...item };
-                formMethods.reset(data);
-
                 if (typeof (onEditButtonClicked) === "function") {
                     onEditButtonClicked(data);
                 }
+
+                setUndefinedToEmptyString(data);
+
+                formMethods.reset(data);
 
                 dispatch(loaderActions.hide())
                 setShowModal(true);
@@ -87,11 +116,13 @@ const PopupCurd = (props) => {
         } else {
             //  setFormValues(item);
             const data = { ...item };
-            formMethods.reset(data);
-
             if (typeof (onEditButtonClicked) === "function") {
                 onEditButtonClicked(data);
             }
+
+            setUndefinedToEmptyString(data);
+
+            formMethods.reset(data);
 
             setShowModal(true);
         }
@@ -180,7 +211,8 @@ const PopupCurd = (props) => {
 
     const formSubmitHandler = (data) => {
 
-        //debugger;
+        setEmptyStringToUndefined(data);
+
         var url = editMode ? urls.editUrl : urls.createUrl;
         setFormError(null);
         dispatch(loaderActions.show())
@@ -203,11 +235,13 @@ const PopupCurd = (props) => {
         let k = key ? key : "id";
         objectPath.set(initVal, k, 0);//null id => server validation error
         //setFormValues(initVal);
-        formMethods.reset(initVal);
-
         if (typeof (onNewButtonClicked) === "function") {
             onNewButtonClicked(initVal);
         }
+
+        setUndefinedToEmptyString(initVal);
+
+        formMethods.reset(initVal);
 
         setFormError(null);
 
@@ -324,15 +358,12 @@ const PopupCurd = (props) => {
                     <Alert severity="error">{formError}</Alert>
                 )}
 
-                {/* values={formValues} */}
                 {detailMode ?
                     <>
-                        {/* {console.log('item', detailItem)} */}
                         {React.cloneElement(detailForm, { ...detailItem })}
                     </>
                     :
                     <FormProvider  {...formMethods}>
-
                         <form onSubmit={formMethods.handleSubmit(formSubmitHandler)} ref={formRef} >
                             {form(formMethods)}
                         </form>

@@ -75,8 +75,6 @@ const CompAddress = (props) => {
     const formfg = () => (
         <>
             <InputHidden name="id" />
-            {/* <InputHidden name="stateId" />  
-               <InputHidden name="countryId" /> */}
             <SimpleInputHidden name="companyId" value={props.parentItem.id} />
             <Row>
                 <Col sm={4}>
@@ -200,7 +198,14 @@ const CompAddress = (props) => {
     );
 
     const onEditButtonClicked = (data) => {
+        debugger;
         if (!data) data = {};
+
+        if (!data.dateTo) data.dateTo = "";
+        if (!data.telModir) data.telModir = "";
+        if (!data.telMoaven) data.telMoaven = "";
+        if (!data.telMarkaz) data.telMarkaz = "";
+        if (!data.description) data.description = "";
 
         setCountryVal(data.countryId || 0);
         setStateVal(data.stateId || 0);
