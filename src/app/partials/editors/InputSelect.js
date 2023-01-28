@@ -10,10 +10,11 @@ import baseService from "../../services/base.service"
 const InputSelect = (props) => {
     const {
         enumType, lookupType, serverBinding, /* one of this */
-        name, label, ...rest } = props
+        name, label, placeholder, onChange, ...rest } = props
     const [data, setData] = useState([])
     const [loading, setLoading] = useState(false);
-    const { control, errors/*, values*/ } = useFormContext()
+    const { control, errors/*, values*/ } = useFormContext();
+
     useEffect(() => {
         setLoading(true)
         if (enumType) {
@@ -27,24 +28,28 @@ const InputSelect = (props) => {
             })
             setLoading(false)
         } else if (serverBinding) {
-            baseService.post(serverBinding.url, serverBinding.filter || {}).then(res => {
-                setData(res.data.map(r => (
-                    {
-                        id: r[serverBinding.valueField],
-                        desc: r[serverBinding.textField]
-                    })
-                   
-                ));
-               
-                setLoading(false);
-               
-                
-            });
+            baseService.post(serverBinding.url, serverBinding.filter || {})
+                .then(res => {
+                    setData(res.data.map(r => (
+                        {
+                            id: r[serverBinding.valueField],
+                            desc: r[serverBinding.textField]
+                        })
+                    ));
+                })
+                .catch()
+                .finally(() => setLoading(false));
         } else {
             alert("wrong usage of dropdown")
         }
 
     }, [enumType, lookupType, serverBinding]);
+
+    const handleChange = (e) => {
+        if (typeof (onChange) === "function") {
+            onChange(e.target.value, e.currentTarget.innerText);
+        }
+    };
 
     //simple name : "title" 
     //path name : "items[1].title"
@@ -58,17 +63,41 @@ const InputSelect = (props) => {
         <FormControl variant="outlined" style={{ width: "100%" }} size="small">
             <InputLabel error={hasError}>{label}</InputLabel>
             <Controller
-                as={
-                    <Select label={label} size="small" error={hasError}>
-                        <MenuItem value={null}>
-                            &nbsp;
-                        </MenuItem>
-                        {data.map(item =>
-                            <MenuItem value={item.id || ''} key={item.id}>{item.desc}</MenuItem>
-                            //<MenuItem value={item.id || ''}   defaultValue={item.id} key={item.id}>{item.desc}</MenuItem>
+                render={({ onChange, value, onBlur, name }) => (
+                    <Select
+                        onChange={(e) => { handleChange(e) }}
+                        label={label}
+                        size="small"
+                        defaultValue={value}
+                    >
+
+                        {placeholder ?
+                            <MenuItem value="" disabled>
+                                {placeholder}
+                            </MenuItem>
+                            :
+                            <MenuItem value="" style={{ height: '5px' }}>
+                                &nbsp;
+                            </MenuItem>
+                        }
+
+                        {data && data.map(item =>
+                            <MenuItem value={item.id} key={item.id}>{item.desc}</MenuItem>
                         )}
                     </Select>
-                }
+                )}
+
+                // as={
+                //     <Select label={label} size="small" error={hasError}>
+                //         <MenuItem value={null}>
+                //             &nbsp;
+                //         </MenuItem>
+                //         {data.map(item =>
+                //             <MenuItem value={item.id || ''} key={item.id}>{item.desc}</MenuItem>
+                //             //<MenuItem value={item.id || ''}   defaultValue={item.id} key={item.id}>{item.desc}</MenuItem>
+                //         )}
+                //     </Select>
+                // }
                 name={name}
                 control={control}
                 {...rest}
