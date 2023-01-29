@@ -90,6 +90,7 @@ const InputSelect = (props) => {
                         //defaultValue={value}
                         name={name}
                         value={data && data.some(x => x.id === value) ? (value || '') : ''}
+                        {...rest}
                     >
 
                         {placeholder ?
@@ -120,8 +121,7 @@ const InputSelect = (props) => {
                 //     </Select>
                 // }
                 name={name}
-                control={control}
-                {...rest}
+                control={control}                
             />
             {loading && (
                 <i className="fa fa-spin fa-spinner" style={{ position: "absolute", top: "12px", left: "30px" }}></i>

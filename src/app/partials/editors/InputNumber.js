@@ -33,8 +33,9 @@ const InputNumber = (props) => {
                         value={value || ""}
                         onChange={(e) => { onChange(e); handleChange(e); }}
 
-                        style={{direction: "ltr"}}
-                        error={hasError} />
+                        style={{ direction: "ltr" }}
+                        error={hasError}
+                        {...rest} />
                 )}
                 // as={
                 //     <OutlinedInput
@@ -46,8 +47,7 @@ const InputNumber = (props) => {
                 // }
                 control={control}
                 name={name}
-                //defaultValue={value || ''}
-                {...rest}
+            //defaultValue={value || ''}                
             />
             <FormHelperText>
                 {hasError && (error.message)}
