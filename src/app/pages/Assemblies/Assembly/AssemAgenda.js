@@ -43,15 +43,15 @@ const AssemAgenda = (props) => {
                     <InputSelect
                         name="taskTypeId"
                         label="دستور جلسه"
-                        // readUrl="/AssemAgenda/GetTaskTypes"
-                        // textField="codeName"
-                        // valueField="id"
-                        serverBinding={{
-                            url: '/AssemAgenda/GetTaskTypes',
-                            filter: {},
-                            textField: 'codeName',
-                            valueField: 'id'
-                        }}
+                        apiUrl="/AssemAgenda/GetTaskTypes"
+                        textField="codeName"
+                        valueField="id"
+                        // serverBinding={{
+                        //     url: '/AssemAgenda/GetTaskTypes',
+                        //     filter: {},
+                        //     textField: 'codeName',
+                        //     valueField: 'id'
+                        // }}
                         rules={{ required: "اجباری است" }}
                     />
                 </Col>

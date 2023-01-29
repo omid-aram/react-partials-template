@@ -5,7 +5,7 @@ import objectPath from "object-path"
 
 
 const InputNumber = (props) => {
-    const { name, label, rows, ...rest } = props
+    const { name, label, onChange, ...rest } = props
     const { control, errors/*, values*/ } = useFormContext();
 
     //simple name : "title" 
@@ -15,18 +15,35 @@ const InputNumber = (props) => {
     let hasError = !!error;
     //let value = values ? objectPath.get(values, namePath) : null;
 
+    const handleChange = (e) => {
+        if (typeof (onChange) === "function") {
+            onChange(e.target.value, e.currentTarget.innerText);
+        }
+    };
+
     return (<>
         <FormControl variant="outlined" style={{ width: "100%" }} size="small">
             <InputLabel error={hasError} >{label}</InputLabel>
             <Controller
-                as={
+                render={({ onChange, value, onBlur, name }) => (
                     <OutlinedInput
                         type="number"
                         label={label}
-                        multiline={Boolean(rows)}
-                        rows={rows || 0}
+                        name={name}
+                        value={value || ""}
+                        onChange={(e) => { onChange(e); handleChange(e); }}
+
+                        style={{direction: "ltr"}}
                         error={hasError} />
-                }
+                )}
+                // as={
+                //     <OutlinedInput
+                //         type="number"
+                //         label={label}
+                //         multiline={Boolean(rows)}
+                //         rows={rows || 0}
+                //         error={hasError} />
+                // }
                 control={control}
                 name={name}
                 //defaultValue={value || ''}

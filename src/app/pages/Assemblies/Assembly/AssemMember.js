@@ -33,15 +33,15 @@ const AssemMember = (props) => {
                     <InputSelect
                         name="personId"
                         label="نام عضو"
-                        // readUrl="/AssemMember/GetPersons"
-                        // textField="title"
-                        // valueField="id"
-                        serverBinding={{
-                            url: '/AssemMember/GetPersons',
-                            filter: {},
-                            textField: 'title',
-                            valueField: 'id'
-                        }}
+                        apiUrl="/AssemMember/GetPersons"
+                        textField="title"
+                        valueField="id"
+                        // serverBinding={{
+                        //     url: '/AssemMember/GetPersons',
+                        //     filter: {},
+                        //     textField: 'title',
+                        //     valueField: 'id'
+                        // }}
 
                         rules={{ required: "اجباری است" }}
                     />

@@ -9,7 +9,7 @@ import InputHidden from "../../../partials/editors/InputHidden";
 import SimpleInputHidden from "../../../partials/editors/SimpleInputHidden";
 import InputDate from "../../../partials/editors/InputDate";
 import InputSelect from "../../../partials/editors/InputSelect";
-import InputSelectApiChangeValue from "../../../partials/editors_old/InputSelectApiChangeValue";
+//import InputSelectApiChangeValue from "../../../partials/editors_old/InputSelectApiChangeValue";
 
 const CompAddress = (props) => {
     //console.log('CompAddress.parentItem', parentItem);
@@ -72,6 +72,8 @@ const CompAddress = (props) => {
         setStateVal(val);
     }
 
+    const cityFilter = { CountryId: countryVal, StateId: stateVal };
+    
     const formfg = () => (
         <>
             <InputHidden name="id" />
@@ -95,39 +97,55 @@ const CompAddress = (props) => {
                     />
                 </Col>
                 <Col sm={4}>
-                    <InputSelectApiChangeValue
+                    {/* <InputSelectApiChangeValue
                         name="countryId"
                         label="کشور"
                         readUrl="/CompAddress/GetCountries"
                         textField="name"
                         valueField="id"
                         changeVal={countryChanged}
+                    /> */}
+                    <InputSelect
+                        name="countryId"
+                        label="کشور"
+                        apiUrl="/CompAddress/GetCountries"
+                        textField="name"
+                        valueField="id"
+                        onChange={countryChanged}
                     />
                 </Col>
                 <Col sm={4}>
-                    <InputSelectApiChangeValue
+                    {/* <InputSelectApiChangeValue
                         name="stateId"
                         label="استان"
                         readUrl="/CompAddress/GetStates"
                         textField="name"
                         valueField="id"
                         changeVal={stateChanged}
+                    /> */}
+                    <InputSelect
+                        name="stateId"
+                        label="استان"
+                        apiUrl="/CompAddress/GetStates"
+                        textField="name"
+                        valueField="id"
+                        onChange={stateChanged}
                     />
                 </Col>
                 <Col sm={4}>
                     <InputSelect
                         name="cityId"
                         label="شهر"
-                        // readUrl="/CompAddress/GetCities"
-                        // param={{ CountryId: countryVal, StateId: stateVal }}
-                        // textField="name"
-                        // valueField="id"
-                        serverBinding={{
-                            url: '/CompAddress/GetCities',
-                            filter: { CountryId: countryVal, StateId: stateVal },
-                            textField: 'name',
-                            valueField: 'id'
-                        }}
+                        apiUrl="/CompAddress/GetCities"
+                        apiFilter={cityFilter}
+                        textField="name"
+                        valueField="id"
+                    // serverBinding={{
+                    //     url: '/CompAddress/GetCities',
+                    //     filter: { CountryId: countryVal, StateId: stateVal },
+                    //     textField: 'name',
+                    //     valueField: 'id'
+                    // }}
                     />
                     {/* <InputSelectApiChangeValue
                          name="cityId"
@@ -198,14 +216,14 @@ const CompAddress = (props) => {
     );
 
     const onEditButtonClicked = (data) => {
-        debugger;
-        if (!data) data = {};
+        // debugger;
+        // if (!data) data = {};
 
-        if (!data.dateTo) data.dateTo = "";
-        if (!data.telModir) data.telModir = "";
-        if (!data.telMoaven) data.telMoaven = "";
-        if (!data.telMarkaz) data.telMarkaz = "";
-        if (!data.description) data.description = "";
+        // if (!data.dateTo) data.dateTo = "";
+        // if (!data.telModir) data.telModir = "";
+        // if (!data.telMoaven) data.telMoaven = "";
+        // if (!data.telMarkaz) data.telMarkaz = "";
+        // if (!data.description) data.description = "";
 
         setCountryVal(data.countryId || 0);
         setStateVal(data.stateId || 0);

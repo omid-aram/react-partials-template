@@ -4,7 +4,8 @@ import { Row, Col } from "react-bootstrap";
 
 import InputText from "../../../partials/editors/InputText";
 import InputHidden from "../../../partials/editors/InputHidden";
-import InputSelectApiChangeValue from "../../../partials/editors_old/InputSelectApiChangeValue";
+//import InputSelectApiChangeValue from "../../../partials/editors_old/InputSelectApiChangeValue";
+import InputSelect from "../../../partials/editors/InputSelect";
 import InputDate from "../../../partials/editors/InputDate";
 import SimpleInputHidden from "../../../partials/editors/SimpleInputHidden";
 
@@ -89,7 +90,7 @@ const MeetInfo = () => {
         <>
             <Row>
                 <Col sm={4}>
-                    <InputSelectApiChangeValue
+                    {/* <InputSelectApiChangeValue
                         name="companyId"
                         label="شرکت"
                         readUrl="/MeetInfo/GetCompanies"
@@ -97,6 +98,14 @@ const MeetInfo = () => {
                         textField="codeName"
                         valueField="id"
                         changeVal={companyChanged}
+                    /> */}
+                    <InputSelect
+                        name="companyId"
+                        label="شرکت"
+                        apiUrl="/MeetInfo/GetCompanies"
+                        textField="codeName"
+                        valueField="id"
+                        onChange={companyChanged}
                     />
                 </Col>
             </Row>

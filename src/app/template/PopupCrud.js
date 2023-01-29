@@ -13,38 +13,19 @@ import Alert from "@material-ui/lab/Alert";
 import confirmService from "../partials/content/ConfirmService";
 import objectPath from "object-path";
 import { passIdsActions } from "../store/ducks/passIds.duck";
-//import CompanyGroup from "../pages/Common/CompanyGroup";
 
 
 const PopupCurd = (props) => {
 
-    const { title, columns, keyColumn, urls, form, searchForm, detailForm, key, sortItem, initFormValues, otherFormFields,
+    const { title, columns, keyColumn, urls, form, searchForm, detailForm, key, sortItem, initFormValues, //otherFormFields,
         pageSize, modalSize, detailSize, detailTitle, initSearchValues, onEditButtonClicked, onNewButtonClicked } = props;
 
     const [filter, setFilter] = useState({
         page: 1,
-        //companyId:props.comid,
         pageSize: pageSize || 10,
         sort: sortItem || null,
         ...initSearchValues,
     });
-
-    // //const firstUpdate = useRef(true);
-    // useEffect(() => {
-    //     // if (firstUpdate.current) {//To prevent running on initial render
-    //     //     firstUpdate.current = false;
-    //     //     return;
-    //     // }
-
-    //     debugger;
-    //     setFilter({
-    //         page: 1,
-    //         companyId:props.comid,
-    //         pageSize: pageSize || 10,
-    //         sort: sortItem || null,
-    //         ...initSearchValues,
-    //     })
-    // }, [initSearchValues, pageSize, sortItem])
 
     const [showModal, setShowModal] = useState(false);
     const [modalTitle, setModalTitle] = useState("");
@@ -62,31 +43,30 @@ const PopupCurd = (props) => {
 
     const dispatch = useDispatch();
 
-    const setUndefinedToEmptyString = (data) => {
+    // const setUndefinedToEmptyString = (data) => {
+        
+    //     if (!data) data = {};
 
-        //debugger;
-        if (!data) data = {};
+    //     const columnFields = (columns || []).map(x => x.field);
+    //     const fields2 = [...columnFields, ...(otherFormFields || [])];
 
-        const columnFields = (columns || []).map(x => x.field);
-        const fields = [...columnFields, ...(otherFormFields || [])];
+    //     fields2.forEach(x => {
+    //         //if (!data[x]) data[x] = "";
+    //         if (data[x] === null || data[x] === undefined) data[x] = "";
+    //     });
+    // }
 
-        fields.forEach(x => {
-            //if (!data[x]) data[x] = "";
-            if (data[x] === null || data[x] === undefined) data[x] = "";
-        });
-    }
+    // const setEmptyStringToUndefined = (data) => {
 
-    const setEmptyStringToUndefined = (data) => {
+    //     if (!data) data = {};
 
-        if (!data) data = {};
+    //     const columnFields = (columns || []).map(x => x.field);
+    //     const fields = [...columnFields, ...(otherFormFields || [])];
 
-        const columnFields = (columns || []).map(x => x.field);
-        const fields = [...columnFields, ...(otherFormFields || [])];
-
-        fields.forEach(x => {
-            if (data[x] === "") data[x] = undefined;
-        });
-    }
+    //     fields.forEach(x => {
+    //         if (data[x] === "") data[x] = undefined;
+    //     });
+    // }
 
     const editHandler = (item) => {
 
@@ -106,7 +86,7 @@ const PopupCurd = (props) => {
                     onEditButtonClicked(data);
                 }
 
-                setUndefinedToEmptyString(data);
+                //setUndefinedToEmptyString(data);
 
                 formMethods.reset(data);
 
@@ -120,7 +100,7 @@ const PopupCurd = (props) => {
                 onEditButtonClicked(data);
             }
 
-            setUndefinedToEmptyString(data);
+            //setUndefinedToEmptyString(data);
 
             formMethods.reset(data);
 
@@ -211,7 +191,7 @@ const PopupCurd = (props) => {
 
     const formSubmitHandler = (data) => {
 
-        setEmptyStringToUndefined(data);
+        //setEmptyStringToUndefined(data);
 
         var url = editMode ? urls.editUrl : urls.createUrl;
         setFormError(null);
@@ -239,7 +219,7 @@ const PopupCurd = (props) => {
             onNewButtonClicked(initVal);
         }
 
-        setUndefinedToEmptyString(initVal);
+        //setUndefinedToEmptyString(initVal);
 
         formMethods.reset(initVal);
 

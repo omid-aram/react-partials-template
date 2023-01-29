@@ -38,15 +38,15 @@ const AssemBoard = (props) => {
                     <InputSelect
                         name="personId"
                         label="نام شخص"
-                        // readUrl="/AssemBoard/GetPersons"
-                        // textField="fullName"
-                        // valueField="id"
-                        serverBinding={{
-                            url: '/AssemBoard/GetPersons',
-                            filter: {},
-                            textField: 'fullName',
-                            valueField: 'id'
-                        }}
+                        apiUrl="/AssemBoard/GetPersons"
+                        textField="fullName"
+                        valueField="id"
+                        // serverBinding={{
+                        //     url: '/AssemBoard/GetPersons',
+                        //     filter: {},
+                        //     textField: 'fullName',
+                        //     valueField: 'id'
+                        // }}
 
                     />
                 </Col>

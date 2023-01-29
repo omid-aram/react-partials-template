@@ -24,20 +24,34 @@ const UserCharts = () => {
             <InputHidden name="id" />
             <Row>
                 <Col sm={6}>
-                    <InputSelect serverBinding={{
-                        url: '/Common/ChartDropDown',
-                        filter: {},
-                        textField: 'desc',
-                        valueField: 'id'
-                    }} label=" چارت سازمانی" name="chart" rules={{ required: "اجباری است" }} />
+                    <InputSelect
+                        label=" چارت سازمانی"
+                        name="chart"
+                        apiUrl="/Common/ChartDropDown"
+                        textField="desc"
+                        valueField="id"
+                        // serverBinding={{
+                        //     url: '/Common/ChartDropDown',
+                        //     filter: {},
+                        //     textField: 'desc',
+                        //     valueField: 'id'
+                        // }}
+                        rules={{ required: "اجباری است" }} />
                 </Col>
                 <Col sm={6}>
-                    <InputSelect serverBinding={{
-                        url: '/Common/UserDropDown',
-                        filter: {},
-                        textField: 'desc',
-                        valueField: 'id'
-                    }} label="کاربر" name="user" rules={{ required: "اجباری است" }} />
+                    <InputSelect
+                        label="کاربر"
+                        name="user"
+                        apiUrl="/Common/UserDropDown"
+                        textField="desc"
+                        valueField="id"
+                        // serverBinding={{
+                        //     url: '/Common/UserDropDown',
+                        //     filter: {},
+                        //     textField: 'desc',
+                        //     valueField: 'id'
+                        // }}
+                        rules={{ required: "اجباری است" }} />
                 </Col>
             </Row>
         </div >

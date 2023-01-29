@@ -45,15 +45,15 @@ const CompSubCompany = (props) => {
                     <InputSelect
                         name="id"
                         label="شرکت زیرمجموعه"
-                        // readUrl="/CompSubCompany/GetOrphanCompanies"
-                        // textField="codeName"
-                        // valueField="id"
-                        serverBinding={{
-                            url: '/CompSubCompany/GetOrphanCompanies',
-                            filter: {},
-                            textField: 'codeName',
-                            valueField: 'id'
-                        }}
+                        apiUrl="/CompSubCompany/GetOrphanCompanies"
+                        textField="codeName"
+                        valueField="id"
+                        // serverBinding={{
+                        //     url: '/CompSubCompany/GetOrphanCompanies',
+                        //     filter: {},
+                        //     textField: 'codeName',
+                        //     valueField: 'id'
+                        // }}
                     />
                 </Col>
             </Row>

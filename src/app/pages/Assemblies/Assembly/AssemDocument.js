@@ -52,15 +52,15 @@ const CompDocument = (props) => {
                     <InputSelect
                         name="asmDocTypeId"
                         label="نوع مستند"
-                        // readUrl="/CompDocument/GetAsmDocTypes"
-                        // textField="name"
-                        // valueField="id"
-                        serverBinding={{
-                            url: '/CompDocument/GetAsmDocTypes',
-                            filter: {},
-                            textField: 'name',
-                            valueField: 'id'
-                        }}
+                        apiUrl="/CompDocument/GetAsmDocTypes"
+                        textField="name"
+                        valueField="id"
+                        // serverBinding={{
+                        //     url: '/CompDocument/GetAsmDocTypes',
+                        //     filter: {},
+                        //     textField: 'name',
+                        //     valueField: 'id'
+                        // }}
                     />
                 </Col>
                 <Col sm={4}>

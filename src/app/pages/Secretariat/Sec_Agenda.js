@@ -1,6 +1,6 @@
 import React from "react"
 import PopupCurd from "../../template/PopupCrud"
-import { Row, Col,Button as Btn } from "react-bootstrap";
+import { Row, Col, Button as Btn } from "react-bootstrap";
 import InputDate from "../../partials/editors/InputDate";
 import InputText from "../../partials/editors/InputText";
 import InputHidden from "../../partials/editors/InputHidden";
@@ -27,46 +27,53 @@ const Sec_Agenda = () => {
 
     const DocTypeColumn = [
         {
-          field: "DES_ID",
-          title: "کد تفصیلی",
-          width: 2
+            field: "DES_ID",
+            title: "کد تفصیلی",
+            width: 2
         },
         {
-          field: "DES",
-          title: "نام بانک",
-          width: 5
+            field: "DES",
+            title: "نام بانک",
+            width: 5
         },
-      ]
-    
-    
-      const searchForm = (
+    ]
+
+
+    const searchForm = (
         <>
-          <Row>
-            <Col md={4}>
-              <InputText
-                name="name"
-                label="تفصیلی یا نام بانک"
-              />
-            </Col>
-            <Col sm={2}>
-              <Btn variant="outline-primary" type="submit">جستجو</Btn>
-            </Col>
-          </Row>
+            <Row>
+                <Col md={4}>
+                    <InputText
+                        name="name"
+                        label="تفصیلی یا نام بانک"
+                    />
+                </Col>
+                <Col sm={2}>
+                    <Btn variant="outline-primary" type="submit">جستجو</Btn>
+                </Col>
+            </Row>
         </>
-      );
-    
+    );
+
 
     const form = () => (
         <div className="form-container">
             <InputHidden name="id" />
             <Row>
                 <Col sm={4}>
-                    <InputSelect serverBinding={{
-                        url: '/Common/UserDropDown',
-                        filter: {},
-                        textField: 'desc',
-                        valueField: 'id'
-                    }} label="گیرنده" name="user" rules={{ required: "اجباری است" }} />
+                    <InputSelect
+                        label="گیرنده"
+                        name="user"
+                        apiUrl="/Common/UserDropDown"
+                        textField="desc"
+                        valueField="id"
+                        // serverBinding={{
+                        //     url: '/Common/UserDropDown',
+                        //     filter: {},
+                        //     textField: 'desc',
+                        //     valueField: 'id'
+                        // }}
+                        rules={{ required: "اجباری است" }} />
                 </Col>
                 <Col sm={4}>
                     <InputModal

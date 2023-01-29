@@ -93,15 +93,15 @@ const ServiceCrud = () => {
                     <InputSelect
                         name="companyGroupId"
                         label="گروه"
-                        // readUrl="/CompanyGroup/GetAll"
-                        // textField="name"
-                        // valueField="id"
-                        serverBinding={{
-                            url: '/CompanyGroup/GetAll',
-                            filter: {},
-                            textField: 'name',
-                            valueField: 'id'
-                        }}
+                        apiUrl="/CompanyGroup/GetAll"
+                        textField="name"
+                        valueField="id"
+                        // serverBinding={{
+                        //     url: '/CompanyGroup/GetAll',
+                        //     filter: {},
+                        //     textField: 'name',
+                        //     valueField: 'id'
+                        // }}
                     />
                 </Col>
                 <Col sm={3}>

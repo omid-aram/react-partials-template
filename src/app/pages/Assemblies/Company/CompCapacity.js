@@ -59,16 +59,16 @@ const CompCapacity = (props) => {
                     <InputSelect
                         name="asmProdLineId"
                         label="خط تولید"
-                        // readUrl="/CompCapacity/GetProdLines"
-                        // param={{ CompanyId: props.parentItem.id }}
-                        // textField="saloonLocation"
-                        // valueField="id"
-                        serverBinding={{
-                            url: '/CompCapacity/GetProdLines',
-                            filter: { CompanyId: props.parentItem.id },
-                            textField: 'saloonLocation',
-                            valueField: 'id'
-                        }}
+                        apiUrl="/CompCapacity/GetProdLines"
+                        apiFilter={{ CompanyId: props.parentItem.id }}
+                        textField="saloonLocation"
+                        valueField="id"
+                    // serverBinding={{
+                    //     url: '/CompCapacity/GetProdLines',
+                    //     filter: { CompanyId: props.parentItem.id },
+                    //     textField: 'saloonLocation',
+                    //     valueField: 'id'
+                    // }}
                     />
                 </Col>
                 <Col sm={4}>
@@ -82,15 +82,15 @@ const CompCapacity = (props) => {
                     <InputSelect
                         name="measUnitCode"
                         label="واحد اندازه گیری"
-                        // readUrl="/CompCapacity/GetMeasUnits"
-                        // textField="name"
-                        // valueField="code"
-                        serverBinding={{
-                            url: '/CompCapacity/GetMeasUnits',
-                            filter: {},
-                            textField: 'name',
-                            valueField: 'code'
-                        }}
+                        apiUrl="/CompCapacity/GetMeasUnits"
+                        textField="name"
+                        valueField="code"
+                        // serverBinding={{
+                        //     url: '/CompCapacity/GetMeasUnits',
+                        //     filter: {},
+                        //     textField: 'name',
+                        //     valueField: 'code'
+                        // }}
                     />
                 </Col>
                 <Col sm={4}>
@@ -104,16 +104,16 @@ const CompCapacity = (props) => {
                     <InputSelect
                         name="compFiscalYearId"
                         label="سال مالی"
-                        // readUrl="/CompCapacity/GetCompFiscalYears"
-                        // param={{ CompanyId: props.parentItem.id }}
-                        // textField="year"
-                        // valueField="id"
-                        serverBinding={{
-                            url: '/CompCapacity/GetCompFiscalYears',
-                            filter: { CompanyId: props.parentItem.id },
-                            textField: 'year',
-                            valueField: 'id'
-                        }}
+                        apiUrl="/CompCapacity/GetCompFiscalYears"
+                        apiFilter={{ CompanyId: props.parentItem.id }}
+                        textField="year"
+                        valueField="id"
+                        // serverBinding={{
+                        //     url: '/CompCapacity/GetCompFiscalYears',
+                        //     filter: { CompanyId: props.parentItem.id },
+                        //     textField: 'year',
+                        //     valueField: 'id'
+                        // }}
                     />
                 </Col>
                 <Col sm={12}>

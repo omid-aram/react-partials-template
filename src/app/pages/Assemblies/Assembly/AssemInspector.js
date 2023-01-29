@@ -39,15 +39,15 @@ const AssemInspector = (props) => {
                     <InputSelect
                         name="personId"
                         label="نام عضو"
-                        // readUrl="/AssemInspector/GetPersons"
-                        // textField="title"
-                        // valueField="id"
-                        serverBinding={{
-                            url: '/AssemInspector/GetPersons',
-                            filter: {},
-                            textField: 'title',
-                            valueField: 'id'
-                        }}
+                        apiUrl="/AssemInspector/GetPersons"
+                        textField="title"
+                        valueField="id"
+                        // serverBinding={{
+                        //     url: '/AssemInspector/GetPersons',
+                        //     filter: {},
+                        //     textField: 'title',
+                        //     valueField: 'id'
+                        // }}
 
                         rules={{ required: "اجباری است" }}
                     />

@@ -5,7 +5,7 @@ import { Row, Col } from "react-bootstrap";
 import InputText from "../../../partials/editors/InputText";
 import InputHidden from "../../../partials/editors/InputHidden";
 import InputSelect from "../../../partials/editors/InputSelect";
-import InputSelectApiChangeValue from "../../../partials/editors_old/InputSelectApiChangeValue";
+//import InputSelectApiChangeValue from "../../../partials/editors_old/InputSelectApiChangeValue";
 import InputCheckbox from "../../../partials/editors/InputCheckbox";
 import InputDate from "../../../partials/editors/InputDate";
 import SimpleInputHidden from "../../../partials/editors/SimpleInputHidden";
@@ -76,16 +76,16 @@ const AssemInfo = () => {
                     <InputSelect
                         name="fiscalYearId"
                         label="سال مالی"
-                        // readUrl="/AssemInfo/GetCompFiscalYears"
-                        // param={{ CompanyId: company.id }}
-                        // textField="year"
-                        // valueField="id"
-                        serverBinding={{
-                            url: '/AssemInfo/GetCompFiscalYears',
-                            filter: { CompanyId: company.id },
-                            textField: 'year',
-                            valueField: 'id'
-                        }}
+                        apiUrl="/AssemInfo/GetCompFiscalYears"
+                        apiFilter={{ CompanyId: company.id }}
+                        textField="year"
+                        valueField="id"
+                        // serverBinding={{
+                        //     url: '/AssemInfo/GetCompFiscalYears',
+                        //     filter: { CompanyId: company.id },
+                        //     textField: 'year',
+                        //     valueField: 'id'
+                        // }}
                     />
                 </Col>
                 <Col sm={6}>
@@ -129,7 +129,7 @@ const AssemInfo = () => {
         <>
             <Row>
                 <Col sm={4}>
-                    <InputSelectApiChangeValue
+                    {/* <InputSelectApiChangeValue
                         name="companyId"
                         label="شرکت"
                         readUrl="/AssemInfo/GetCompanies"
@@ -137,21 +137,15 @@ const AssemInfo = () => {
                         textField="codeName"
                         valueField="id"
                         changeVal={companyChanged}
-                    />
-                    {/* <InputSelect
+                    /> */}
+                    <InputSelect
                         name="companyId"
                         label="شرکت"
-                        // readUrl="/AssemInfo/GetCompanies"
-                        // textField="codeName"
-                        // valueField="id"
-                        serverBinding={{
-                            url: '/AssemInfo/GetCompanies',
-                            filter: {},
-                            textField: 'codeName',
-                            valueField: 'id'
-                        }}
-                        changeVal={companyChanged}
-                    /> */}
+                        apiUrl="/AssemInfo/GetCompanies"
+                        textField="codeName"
+                        valueField="id"
+                        onChange={companyChanged}
+                    />
                 </Col>
             </Row>
         </>

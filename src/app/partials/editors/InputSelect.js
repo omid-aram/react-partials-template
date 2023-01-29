@@ -24,7 +24,7 @@ const InputSelect = (props) => {
     useEffect(() => {
         setLoading(true);
 
-        if (items){
+        if (items) {
             setData(items.map(r => (
                 {
                     id: r[valueField || 'id'],
@@ -89,7 +89,7 @@ const InputSelect = (props) => {
                         size="small"
                         //defaultValue={value}
                         name={name}
-                        value={data && data.length > 0 ? value : ''}
+                        value={data && data.some(x => x.id === value) ? (value || '') : ''}
                     >
 
                         {placeholder ?

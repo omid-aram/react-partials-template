@@ -59,12 +59,19 @@ const MeetingRequest = () => {
       <InputHidden name="SRL" />
       <Row>
         <Col sm={4}>
-          <InputSelect serverBinding={{
-            url: '/Common/UserDropDown',
-            filter: {},
-            textField: 'desc',
-            valueField: 'id'
-          }} label="گیرنده" name="user" rules={{ required: "اجباری است" }} />
+          <InputSelect
+            label="گیرنده"
+            name="user"
+            apiUrl="/Common/UserDropDown"
+            textField="desc"
+            valueField="id"
+            // serverBinding={{
+            //   url: '/Common/UserDropDown',
+            //   filter: {},
+            //   textField: 'desc',
+            //   valueField: 'id'
+            // }}
+            rules={{ required: "اجباری است" }} />
         </Col>
         <Col sm={4}>
           <InputText label="شماره" name="NUMBER" rules={{ required: "اجباری است" }} />

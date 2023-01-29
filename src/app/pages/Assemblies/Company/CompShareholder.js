@@ -105,16 +105,16 @@ const CompShareholder = (props) => {
                     <InputSelect
                         name="compFiscalYearId"
                         label="سال مالی"
-                        // readUrl="/CompShareholder/GetCompFiscalYears"
-                        // param={{ CompanyId: props.parentItem.id }}
-                        // textField="year"
-                        // valueField="id"
-                        serverBinding={{
-                            url: '/CompShareholder/GetCompFiscalYears',
-                            filter: { CompanyId: props.parentItem.id },
-                            textField: 'year',
-                            valueField: 'id'
-                        }}
+                        apiUrl="/CompShareholder/GetCompFiscalYears"
+                        param={{ CompanyId: props.parentItem.id }}
+                        textField="year"
+                        valueField="id"
+                        // serverBinding={{
+                        //     url: '/CompShareholder/GetCompFiscalYears',
+                        //     filter: { CompanyId: props.parentItem.id },
+                        //     textField: 'year',
+                        //     valueField: 'id'
+                        // }}
                     />
                 </Col>
                 <Col sm={4}>
