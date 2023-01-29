@@ -5,7 +5,6 @@ import { Row, Col } from "react-bootstrap";
 import InputText from "../../../partials/editors/InputText";
 import InputHidden from "../../../partials/editors/InputHidden";
 import InputCheckbox from "../../../partials/editors/InputCheckbox";
-//import InputSelect from "../../../partials/editors/InputSelect_OLD";
 import InputSelect from "../../../partials/editors/InputSelect";
 
 
@@ -40,28 +39,23 @@ const AsmProdLine = () => {
         },
     ]
 
-
-
-
     const formfg = () => (
         <>
-
-
             <InputHidden name="id" />
             <Row>
                 <Col sm={6}>
                     <InputSelect
                         name="companyId"
                         label="شرکت"
-                        // readUrl="/AsmProdLine/GetCompanies"
-                        // textField="codeName"
-                        // valueField="id"
-                        serverBinding={{
-                            url: '/AsmProdLine/GetCompanies',
-                            filter: {},
-                            textField: 'codeName',
-                            valueField: 'id'
-                        }}
+                        apiUrl="/AsmProdLine/GetCompanies"
+                        textField="codeName"
+                        valueField="id"
+                        // serverBinding={{
+                        //     url: '/AsmProdLine/GetCompanies',
+                        //     filter: {},
+                        //     textField: 'codeName',
+                        //     valueField: 'id'
+                        // }}
                     />
                 </Col>
                 <Col sm={6}>

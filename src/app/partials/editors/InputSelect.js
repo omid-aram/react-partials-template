@@ -9,41 +9,68 @@ import baseService from "../../services/base.service"
 
 const InputSelect = (props) => {
     const {
-        enumType, lookupType, serverBinding, /* one of this */
-        name, label, placeholder, onChange, ...rest } = props
+        items, enumType, lookupType, apiUrl, /* one of this */
+        apiFilter, valueField, textField,
+        name, label, placeholder, onChange, ...rest } = props;
+
     const [data, setData] = useState([])
     const [loading, setLoading] = useState(false);
     const { control, errors/*, values*/ } = useFormContext();
 
+    const namePath = name.replace(/\[(\w+)\]/g, '.$1') //items[1] => items.1
+    const error = objectPath.get(errors, namePath);
+    const hasError = !!error;
+
     useEffect(() => {
-        setLoading(true)
-        if (enumType) {
+        setLoading(true);
+
+        if (items){
+            setData(items.map(r => (
+                {
+                    id: r[valueField || 'id'],
+                    desc: r[textField || 'desc']
+                })
+            ));
+            setLoading(false);
+        } else if (enumType) {
             getEnumSelectData(enumType).then(x => {
-                setData(x.data);
+                setData(x.data.map(r => (
+                    {
+                        id: r[valueField || 'id'],
+                        desc: r[textField || 'desc']
+                    })
+                ));
             })
             setLoading(false)
         } else if (lookupType) {
             getLookupSelectData(lookupType).then(x => {
-                setData(x.data);
+                setData(x.data.map(r => (
+                    {
+                        id: r[valueField || 'id'],
+                        desc: r[textField || 'desc']
+                    })
+                ));
             })
             setLoading(false)
-        } else if (serverBinding) {
-            baseService.post(serverBinding.url, serverBinding.filter || {})
+        } else if (apiUrl) {
+            baseService.post(apiUrl, apiFilter || {})
                 .then(res => {
                     setData(res.data.map(r => (
                         {
-                            id: r[serverBinding.valueField],
-                            desc: r[serverBinding.textField]
+                            id: r[valueField || 'id'],
+                            desc: r[textField || 'desc']
                         })
                     ));
                 })
                 .catch()
                 .finally(() => setLoading(false));
         } else {
-            alert("wrong usage of dropdown")
+            setData([]);
+            setLoading(false);
+            console.error(`${name}: صحیح تعریف نشده است`);
         }
 
-    }, [enumType, lookupType, serverBinding]);
+    }, [items, enumType, lookupType, apiUrl, apiFilter, textField, valueField, name]);
 
     const handleChange = (e) => {
         if (typeof (onChange) === "function") {
@@ -51,24 +78,18 @@ const InputSelect = (props) => {
         }
     };
 
-    //simple name : "title" 
-    //path name : "items[1].title"
-    let namePath = name.replace(/\[(\w+)\]/g, '.$1') //items[1] => items.1
-    let error = objectPath.get(errors, namePath);
-    let hasError = !!error;
-
-    //let value = values ? objectPath.get(values, namePath) : null;
-
     return (<>
         <FormControl variant="outlined" style={{ width: "100%" }} size="small">
             <InputLabel error={hasError}>{label}</InputLabel>
             <Controller
                 render={({ onChange, value, onBlur, name }) => (
                     <Select
-                        onChange={(e) => { handleChange(e) }}
+                        onChange={(e) => { onChange(e); handleChange(e); }}
                         label={label}
                         size="small"
-                        defaultValue={value}
+                        //defaultValue={value}
+                        name={name}
+                        value={data && data.length > 0 ? value : ''}
                     >
 
                         {placeholder ?
@@ -82,7 +103,7 @@ const InputSelect = (props) => {
                         }
 
                         {data && data.map(item =>
-                            <MenuItem value={item.id} key={item.id}>{item.desc}</MenuItem>
+                            <MenuItem value={item.id || ''} key={item.id}>{item.desc}</MenuItem>
                         )}
                     </Select>
                 )}
