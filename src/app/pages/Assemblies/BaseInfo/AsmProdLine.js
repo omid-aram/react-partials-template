@@ -50,6 +50,7 @@ const AsmProdLine = () => {
                         apiUrl="/AsmProdLine/GetCompanies"
                         textField="codeName"
                         valueField="id"
+                        readOnly={true}
                         // serverBinding={{
                         //     url: '/AsmProdLine/GetCompanies',
                         //     filter: {},

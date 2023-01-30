@@ -10,7 +10,7 @@ import baseService from "../../services/base.service"
 const InputSelect = (props) => {
     const {
         items, enumType, lookupType, apiUrl, /* one of this */
-        apiFilter, valueField, textField,
+        apiFilter, valueField, textField, readOnly,
         name, label, placeholder, onChange, ...rest } = props;
 
     const [data, setData] = useState([])
@@ -93,18 +93,21 @@ const InputSelect = (props) => {
                         {...rest}
                     >
 
-                        {placeholder ?
-                            <MenuItem value="" disabled>
-                                {placeholder}
-                            </MenuItem>
-                            :
-                            <MenuItem value="" style={{ height: '5px' }}>
-                                &nbsp;
-                            </MenuItem>
+                        {!readOnly &&
+                            (placeholder ?
+                                <MenuItem value="" disabled>
+                                    {placeholder}
+                                </MenuItem>
+                                :
+                                <MenuItem value="" style={{ height: '5px' }}>
+                                    &nbsp;
+                                </MenuItem>
+                            )
                         }
 
                         {data && data.map(item =>
-                            <MenuItem value={item.id || ''} key={item.id}>{item.desc}</MenuItem>
+                            (!readOnly || (!value) || (item.id === value)) &&
+                            (<MenuItem value={item.id || ''} key={item.id}>{item.desc}</MenuItem>)
                         )}
                     </Select>
                 )}
@@ -121,7 +124,8 @@ const InputSelect = (props) => {
                 //     </Select>
                 // }
                 name={name}
-                control={control}                
+                control={control}
+                defaultValue={""}
             />
             {loading && (
                 <i className="fa fa-spin fa-spinner" style={{ position: "absolute", top: "12px", left: "30px" }}></i>

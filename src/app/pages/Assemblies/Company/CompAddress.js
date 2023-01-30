@@ -73,7 +73,7 @@ const CompAddress = (props) => {
     }
 
     const cityFilter = { CountryId: countryVal, StateId: stateVal };
-    
+
     const formfg = () => (
         <>
             <InputHidden name="id" />
@@ -158,9 +158,14 @@ const CompAddress = (props) => {
                     /> */}
                 </Col>
                 <Col sm={4}>
-                    <InputNumber
+                    <InputText                        
                         name="postCode"
                         label="کد پستی"
+                        type="digit"
+                        style={{ fontWeight: 'bold', color: 'green' }}
+                        readOnly={false}
+                        //inputProps={{ maxLength: "10" }}
+                        maxLength={10}
                     />
                 </Col>
                 <Col sm={4}>

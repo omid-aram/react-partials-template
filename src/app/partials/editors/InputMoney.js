@@ -7,7 +7,7 @@ import NumberFormat from "react-number-format";
 
 
 
-const InputDate = (props) => {
+const InputMoney = (props) => {
   const { name, label, time, size, ...rest } = props
   const { control, errors } = useFormContext();
 
@@ -39,6 +39,7 @@ const InputDate = (props) => {
         }
         control={control}
         name={name}
+        defaultValue={""}
         //defaultValue={value}
         //onChange={handleChange}
         {...rest}
@@ -76,4 +77,4 @@ function NumberCustom(props) {
   );
 }
 
-export default InputDate;
+export default InputMoney;

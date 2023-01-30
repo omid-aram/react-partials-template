@@ -172,6 +172,9 @@ export default function Grid(props) {
 
                             //cell = row[col.field];  simple  e.g. title
                             cell = objectPath.get(row, col.field);//   complex e.g. type.title
+                            if (cell && col.comma1000){
+                                cell = cell.toLocaleString('en-US');
+                            }
                         }
                         return (<TableCell key={j} align={col.align ? col.align : "inherit"}>{cell}</TableCell>);
                     })}

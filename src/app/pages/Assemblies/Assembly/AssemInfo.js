@@ -38,6 +38,13 @@ const AssemInfo = () => {
         },
     ]
 
+    const [company, setCompany] = useState({});
+    const companyChanged = (val, text) => {
+        setCompany({ id: val, name: text });
+    }
+
+    const fiscalYearFilter = { CompanyId: company.id };
+
     const formfg = () => (
         <>
             <InputHidden name="id" />
@@ -77,7 +84,7 @@ const AssemInfo = () => {
                         name="fiscalYearId"
                         label="سال مالی"
                         apiUrl="/AssemInfo/GetCompFiscalYears"
-                        apiFilter={{ CompanyId: company.id }}
+                        apiFilter={fiscalYearFilter}
                         textField="year"
                         valueField="id"
                         // serverBinding={{
@@ -119,11 +126,6 @@ const AssemInfo = () => {
             </Row>
         </>
     );
-
-    const [company, setCompany] = useState({});
-    const companyChanged = (val, text) => {
-        setCompany({ id: val, name: text });
-    }
 
     const searchForm = (
         <>

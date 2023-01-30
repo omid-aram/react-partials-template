@@ -9,7 +9,7 @@ import moment from "moment-jalaali"
 
 
 const InputDate = (props) => {
-    const { name, label, time,...rest } = props
+    const { name, label, time, ...rest } = props
     const { control, errors } = useFormContext();
 
 
@@ -68,23 +68,24 @@ function DatePickerCustom(props) {
 
     //just for init value
     const [initValue, setInitValue] = useState();
-    useEffect(() =>{
+    useEffect(() => {
         setInitValue(value ? moment(value, 'YYYY/M/D HH:mm:ss') : null);
-    },[value])
-   
+    }, [value])
+
     return (
         <DatePicker
             value={initValue}
             timePicker={showTime}
             isGregorian={false}
+            setTodayOnBlur={false}
             ref={r => inputRef(r != null ? r.input : null)}
             onChange={(val) => {
-                if(!val){
+                if (!val) {
                     return;
                 }
                 //let jVal = val.format('jYYYY/jM/jD');
                 let gVal = val.format('YYYY/M/D HH:mm:ss');
-                
+
                 onChange(gVal);
                 //older version
                 // onChange({

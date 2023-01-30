@@ -29,6 +29,7 @@ const CompCapacity = (props) => {
         {
             field: "capacity",
             title: "ظرفیت",
+            comma1000: true
         },
         {
             field: "compFiscalYearYear",
@@ -50,6 +51,9 @@ const CompCapacity = (props) => {
     //     setStateVal(val);
     // }
 
+    const prodLineFilter = { CompanyId: props.parentItem.id };
+    const compFiscalYearFilter = { CompanyId: props.parentItem.id };
+
     const formfg = () => (
         <>
             <InputHidden name="id" />
@@ -60,7 +64,7 @@ const CompCapacity = (props) => {
                         name="asmProdLineId"
                         label="خط تولید"
                         apiUrl="/CompCapacity/GetProdLines"
-                        apiFilter={{ CompanyId: props.parentItem.id }}
+                        apiFilter={prodLineFilter}
                         textField="saloonLocation"
                         valueField="id"
                     // serverBinding={{
@@ -105,7 +109,7 @@ const CompCapacity = (props) => {
                         name="compFiscalYearId"
                         label="سال مالی"
                         apiUrl="/CompCapacity/GetCompFiscalYears"
-                        apiFilter={{ CompanyId: props.parentItem.id }}
+                        apiFilter={compFiscalYearFilter}
                         textField="year"
                         valueField="id"
                         // serverBinding={{

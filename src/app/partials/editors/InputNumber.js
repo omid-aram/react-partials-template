@@ -47,7 +47,7 @@ const InputNumber = (props) => {
                 // }
                 control={control}
                 name={name}
-            //defaultValue={value || ''}                
+                defaultValue={""}
             />
             <FormHelperText>
                 {hasError && (error.message)}

@@ -6,7 +6,6 @@ import InputText from "../../partials/editors/InputText";
 import InputHidden from "../../partials/editors/InputHidden";
 import InputSelect from "../../partials/editors/InputSelect";
 import InputDate from "../../partials/editors/InputDate";
-import InputMoney from "../../partials/editors/InputMoney";
 import CompDetails from "../Assemblies/Company/CompDetails";
 
 
@@ -79,6 +78,7 @@ const ServiceCrud = () => {
                     <InputText
                         name="code"
                         label="كد شركت"
+                        type="digit"
                     />
                 </Col>
                 <Col sm={3}>
@@ -108,12 +108,14 @@ const ServiceCrud = () => {
                     <InputText
                         name="nationalCode"
                         label="شناسه ملی / کد اقتصادی"
+                        type="digit"
                     />
                 </Col>
                 <Col sm={3}>
                     <InputText
                         name="registerNo"
                         label="شماره ثبت"
+                        type="digit"
                     />
                 </Col>
                 <Col sm={3}>
@@ -129,15 +131,17 @@ const ServiceCrud = () => {
                     />
                 </Col>
                 <Col sm={3}>
-                    <InputMoney
+                    <InputText
                         name="shareCount"
                         label="تعداد سهام"
+                        type="digit3"
                     />
                 </Col>
                 <Col sm={3}>
-                    <InputMoney
+                    <InputText
                         name="sharePrice"
                         label="مبلغ هر سهم"
+                        type="digit3"
                     />
                 </Col>
                 <Col sm={3}>

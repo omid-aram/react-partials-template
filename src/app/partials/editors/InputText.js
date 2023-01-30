@@ -4,7 +4,7 @@ import { Controller, useFormContext } from "react-hook-form"
 import objectPath from "object-path"
 
 const InputText = (props) => {
-    const { name, label, type, rows, onChange, ...rest } = props
+    const { name, label, type, rows, onChange, style, readOnly, inputProps, maxLength, ...rest } = props
     const { control, errors } = useFormContext();
     // console.log("props1" , props)
     //simple name : "title" 
@@ -20,6 +20,12 @@ const InputText = (props) => {
         }
     };
 
+    const numberGrouping = (sNum) => {
+        if (!sNum && sNum !== 0) return "";
+    
+        return sNum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    };    
+
     return (<>
         <FormControl variant="outlined" style={{ width: "100%" }} size="small">
             <InputLabel error={hasError} >{label}</InputLabel>
@@ -29,13 +35,23 @@ const InputText = (props) => {
                         type={type || "text"}
                         label={label}
                         name={name}
-                        value={value || ""}
+                        value={type === "digit3" ? numberGrouping(value) : (value || "")}
                         onChange={(e) => { onChange(e); handleChange(e); }}
 
-                        style={{direction: ["number", "email", "tel", "password"].includes(type) ? "ltr" : null}}
+                        style={{ direction: ["number", "email", "tel", "password", "digit", "digit3"].includes(type) ? "ltr" : null, ...style }}
+                        inputProps={{ readOnly: readOnly ? "true" : null, maxLength: maxLength, ...inputProps }}
                         multiline={Boolean(rows)}
                         rows={rows || 0}
-                        error={hasError} 
+                        error={hasError}
+                        onInput={(e) => {
+                            if (type === "digit" || type === "digit3") {
+                                e.target.value = e.target.value.replace(/[^0-9.-]/g, '').replace(/(\..*)\./g, '$1');
+
+                                if (type === "digit3") {
+                                    e.target.value = numberGrouping(e.target.value);
+                                }
+                            }
+                        }}
                         {...rest} />
                 )}
                 // as={
@@ -48,8 +64,8 @@ const InputText = (props) => {
                 // }
                 control={control}
                 name={name}
-                //defaultValue={""}
-                //{...rest}
+                defaultValue={""}
+            //{...rest}
             />
             <FormHelperText>
                 {hasError && (error.message)}
