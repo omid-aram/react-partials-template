@@ -17,7 +17,7 @@ import { passIdsActions } from "../store/ducks/passIds.duck";
 
 const PopupCurd = (props) => {
 
-    const { title, columns, keyColumn, urls, form, searchForm, detailForm, key, sortItem, initFormValues, //otherFormFields,
+    const { title, columns, keyColumn, urls, form, searchForm, detailForm, sortItem, initFormValues, //otherFormFields,
         pageSize, modalSize, detailSize, detailTitle, initSearchValues, onEditButtonClicked, onNewButtonClicked } = props;
 
     const [filter, setFilter] = useState({
@@ -212,7 +212,7 @@ const PopupCurd = (props) => {
     }
     const addNewHandler = () => {
         let initVal = { ...initFormValues };
-        let k = key ? key : "id";
+        let k = keyColumn || "id";
         objectPath.set(initVal, k, 0);//null id => server validation error
         //setFormValues(initVal);
         if (typeof (onNewButtonClicked) === "function") {

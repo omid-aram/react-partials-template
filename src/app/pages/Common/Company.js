@@ -15,51 +15,73 @@ const ServiceCrud = () => {
         {
             field: "code",
             title: "كد شركت",
-            width: 70
+            sortable: true,
+            sortField: "code.Length, code",
+            width: 70,
+            filterable: true,
         },
         {
             field: "name",
             title: "نام شرکت",
+            style: {color: 'blue'},
+            sortable: true,
         },
         {
             field: "companyTypeDesc",
             title: "نوع",
+            style: {fontWeight: 'bold'},
+            sortable: true,
+            sortField: "companyType",
         },
         {
             field: "nationalCode",
             title: "شناسه ملی / کد اقتصادی",
+            sortable: true,
         },
         {
             field: "registerNo",
             title: "ش ثبت",
+            sortable: true,
         },
         {
             field: "stockCode",
             title: "کد بورس",
+            sortable: true,
         },
         {
             field: "registerDateFa",
             title: "تاریخ تاسیس",
+            sortable: true,
+            sortField: "registerDate",
         },
         {
             field: "shareCount",
             title: "تعداد سهام",
+            sortable: true,
+            comma1000: true,
         },
         {
             field: "sharePrice",
             title: "مبلغ هر سهم",
+            sortable: true,
+            comma1000: true,
         },
         {
             field: "terminateDateFa",
             title: "تاریخ انحلال",
+            sortable: true,
+            sortField: "terminateDate",
         },
         {
             field: "nation",
             title: "ملیت",
+            sortable: true,
         },
         {
             field: "companyGroupName",
             title: "گروه",
+            sortable: true,
+            sortField: "CompanyGroupId",
         },
     ]
 

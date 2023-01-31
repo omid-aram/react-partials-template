@@ -236,7 +236,7 @@ const CompAddress = (props) => {
 
     return (<>
 
-        <PopupCurd
+        <PopupCurd        
             columns={columns}
             pageSize={5}
             title="آدرس های شرکت"

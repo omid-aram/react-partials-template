@@ -75,7 +75,7 @@ export default function Grid(props) {
             let omidFilters = []
             for (let field2 in localFilter) {
                 omidFilters.push({
-                    Field: field2[0].toUpperCase() + field2.substr(1),
+                    Field: field2[0].toUpperCase() + field2.substring(1),
                     Value: localFilter[field2],
                 });
             }
@@ -83,8 +83,14 @@ export default function Grid(props) {
             let f = { ...filter, ...localFilter, Filters: omidFilters }
             f.page = page + 1;
             f.pageSize = isShowAll() ? 10000 : rowsPerPage;
-            if (orderby)
-                f.sort = orderby + ' ' + orderDir;
+            if (orderby) {
+                //f.sort = orderby + ' == null, ' + orderby + ' ' + orderDir;
+                f.sort = "";
+                const orderbyArray = orderby.split(',');
+                orderbyArray.forEach(x => {
+                    f.sort += (f.sort.length > 0 ? ", " : "") + x + ' == null, ' + x + ' ' + orderDir;
+                });
+            }
 
             baseService.post(url, f).then(({ data }) => {
                 if (data.errors) {
@@ -139,6 +145,7 @@ export default function Grid(props) {
         const isAsc = orderby === field && orderDir === 'asc';
         setOrderDir(isAsc ? 'desc' : 'asc');
         setOrderby(field);
+        setPage(0);
     }
 
     const localFilterChange = (field, input) => {
@@ -172,11 +179,11 @@ export default function Grid(props) {
 
                             //cell = row[col.field];  simple  e.g. title
                             cell = objectPath.get(row, col.field);//   complex e.g. type.title
-                            if (cell && col.comma1000){
+                            if (cell && col.comma1000) {
                                 cell = cell.toLocaleString('en-US');
                             }
                         }
-                        return (<TableCell key={j} align={col.align ? col.align : "inherit"}>{cell}</TableCell>);
+                        return (<TableCell key={j} align={col.align ? col.align : "inherit"} style={col.style}>{cell}</TableCell>);
                     })}
 
                 </TableRow>
@@ -212,9 +219,10 @@ export default function Grid(props) {
                                 {col.sortable ?
                                     (
                                         <TableSortLabel
-                                            active={orderby === col.sortField || col.field}
+                                            active={orderby === (col.sortField || col.field)}
                                             direction={orderby === (col.sortField || col.field) ? orderDir : 'asc'}
                                             onClick={() => sortHandler(col.sortField || col.field)}
+                                            style={{ "fontWeight": orderby === (col.sortField || col.field) ? "bold" : null }}
                                         >
                                             {col.title}
                                         </TableSortLabel>
