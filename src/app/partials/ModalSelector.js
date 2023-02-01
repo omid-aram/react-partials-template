@@ -32,7 +32,7 @@ const ModalSelector = props => {
             if (isCheck) {
                 setSelected(prev => [...prev, item[keyColumn]])
             } else {
-                setSelected(prev => prev.filter(x => x[keyColumn] != item[keyColumn]))
+                setSelected(prev => prev.filter(x => x[keyColumn] !== item[keyColumn]))
             }
         }
     }

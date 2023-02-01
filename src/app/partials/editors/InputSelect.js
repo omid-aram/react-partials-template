@@ -22,6 +22,7 @@ const InputSelect = (props) => {
     const hasError = !!error;
 
     useEffect(() => {
+        let isMounted = true;
         setLoading(true);
 
         if (items) {
@@ -34,6 +35,8 @@ const InputSelect = (props) => {
             setLoading(false);
         } else if (enumType) {
             getEnumSelectData(enumType).then(x => {
+                if (!isMounted) return;
+                
                 setData(x.data.map(r => (
                     {
                         id: r[valueField || 'id'],
@@ -41,9 +44,11 @@ const InputSelect = (props) => {
                     })
                 ));
             })
-            setLoading(false)
+            .finally(() => isMounted && setLoading(false));
         } else if (lookupType) {
             getLookupSelectData(lookupType).then(x => {
+                if (!isMounted) return;
+                
                 setData(x.data.map(r => (
                     {
                         id: r[valueField || 'id'],
@@ -51,10 +56,12 @@ const InputSelect = (props) => {
                     })
                 ));
             })
-            setLoading(false)
+            .finally(() => isMounted && setLoading(false));
         } else if (apiUrl) {
             baseService.post(apiUrl, apiFilter || {})
                 .then(res => {
+                    if (!isMounted) return;
+                
                     setData(res.data.map(r => (
                         {
                             id: r[valueField || 'id'],
@@ -63,12 +70,18 @@ const InputSelect = (props) => {
                     ));
                 })
                 .catch()
-                .finally(() => setLoading(false));
+                .finally(() => isMounted && setLoading(false));
         } else {
             setData([]);
             setLoading(false);
             console.error(`${name}: صحیح تعریف نشده است`);
         }
+
+        const cleanUp = () => {
+            isMounted = false;
+        };
+
+        return cleanUp;
 
     }, [items, enumType, lookupType, apiUrl, apiFilter, textField, valueField, name]);
 

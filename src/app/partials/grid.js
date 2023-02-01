@@ -54,6 +54,7 @@ export default function Grid(props) {
     //const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
     useEffect(() => {
+        let isMounted = true;
         const isShowAll = () => {
             return rowsPerPage === 'All';
         }
@@ -93,6 +94,8 @@ export default function Grid(props) {
             }
 
             baseService.post(url, f).then(({ data }) => {
+                if (!isMounted) return;
+                
                 if (data.errors) {
                     //alert or something
                 } else {
@@ -109,8 +112,15 @@ export default function Grid(props) {
                         setTotal(data.totalCount);
                     }
                 }
-            }).finally(() => setLoading(false));
+            }).finally(() => isMounted && setLoading(false));
         }
+
+        const cleanUp = () => {
+            isMounted = false;
+        };
+
+        return cleanUp;
+
     }, [page, rowsPerPage, filter, orderby, orderDir, offlineData, forceUpdate, localFilter, offline, url])
 
     // useEffect(() => {

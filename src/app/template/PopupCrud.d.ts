@@ -102,15 +102,25 @@ export interface PopupCrudProps {
    */
   detailTitle: string;
   /**
-   * - تابعی که با زدن دکمه ویرایش فراخوانی میشود
+   * - تابعی که پیش از باز شدن پنجره ویرایش فراخوانی میشود
    * @param data داده های ردیف انتخاب شده
    */
   onEditButtonClicked;
   /**
-   * - تابعی که با زدن دکمه ثبت مورد جدید فراخوانی میشود
+   * - تابعی که پیش از باز شدن پنجره ثبت مورد جدید فراخوانی میشود
    * @param data مقادیر پیش فرض فرم
    */
   onNewButtonClicked;
 }
 
+/**
+ * - این کامپوننت چهار عمل اصلی فرم را تسهیل میکند
+ * - شامل یک جدول جهت نمایش داده ها و یک فرم جهت ثبت یا ویرایش اطلاعات
+ * - 
+ * - پارامترهای مهم :
+ * - - - title
+ * - - columns
+ * - - urls
+ * - - form
+ */
 export default function PopupCrud(props: PopupCrudProps): JSX.Element;

@@ -18,7 +18,6 @@ const ServiceCrud = () => {
             sortable: true,
             sortField: "code.Length, code",
             width: 70,
-            filterable: true,
         },
         {
             field: "name",

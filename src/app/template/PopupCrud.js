@@ -44,7 +44,7 @@ const PopupCurd = (props) => {
     const dispatch = useDispatch();
 
     // const setUndefinedToEmptyString = (data) => {
-        
+
     //     if (!data) data = {};
 
     //     const columnFields = (columns || []).map(x => x.field);
@@ -338,16 +338,18 @@ const PopupCurd = (props) => {
                     <Alert severity="error">{formError}</Alert>
                 )}
 
-                {detailMode ?
-                    <>
-                        {React.cloneElement(detailForm, { ...detailItem })}
-                    </>
-                    :
-                    <FormProvider  {...formMethods}>
-                        <form onSubmit={formMethods.handleSubmit(formSubmitHandler)} ref={formRef} >
-                            {form(formMethods)}
-                        </form>
-                    </FormProvider >
+                {showModal &&
+                    (detailMode ?
+                        <>
+                            {React.cloneElement(detailForm, { ...detailItem })}
+                        </>
+                        :
+                        <FormProvider  {...formMethods}>
+                            <form onSubmit={formMethods.handleSubmit(formSubmitHandler)} ref={formRef} >
+                                {form(formMethods)}
+                            </form>
+                        </FormProvider >
+                    )
                 }
             </GenModal >
         </>
