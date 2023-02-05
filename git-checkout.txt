@@ -1,6 +1,7 @@
 git fetch --all
 
-git checkout template/master src/app/template/PopupCrud.js src/app/template/PopupCrud.d.ts 
+git checkout template/master src/app/template/PopupCrud.js
+                             src/app/template/PopupCrud.d.ts 
                              src/app/partials/grid.js 
                              src/app/partials/editors/InputText.js
                              src/app/partials/editors/InputText.d.ts
