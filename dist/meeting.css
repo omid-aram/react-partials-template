@@ -1,8 +1,0 @@
-.MuiTypography-root {
-    font-family: 'IRANSans'!important;
-}
-
-.MuiButton-label{
-    font-family: 'IRANSans'!important;
-}
-.test3meeting{border-radius:5px}.parentMenu{font-size:13px;font-weight:500;color:#d0e5ff}.menucol{background-color:#131d23;padding:35px 20px}.menucol a{color:#fff;transition:.3s all;font-size:11px;font-weight:400}.menucol a:hover{color:#181818}.menucol .menulink{padding:5px;margin:5px 0;border-bottom:1px solid #acadb7;display:inline-block}.parentMenu{list-style:none}.caret{cursor:pointer;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.caret::before{content:"◀";color:#d9eaff;display:inline-block;margin-left:6px;font-size:10px}.caret-down::before{-ms-transform:rotate(90deg);-webkit-transform:rotate(90deg);transform:rotate(90deg)}@media(min-width: 1024px){.container,.container-lg,.container-md,.container-sm{max-width:100%;height:100%}}.loginbtn{background-color:#53eab8 !important}.logoutbtn{background-color:#de3078f2 !important}.row{height:100%}.test2meeting{border:2px solid green;margin:5px}
