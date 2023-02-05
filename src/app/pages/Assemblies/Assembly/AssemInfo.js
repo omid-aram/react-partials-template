@@ -14,6 +14,8 @@ import AssemDetails from "./AssemDetails";
 
 const AssemInfo = () => {
 
+    const [trigger, setTrigger] = useState(false);
+
     const columns = [
         {
             field: "assemNo",
@@ -38,9 +40,10 @@ const AssemInfo = () => {
         },
     ]
 
-    const [company, setCompany] = useState({});
+    const [company, setCompany] = useState({id: 1});
     const companyChanged = (val, text) => {
         setCompany({ id: val, name: text });
+        setTrigger(true);
     }
 
     const fiscalYearFilter = { CompanyId: company.id };
@@ -87,12 +90,12 @@ const AssemInfo = () => {
                         apiFilter={fiscalYearFilter}
                         textField="year"
                         valueField="id"
-                        // serverBinding={{
-                        //     url: '/AssemInfo/GetCompFiscalYears',
-                        //     filter: { CompanyId: company.id },
-                        //     textField: 'year',
-                        //     valueField: 'id'
-                        // }}
+                    // serverBinding={{
+                    //     url: '/AssemInfo/GetCompFiscalYears',
+                    //     filter: { CompanyId: company.id },
+                    //     textField: 'year',
+                    //     valueField: 'id'
+                    // }}
                     />
                 </Col>
                 <Col sm={6}>
@@ -168,7 +171,6 @@ const AssemInfo = () => {
                 editUrl: "/AssemInfo/Update",
                 detailUrl: "modal",
             }}
-            //comid={window.a}
             form={formfg}
             searchForm={searchForm}
             initSearchValues={{ companyId: company.id }}
@@ -176,6 +178,9 @@ const AssemInfo = () => {
             detailForm={<AssemDetails />}
             detailSize="xl"
             detailTitle={detailTitle}
+
+            trigger={trigger}
+            setTrigger={setTrigger}
         />
 
     </>);

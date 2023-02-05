@@ -102,7 +102,7 @@ const InputSelect = (props) => {
                         size="small"
                         //defaultValue={value}
                         name={name}
-                        value={data && data.some(x => x.id === value) ? (value || '') : ''}
+                        value={data && data.some(x => x.id.toString() === value.toString()) ? (value || '') : ''}
                         {...rest}
                     >
 

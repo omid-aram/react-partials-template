@@ -95,7 +95,7 @@ export default function Grid(props) {
 
             baseService.post(url, f).then(({ data }) => {
                 if (!isMounted) return;
-                
+
                 if (data.errors) {
                     //alert or something
                 } else {

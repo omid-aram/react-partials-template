@@ -48,7 +48,7 @@ export interface PopupCrudProps {
   /**
    * - تعداد ردیف ها در هر صفحه
    */
-  pageSize: int;
+  pageSize: number;
   /**
    * - مقادیر پیش فرض جستجو
    * - e.g. initSearchValues={{ personType: 1 }}
@@ -118,7 +118,7 @@ export interface PopupCrudProps {
  * - شامل یک جدول جهت نمایش داده ها و یک فرم جهت ثبت یا ویرایش اطلاعات
  * - 
  * - پارامترهای مهم :
- * - - - title
+ * - - title
  * - - columns
  * - - urls
  * - - form

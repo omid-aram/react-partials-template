@@ -20,7 +20,7 @@ export interface InputTextProps {
   /**
    * در صورت تعریف، کنترل به صورت چندخطی نمایش داده می شود
    */
-  rows?: int;
+  rows?: number;
   /**
    * در صورت تعریف، کنترل غیر قابل تغییر می شود
    */
@@ -32,7 +32,7 @@ export interface InputTextProps {
   /**
    * در صورت تعریف، طول رشته محدود می شود
    */
-  maxLength?: int;
+  maxLength?: number;
   /**
    * شخصی سازی استایل
    */

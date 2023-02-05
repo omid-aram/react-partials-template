@@ -1,4 +1,4 @@
-import React, { useState, useRef/*, useEffect*/ } from "react"
+import React, { useState, useRef, useEffect } from "react"
 import Grid from "../partials/grid"
 import { DeleteButton, EditButton, DetailButton } from "../partials/content/UIHelper";
 import { Portlet, PortletHeader, PortletHeaderToolbar, PortletBody } from "../partials/content/Portlet";
@@ -18,7 +18,8 @@ import { passIdsActions } from "../store/ducks/passIds.duck";
 const PopupCurd = (props) => {
 
     const { title, columns, keyColumn, urls, form, searchForm, detailForm, sortItem, initFormValues, //otherFormFields,
-        pageSize, modalSize, detailSize, detailTitle, initSearchValues, onEditButtonClicked, onNewButtonClicked } = props;
+        pageSize, modalSize, detailSize, detailTitle, initSearchValues, onEditButtonClicked, onNewButtonClicked
+        , trigger, setTrigger } = props;
 
     const [filter, setFilter] = useState({
         page: 1,
@@ -34,7 +35,7 @@ const PopupCurd = (props) => {
     const [editMode, setEditMode] = useState(false);
     const [detailMode, setDetailMode] = useState(false);
     const [detailItem, setDetailItem] = useState([]);
-    const searchMethods = useForm();
+    const searchMethods = useForm({ defaultValues: { ...initSearchValues } });
     const formMethods = useForm();
 
     const classes = useStyle();
@@ -42,6 +43,19 @@ const PopupCurd = (props) => {
     const formRef = useRef();
 
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (trigger) {
+            setFilter({
+                page: 1,
+                pageSize: pageSize || 10,
+                sort: sortItem || null,
+                ...initSearchValues,
+            });
+
+            setTrigger(false);
+        }
+    }, [initSearchValues, pageSize, sortItem, trigger, setTrigger]);
 
     // const setUndefinedToEmptyString = (data) => {
 
@@ -140,21 +154,22 @@ const PopupCurd = (props) => {
         }
         setModalTitle(detailTitleText);
 
-        if (urls.getUrl) { //which means data is complexer than grid data and needs to be fetch
-            dispatch(loaderActions.show())
-            baseService.post(urls.getUrl, { id: item.id }).then(res => {
+        // if (urls.getUrl) { //which means data is complexer than grid data and needs to be fetch
+        //     dispatch(loaderActions.show())
+        //     baseService.post(urls.getUrl, { id: item.id }).then(res => {
 
-                //setFormValues(res.data);
-                formMethods.reset(res.data)
+        //         //setFormValues(res.data);
+        //         formMethods.reset(res.data)
 
-                dispatch(loaderActions.hide())
-                setShowModal(true);
-            });
-        } else {
-            //  setFormValues(item);
-            formMethods.reset({ ...item })
-            setShowModal(true);
-        }
+        //         dispatch(loaderActions.hide())
+        //         setShowModal(true);
+        //     });
+        // } else {
+        //     //  setFormValues(item);
+        //     formMethods.reset({ ...item })
+        //     setShowModal(true);
+        // }
+        setShowModal(true);
     }
 
     const deleteHandler = (item) => {
