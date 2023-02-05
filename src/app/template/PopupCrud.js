@@ -21,7 +21,7 @@ const PopupCurd = (props) => {
         pageSize, modalSize, detailSize, detailTitle, initSearchValues, onEditButtonClicked, onNewButtonClicked
         , trigger, setTrigger } = props;
 
-    const [filter, setFilter] = useState({
+    const [filter, setFilter] = useState({ 
         page: 1,
         pageSize: pageSize || 10,
         sort: sortItem || null,
