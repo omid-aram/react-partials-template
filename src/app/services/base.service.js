@@ -5,7 +5,7 @@ import { snackbarActions } from '../store/ducks/snackbar.duck';
 
 class BaseService {
 
-    baseUrl = 'https://localhost:44336/';
+    baseUrl = 'https://localhost:44336/'; 
     store = null; // may came from parent project
 
     // baseUrl = (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') ? // dev code
