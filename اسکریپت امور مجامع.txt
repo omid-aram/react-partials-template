@@ -1,0 +1,721 @@
+--تغییرات تست به لایو
+------------------------------------------
+grant SELECT, INSERT, UPDATE, DELETE on admin.PUCOMPT to appfnc;
+
+-------------------------------------------------------
+grant SELECT, INSERT, UPDATE, DELETE on admin.INADDRT to appfnc;
+grant SELECT, INSERT, UPDATE, DELETE on admin.pucityt to appfnc;
+grant SELECT, INSERT, UPDATE, DELETE on admin.pustatt to appfnc;
+grant SELECT, INSERT, UPDATE, DELETE on admin.pucntrt to appfnc;
+
+CREATE OR REPLACE TRIGGER admin.inaddr_BI
+BEFORE INSERT
+ON admin.inaddrt
+REFERENCING NEW AS NEW OLD AS OLD
+FOR EACH ROW
+declare
+  -- local variables here
+     V_CUR_USER VARCHAR2(100);
+begin
+
+ V_CUR_USER := COALESCE(V('APP_USER'),USER);
+
+    IF (V_CUR_USER <> 'APPFNC') then
+        :NEW.UA_USER_SRL := ADMIN.PU_GET_USER_SRL_F(V_CUR_USER);
+    end if;
+    :NEW.U_DATE_TIME := SYSDATE ;
+    --????? ????? ????? ? ????? ?????
+    IF (V_CUR_USER <> 'APPFNC') then
+        :NEW.INS_USER := ADMIN.PU_GET_USER_SRL_F(V_CUR_USER);
+    end if;
+    :NEW.INS_DTE := SYSDATE ;
+
+    :NEW.SRL := ADMIN.inaddrt_SEQ.NEXTVAL;
+
+end inaddr_bi;
+
+CREATE OR REPLACE TRIGGER admin.inaddr_BU
+  before update ON ADMIN.inaddrt
+  for each row
+declare
+  -- local variables here
+    V_CUR_USER VARCHAR2(100);
+begin
+
+
+ V_CUR_USER:=COALESCE(V('APP_USER'),USER);
+
+    IF (V_CUR_USER <> 'APPFNC') then
+     :NEW.UA_USER_SRL := ADMIN.PU_GET_USER_SRL_F(V_CUR_USER);
+    end if;
+     :NEW.U_DATE_TIME := SYSDATE ;
+
+end inaddr_BU;
+
+
+-------------------------------------------------------
+grant SELECT, INSERT, UPDATE, DELETE on admin.INLOCT to appfnc;
+
+CREATE OR REPLACE TRIGGER admin.INLOC_BI
+BEFORE INSERT
+ON ADMIN.INLOCT
+REFERENCING NEW AS NEW OLD AS OLD
+FOR EACH ROW
+declare
+  -- local variables here
+     V_CUR_USER VARCHAR2(100);
+begin
+
+    V_CUR_USER := COALESCE(V('APP_USER'),USER);
+
+    IF (V_CUR_USER <> 'APPFNC') then
+        :NEW.INS_USER := ADMIN.PU_GET_USER_SRL_F(V_CUR_USER);
+    end if;
+    :NEW.INS_DATE := SYSDATE ;
+
+    select  nvl(max(code),0)+1
+    into    :new.code
+    from    admin.inloct
+    where   pucomp_srl = :new.pucomp_srl;
+    :NEW.SRL := ADMIN.INLOCT_seq.NEXTVAL;
+
+end INLOC_BI;
+
+CREATE OR REPLACE TRIGGER admin.INLOC_BU
+  before update ON ADMIN.INLOCT
+  for each row
+declare
+  -- local variables here
+    V_CUR_USER VARCHAR2(100);
+begin
+
+
+ V_CUR_USER:=COALESCE(V('APP_USER'),USER);
+
+    IF (V_CUR_USER <> 'APPFNC') then
+     :NEW.UA_USER_SRL := ADMIN.PU_GET_USER_SRL_F(V_CUR_USER);
+    end if;
+     :NEW.U_DATE_TIME := SYSDATE ;
+end INLOC_BU;
+
+
+-------------------------------------------------------
+grant SELECT, INSERT, UPDATE, DELETE on admin.INCAPCT to appfnc;
+grant SELECT, INSERT, UPDATE, DELETE on admin.infisct to appfnc;
+
+CREATE OR REPLACE TRIGGER admin.incapc_BI
+BEFORE INSERT
+ON admin.incapct
+REFERENCING NEW AS NEW OLD AS OLD
+FOR EACH ROW
+declare
+  -- local variables here
+     V_CUR_USER VARCHAR2(100);
+begin
+
+ V_CUR_USER := COALESCE(V('APP_USER'),USER);
+
+    IF (V_CUR_USER <> 'APPFNC') then
+        :NEW.INS_USER := ADMIN.PU_GET_USER_SRL_F(V_CUR_USER);
+    end if;
+    :NEW.INS_DTE := SYSDATE ;
+
+    :NEW.SRL := ADMIN.incapct_SEQ.NEXTVAL;
+
+end incapc_BI;
+
+-------------------------------------------------------
+grant SELECT, INSERT, UPDATE, DELETE on admin.INSHHOT to appfnc;
+
+CREATE OR REPLACE TRIGGER admin.INSHHO_BI
+  before INSERT ON ADMIN.INSHHOT
+  for each row
+declare
+  -- local variables here
+    V_CUR_USER VARCHAR2(100);
+begin
+
+
+ V_CUR_USER:=COALESCE(V('APP_USER'),USER);
+
+     :NEW.SRL := ADMIN.INSHHOT_seq.NEXTVAL;
+    IF (V_CUR_USER <> 'APPFNC') then
+     :NEW.INS_USER := ADMIN.PU_GET_USER_SRL_F(V_CUR_USER);
+    end if;
+     :NEW.INS_DTE := SYSDATE ;
+
+end INSHHOT_BI;
+
+CREATE OR REPLACE TRIGGER admin.INSHHO_BU
+  before update ON ADMIN.INSHHOT
+  for each row
+declare
+  -- local variables here
+    V_CUR_USER VARCHAR2(100);
+begin
+
+
+ V_CUR_USER:=COALESCE(V('APP_USER'),USER);
+
+    IF (V_CUR_USER <> 'APPFNC') then
+     :NEW.UA_USER_SRL := ADMIN.PU_GET_USER_SRL_F(V_CUR_USER);
+    end if;
+     :NEW.U_DATE_TIME := SYSDATE ;
+
+end INSHHOT_BU;
+
+
+-------------------------------------------------------
+grant SELECT, INSERT, UPDATE, DELETE on admin.INPRTNRT to appfnc;
+-------------------------------------------------------
+grant SELECT, INSERT, UPDATE, DELETE on admin.INFACTT to appfnc;
+
+CREATE OR REPLACE TRIGGER admin.INFACTT_TRG
+BEFORE INSERT
+ON admin.INFACTT
+REFERENCING NEW AS NEW OLD AS OLD
+FOR EACH ROW
+declare
+  -- local variables here
+     V_CUR_USER VARCHAR2(100);
+BEGIN
+-- For Toad:  Highlight column SRL
+  :new.SRL := INFACTT_SEQ.nextval;
+   V_CUR_USER := COALESCE(V('APP_USER'),USER);
+
+    IF (V_CUR_USER <> 'APPFNC') then
+        :NEW.INS_USER := ADMIN.PU_GET_USER_SRL_F(V_CUR_USER);
+    end if;
+    :NEW.INS_DTE := SYSDATE ;
+END INFACTT_TRG;
+
+-------------------------------------------------------
+grant SELECT, INSERT, UPDATE, DELETE on admin.INDOCIT to appfnc;
+
+CREATE OR REPLACE TRIGGER admin.INDOCIT_BU
+  before update ON ADMIN.INDOCIT
+  for each row
+declare
+  -- local variables here
+    V_CUR_USER VARCHAR2(100);
+begin
+
+
+ V_CUR_USER:=COALESCE(V('APP_USER'),USER);
+
+    IF (V_CUR_USER <> 'APPFNC') then
+     :NEW.UAUSER_SRL := ADMIN.PU_GET_USER_SRL_F(V_CUR_USER);
+    end if;
+     :NEW.U_DATE_TIME := SYSDATE ;
+
+end INDOCIT_BU;
+
+CREATE OR REPLACE TRIGGER admin.indoci_BI
+BEFORE INSERT
+ON admin.indocit
+REFERENCING NEW AS NEW OLD AS OLD
+FOR EACH ROW
+declare
+  -- local variables here
+     V_CUR_USER VARCHAR2(100);
+begin
+
+ V_CUR_USER := COALESCE(V('APP_USER'),USER);
+
+    IF (V_CUR_USER <> 'APPFNC') then
+        :NEW.UAUSER_SRL := ADMIN.PU_GET_USER_SRL_F(V_CUR_USER);
+    end if;
+    :NEW.U_DATE_TIME := SYSDATE ;
+
+
+    IF (V_CUR_USER <> 'APPFNC') then
+        :NEW.INS_USER := ADMIN.PU_GET_USER_SRL_F(V_CUR_USER);
+    end if;
+    :NEW.INS_DATE := SYSDATE ;
+
+    :NEW.SRL := ADMIN.indocit_seq.NEXTVAL;
+
+end indoci_BI;
+
+
+-------------------------------------------------------
+grant SELECT, INSERT, UPDATE, DELETE on admin.INCLUBT to appfnc;
+
+CREATE OR REPLACE TRIGGER admin.inclub_BI
+BEFORE INSERT
+ON admin.inclubt
+REFERENCING NEW AS NEW OLD AS OLD
+FOR EACH ROW
+declare
+  -- local variables here
+     V_CUR_USER VARCHAR2(100);
+begin
+
+ V_CUR_USER := COALESCE(V('APP_USER'),USER);
+
+    IF (V_CUR_USER <> 'APPFNC') then
+        :NEW.UAUSER_SRL := ADMIN.PU_GET_USER_SRL_F(V_CUR_USER);
+    end if;
+    :NEW.U_DATE_TIME := SYSDATE ;
+
+    IF (V_CUR_USER <> 'APPFNC') then
+        :NEW.INS_USER := ADMIN.PU_GET_USER_SRL_F(V_CUR_USER);
+    end if;
+    :NEW.INS_DATE := SYSDATE ;
+
+    :NEW.SRL := ADMIN.inclubt_SEQ.NEXTVAL;
+
+end inclub_BI;
+
+CREATE OR REPLACE TRIGGER admin.INCLUBT_BU
+  before update ON ADMIN.INCLUBT
+  for each row
+declare
+  -- local variables here
+    V_CUR_USER VARCHAR2(100);
+begin
+
+
+ V_CUR_USER:=COALESCE(V('APP_USER'),USER);
+
+    IF (V_CUR_USER <> 'APPFNC') then
+     :NEW.UAUSER_SRL := ADMIN.PU_GET_USER_SRL_F(V_CUR_USER);
+    end if;
+     :NEW.U_DATE_TIME := SYSDATE ;
+
+end INCLUBT_BU;
+
+
+-------------------------------------------------------
+grant SELECT, INSERT, UPDATE, DELETE on admin.INMNGT to appfnc;
+
+CREATE OR REPLACE TRIGGER admin.INMNGT_TRG
+BEFORE INSERT
+ON ADMIN.INMNGT
+REFERENCING NEW AS New OLD AS Old
+FOR EACH ROW
+declare
+  -- local variables here
+     V_CUR_USER VARCHAR2(100);
+BEGIN
+-- For Toad:  Highlight column SRL
+     V_CUR_USER := COALESCE(V('APP_USER'),USER);
+
+    IF (V_CUR_USER <> 'APPFNC') then
+        :NEW.INS_USER := ADMIN.PU_GET_USER_SRL_F(V_CUR_USER);
+    end if;
+    :NEW.INS_DATE := SYSDATE ;
+  :new.SRL := INMNGT_SEQ.nextval;
+END INMNGT_TRG;
+
+CREATE OR REPLACE TRIGGER admin.INMNGT_bu
+BEFORE UPDATE
+ON admin.INMNGT
+REFERENCING NEW AS New OLD AS Old
+FOR EACH ROW
+declare
+  -- local variables here
+    V_CUR_USER VARCHAR2(100);
+begin
+
+
+    V_CUR_USER:=COALESCE(V('APP_USER'),USER);
+
+    IF (V_CUR_USER <> 'APPFNC') then
+     :NEW.upd_user := ADMIN.PU_GET_USER_SRL_F(V_CUR_USER);
+    end if;
+     :NEW.upd_date := SYSDATE ;
+
+end INMSENRT_BU;
+
+
+-------------------------------------------------------
+grant SELECT, INSERT, UPDATE, DELETE on admin.INCMEET to appfnc;
+
+CREATE OR REPLACE TRIGGER admin.incmee_BI
+BEFORE INSERT
+ON admin.incmeet
+REFERENCING NEW AS NEW OLD AS OLD
+FOR EACH ROW
+declare
+  -- local variables here
+     V_CUR_USER VARCHAR2(100);
+begin
+
+ V_CUR_USER := COALESCE(V('APP_USER'),USER);
+
+    IF (V_CUR_USER <> 'APPFNC') then
+        :NEW.UA_USER_SRL := ADMIN.PU_GET_USER_SRL_F(V_CUR_USER);
+    end if;
+    :NEW.U_DATE_TIME := SYSDATE ;
+
+    IF (V_CUR_USER <> 'APPFNC') then
+        :NEW.INS_USER := ADMIN.PU_GET_USER_SRL_F(V_CUR_USER);
+    end if;
+    :NEW.ins_date_time := SYSDATE ;
+
+    :NEW.SRL := ADMIN.incmeet_seq.NEXTVAL;
+
+end incmee_BI;
+
+
+CREATE OR REPLACE TRIGGER admin.incmee_BU
+  before update ON ADMIN.incmeet
+  for each row
+declare
+  -- local variables here
+    V_CUR_USER VARCHAR2(100);
+begin
+
+
+ V_CUR_USER:=COALESCE(V('APP_USER'),USER);
+
+    IF (V_CUR_USER <> 'APPFNC') then
+     :NEW.UA_USER_SRL := ADMIN.PU_GET_USER_SRL_F(V_CUR_USER);
+    end if;
+     :NEW.U_DATE_TIME := SYSDATE ;
+
+end incmee_BU;
+
+
+-------------------------------------------------------
+grant SELECT, INSERT, UPDATE, DELETE on admin.INPOSTT to appfnc;
+
+
+CREATE OR REPLACE TRIGGER admin.INPOST_BI
+BEFORE INSERT
+ON admin.INPOSTT
+REFERENCING NEW AS NEW OLD AS OLD
+FOR EACH ROW
+declare
+  -- local variables here
+     V_CUR_USER VARCHAR2(100);
+begin
+
+ V_CUR_USER := COALESCE(V('APP_USER'),USER);
+
+    IF (V_CUR_USER <> 'APPFNC') then
+        :NEW.UA_USER_SRL := ADMIN.PU_GET_USER_SRL_F(V_CUR_USER);
+    end if;
+    :NEW.U_DATE_TIME := SYSDATE ;
+
+    IF (V_CUR_USER <> 'APPFNC') then
+        :NEW.INS_USER := ADMIN.PU_GET_USER_SRL_F(V_CUR_USER);
+    end if;
+    :NEW.INS_DATE := SYSDATE ;
+
+    :NEW.SRL := ADMIN.INPOST_seq.NEXTVAL;
+
+end INPOST_BI;
+
+
+CREATE OR REPLACE TRIGGER admin.INPOST_BU
+  before update ON ADMIN.INPOSTT
+  for each row
+declare
+  -- local variables here
+    V_CUR_USER VARCHAR2(100);
+begin
+
+
+ V_CUR_USER:=COALESCE(V('APP_USER'),USER);
+
+    IF (V_CUR_USER <> 'APPFNC') then
+     :NEW.UA_USER_SRL := ADMIN.PU_GET_USER_SRL_F(V_CUR_USER);
+    end if;
+     :NEW.U_DATE_TIME := SYSDATE ;
+
+end INPOSTT_BU;
+
+
+-------------------------------------------------------
+grant SELECT, INSERT, UPDATE, DELETE on admin.INCOMEET to appfnc;
+
+
+CREATE OR REPLACE TRIGGER admin.incomee_BI
+BEFORE INSERT
+ON admin.incomeet
+REFERENCING NEW AS NEW OLD AS OLD
+FOR EACH ROW
+declare
+  -- local variables here
+     V_CUR_USER VARCHAR2(100);
+begin
+
+ V_CUR_USER := COALESCE(V('APP_USER'),USER);
+
+    IF (V_CUR_USER <> 'APPFNC') then
+        :NEW.UA_USER_SRL := ADMIN.PU_GET_USER_SRL_F(V_CUR_USER);
+    end if;
+    :NEW.U_DATE_TIME := SYSDATE ;
+
+    IF (V_CUR_USER <> 'APPFNC') then
+        :NEW.INS_USER := ADMIN.PU_GET_USER_SRL_F(V_CUR_USER);
+    end if;
+    :NEW.INS_DATE := SYSDATE ;
+
+    :NEW.SRL := ADMIN.incomeet_seq.NEXTVAL;
+
+end incomee_BI;
+
+
+CREATE OR REPLACE TRIGGER admin.incOmee_BU
+  before update ON ADMIN.incomeet
+  for each row
+declare
+  -- local variables here
+    V_CUR_USER VARCHAR2(100);
+begin
+
+
+ V_CUR_USER:=COALESCE(V('APP_USER'),USER);
+
+    IF (V_CUR_USER <> 'APPFNC') then
+     :NEW.UA_USER_SRL := ADMIN.PU_GET_USER_SRL_F(V_CUR_USER);
+    end if;
+     :NEW.U_DATE_TIME := SYSDATE ;
+
+end incOmee_BU;
+
+
+-------------------------------------------------------
+grant SELECT, INSERT, UPDATE, DELETE on admin.INVEST to appfnc;
+
+CREATE OR REPLACE TRIGGER admin.INVES_BI
+BEFORE INSERT
+ON ADMIN.INVEST
+REFERENCING NEW AS NEW OLD AS OLD
+FOR EACH ROW
+declare
+  -- local variables here
+     V_CUR_USER VARCHAR2(100);
+begin
+
+ V_CUR_USER := COALESCE(V('APP_USER'),USER);
+
+    IF (V_CUR_USER <> 'APPFNC') then
+        :NEW.UA_USER_SRL := ADMIN.PU_GET_USER_SRL_F(V_CUR_USER);
+    end if;
+    :NEW.U_DATE_TIME := SYSDATE ;
+
+    IF (V_CUR_USER <> 'APPFNC') then
+        :NEW.INS_USER := ADMIN.PU_GET_USER_SRL_F(V_CUR_USER);
+    end if;
+    :NEW.INS_DATE := SYSDATE ;
+
+    :NEW.SRL := ADMIN.INVEST_seq.NEXTVAL;
+
+end INVES_BI;
+
+
+CREATE OR REPLACE TRIGGER admin.INVES_BU
+  before update ON ADMIN.INVEST
+  for each row
+declare
+  -- local variables here
+    V_CUR_USER VARCHAR2(100);
+begin
+     V_CUR_USER:=COALESCE(V('APP_USER'),USER);
+
+    IF (V_CUR_USER <> 'APPFNC') then
+     :NEW.UA_USER_SRL := ADMIN.PU_GET_USER_SRL_F(V_CUR_USER);
+    end if;
+     :NEW.U_DATE_TIME := SYSDATE ;
+
+end INVEST_BU;
+
+
+-------------------------------------------------------
+grant SELECT, INSERT, UPDATE, DELETE on admin.INMEBRT to appfnc;
+
+
+CREATE OR REPLACE TRIGGER admin.INMEBRT_BI
+BEFORE INSERT
+ON admin.INMEBRT
+REFERENCING NEW AS NEW OLD AS OLD
+FOR EACH ROW
+declare
+  -- local variables here
+     V_CUR_USER VARCHAR2(100);
+begin
+
+ V_CUR_USER := COALESCE(V('APP_USER'),USER);
+
+    IF (V_CUR_USER <> 'APPFNC') then
+        :NEW.UA_USER_SRL := ADMIN.PU_GET_USER_SRL_F(V_CUR_USER);
+    end if;
+    :NEW.UA_DATE_TIME := SYSDATE ;
+
+    IF (V_CUR_USER <> 'APPFNC') then
+        :NEW.INS_USER := ADMIN.PU_GET_USER_SRL_F(V_CUR_USER);
+    end if;
+    :NEW.INS_DATE := SYSDATE ;
+
+    :NEW.SRL := ADMIN.INMEBRT_seq.NEXTVAL;
+
+end INMEBRT_BI;
+
+
+CREATE OR REPLACE TRIGGER admin.INMEBR_BU
+  before update ON ADMIN.INMEBRT
+  for each row
+declare
+  -- local variables here
+    V_CUR_USER VARCHAR2(100);
+begin
+
+
+ V_CUR_USER:=COALESCE(V('APP_USER'),USER);
+
+    IF (V_CUR_USER <> 'APPFNC') then
+     :NEW.UA_USER_SRL := ADMIN.PU_GET_USER_SRL_F(V_CUR_USER);
+    end if;
+     :NEW.UA_DATE_TIME := SYSDATE ;
+
+end INMEBR_BU;
+
+
+-------------------------------------------------------
+grant SELECT, INSERT, UPDATE, DELETE on admin.INSPECT to appfnc;
+
+
+CREATE OR REPLACE TRIGGER admin.INSPEC_BI
+BEFORE INSERT
+ON admin.INSPECT
+REFERENCING NEW AS NEW OLD AS OLD
+FOR EACH ROW
+declare
+  -- local variables here
+     V_CUR_USER VARCHAR2(100);
+begin
+
+ V_CUR_USER := COALESCE(V('APP_USER'),USER);
+
+    IF (V_CUR_USER <> 'APPFNC') then
+        :NEW.UA_USER_SRL := ADMIN.PU_GET_USER_SRL_F(V_CUR_USER);
+    end if;
+    :NEW.U_DATE_TIME := SYSDATE ;
+
+    IF (V_CUR_USER <> 'APPFNC') then
+        :NEW.INS_USER := ADMIN.PU_GET_USER_SRL_F(V_CUR_USER);
+    end if;
+    :NEW.INS_DATE := SYSDATE ;
+
+    :NEW.SRL := ADMIN.INSPEC_seq.NEXTVAL;
+
+end INSPEC_BI;
+
+
+CREATE OR REPLACE TRIGGER admin.INSPEC_BU
+  before update ON ADMIN.INSPECT
+  for each row
+declare
+  -- local variables here
+    V_CUR_USER VARCHAR2(100);
+begin
+
+
+ V_CUR_USER:=COALESCE(V('APP_USER'),USER);
+
+    IF (V_CUR_USER <> 'APPFNC') then
+     :NEW.UA_USER_SRL := ADMIN.PU_GET_USER_SRL_F(V_CUR_USER);
+    end if;
+     :NEW.U_DATE_TIME := SYSDATE ;
+end INSPEC_BU;
+
+
+
+-------------------------------------------------------
+grant SELECT, INSERT, UPDATE, DELETE on admin.INMSENRT to appfnc;
+
+
+CREATE OR REPLACE TRIGGER admin.INMSENRT_BI
+BEFORE INSERT
+ON admin.INMSENRT
+REFERENCING NEW AS NEW OLD AS OLD
+FOR EACH ROW
+declare
+  -- local variables here
+     V_CUR_USER VARCHAR2(100);
+begin
+
+ V_CUR_USER := COALESCE(V('APP_USER'),USER);
+    IF (V_CUR_USER <> 'APPFNC') then
+        :NEW.UA_USER_SRL := ADMIN.PU_GET_USER_SRL_F(V_CUR_USER);
+    end if;
+    :NEW.U_DATE_TIME := SYSDATE ;
+
+    IF (V_CUR_USER <> 'APPFNC') then
+        :NEW.INS_USER := ADMIN.PU_GET_USER_SRL_F(V_CUR_USER);
+    end if;
+    :NEW.INS_DATE := SYSDATE ;
+
+    :NEW.SRL := ADMIN.INMSENRT_seq.NEXTVAL;
+
+end INMSENRT_BI;
+
+
+CREATE OR REPLACE TRIGGER admin.INMSENRT_BU
+  before update ON ADMIN.INMSENRT
+  for each row
+declare
+  -- local variables here
+    V_CUR_USER VARCHAR2(100);
+begin
+
+
+ V_CUR_USER:=COALESCE(V('APP_USER'),USER);
+
+    IF (V_CUR_USER <> 'APPFNC') then
+     :NEW.UA_USER_SRL := ADMIN.PU_GET_USER_SRL_F(V_CUR_USER);
+    end if;
+     :NEW.U_DATE_TIME := SYSDATE ;
+
+end INMSENRT_BU;
+
+
+-------------------------------------------------------
+grant SELECT, INSERT, UPDATE, DELETE on admin.INMROLT to appfnc;
+
+-------------------------------------------------------
+grant SELECT, INSERT, UPDATE, DELETE on admin.INMEMST to appfnc;
+
+
+CREATE OR REPLACE TRIGGER admin.INMEMST_TRG
+BEFORE INSERT
+ON admin.INMEMST
+REFERENCING NEW AS NEW OLD AS OLD
+FOR EACH ROW
+DECLARE
+ V_CUR_USER VARCHAR2(100);
+BEGIN
+-- For Toad:  Highlight column SRL
+  :new.SRL := INMEMST_SEQ.nextval;
+  V_CUR_USER:=COALESCE(V('APP_USER'),USER);
+
+    IF (V_CUR_USER <> 'APPFNC') then
+     :NEW.INS_USER := ADMIN.PU_GET_USER_SRL_F(V_CUR_USER);
+    end if;
+    
+     :NEW.INS_DATE := SYSDATE ;
+END INMEMST_TRG;
+
+
+CREATE OR REPLACE TRIGGER admin.INMEMST_BU
+  before update ON ADMIN.INMEMST
+  for each row
+declare
+  -- local variables here
+    V_CUR_USER VARCHAR2(100);
+begin
+ V_CUR_USER:=COALESCE(V('APP_USER'),USER);
+
+    IF (V_CUR_USER <> 'APPFNC') then
+      :NEW.UA_USER_SRL := ADMIN.PU_GET_USER_SRL_F(V_CUR_USER);
+    end if;
+     :NEW.U_DATE_TIME := SYSDATE ;
+end INMEMST_BU;
+
+
+-------------------------------------------------------
+grant SELECT, INSERT, UPDATE, DELETE on admin.INMRAPPT to appfnc;
