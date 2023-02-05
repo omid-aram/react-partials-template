@@ -1,0 +1,3 @@
+git fetch --all
+
+git checkout template/master src/app/template/*
