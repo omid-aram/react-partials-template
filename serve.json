@@ -1,0 +1,17 @@
+{
+  "public": "_site",
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/saipa/preview/react"
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/saipa/preview/react/**",
+      "destination": "/saipa/preview/react/index.html"
+    }
+  ]
+}
+
+
