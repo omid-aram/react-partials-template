@@ -90,4 +90,4 @@ export interface InputSelectProps {
  *      textField="desc"
  *  />
  */
-export default function InputSelect(props: InputSelectProps): JSX.Element;
+export default function InputSelect(props: InputSelectProps);

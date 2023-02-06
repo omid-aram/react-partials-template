@@ -51,4 +51,4 @@ export interface InputTextProps {
   onChange;
 }
 
-export default function InputText(props: InputTextProps): JSX.Element;
+export default function InputText(props: InputTextProps);

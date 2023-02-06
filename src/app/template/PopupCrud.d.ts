@@ -130,6 +130,54 @@ export interface PopupCrudProps {
    * @param data مقادیر پیش فرض فرم
    */
   onNewButtonClicked;
+
+  /**
+   * - میتوانید در صورت نیاز، جدول را مجدداً بارگذاری کنید
+   * -
+   * - const [trigger, setTrigger] = useState(false);
+   * -
+   * - const companyChanged = (val) => {
+   * -        setCompany({ id: val });
+   * -        setTrigger(true);
+   * - }
+   * -
+   * - ...
+   * - \<PopupCurd
+   * -        columns={columns}
+   * -        pageSize={10}
+   * -        initSearchValues={{ companyId: company.id }}
+   * -        ...
+   * -        trigger={trigger}
+   * -        setTrigger={setTrigger}
+   * - />
+   * -
+   * - ⚠️ No need to setTrigger(false); It happens inside the component after reloading the grid.
+   */
+   trigger;
+
+  /**
+   * - میتوانید در صورت نیاز، جدول را مجدداً بارگذاری کنید
+   * -
+   * - const [trigger, setTrigger] = useState(false);
+   * -
+   * - const companyChanged = (val) => {
+   * -        setCompany({ id: val });
+   * -        setTrigger(true);
+   * - }
+   * -
+   * - ...
+   * - \<PopupCurd
+   * -        columns={columns}
+   * -        pageSize={10}
+   * -        initSearchValues={{ companyId: company.id }}
+   * -        ...
+   * -        trigger={trigger}
+   * -        setTrigger={setTrigger}
+   * - />
+   * -
+   * - ⚠️ No need to setTrigger(false); It happens inside the component after reloading the grid.
+   */
+   setTrigger;
 }
 
 /**
@@ -142,4 +190,4 @@ export interface PopupCrudProps {
  * - - urls
  * - - form
  */
-export default function PopupCrud(props: PopupCrudProps): JSX.Element;
+export default function PopupCrud(props: PopupCrudProps);//: JSX.Element;
