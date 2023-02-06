@@ -1,3 +1,7 @@
+/**
+* InputSelect.d.ts - 1401/11/17
+*/
+
 export interface InputSelectProps {
   /**
    * نام فیلد

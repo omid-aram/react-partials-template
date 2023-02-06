@@ -1,17 +1,13 @@
-import React, { useState, useEffect, useMemo/*, useRef*/ } from 'react';
+/**
+* grid.js - 1401/11/17
+*/
+
+import React, { useState, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core';
 import { Table, TableBody, TableHead, TableRow, TableCell, TableFooter, TablePagination } from '@material-ui/core';
-// import Table from '@material-ui/core/Table';
-// import TableBody from '@material-ui/core/TableBody';
-// import TableHead from '@material-ui/core/TableHead';
-// import TableCell from '@material-ui/core/TableCell';
-// import TableFooter from '@material-ui/core/TableFooter';
-// import TablePagination from '@material-ui/core/TablePagination';
-// import TableRow from '@material-ui/core/TableRow';
-
 import baseService from '../services/base.service'
-import { /*CircularProgress,*/ Checkbox, TableContainer, TableSortLabel, LinearProgress, /*Button,*/ IconButton, Radio } from '@material-ui/core';
+import { Checkbox, TableContainer, TableSortLabel, LinearProgress, IconButton, Radio } from '@material-ui/core';
 import objectPath from 'object-path';
 import Pagination from '@material-ui/lab/Pagination';
 import { dynamicSort } from '../utils/helper'
@@ -28,11 +24,7 @@ export default function Grid(props) {
         selectedItems,
         singleSelect,
         onSelectChange,
-
-        //clickedRowId,
-
         defaultSort,
-        //itemInPage,
         fixHeight,
         hideRowsPerPage,
         paginationBtnCount,

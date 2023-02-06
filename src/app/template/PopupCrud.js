@@ -1,3 +1,7 @@
+/**
+* PopupCrud.js - 1401/11/17
+*/
+
 import React, { useState, useRef, useEffect } from "react"
 import Grid from "../partials/grid"
 import { DeleteButton, EditButton, DetailButton } from "../partials/content/UIHelper";
@@ -13,10 +17,6 @@ import Alert from "@material-ui/lab/Alert";
 import confirmService from "../partials/content/ConfirmService";
 import objectPath from "object-path";
 import { passIdsActions } from "../store/ducks/passIds.duck";
-
-/**
-* PopupCrud.js - 1401/11/17
-*/
 
 const PopupCurd = (props) => {
 
