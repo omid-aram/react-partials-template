@@ -22,9 +22,9 @@ const InputText = (props) => {
 
     const numberGrouping = (sNum) => {
         if (!sNum && sNum !== 0) return "";
-    
+
         return sNum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-    };    
+    };
 
     return (<>
         <FormControl variant="outlined" style={{ width: "100%" }} size="small">
@@ -40,7 +40,7 @@ const InputText = (props) => {
 
                         style={{ direction: ["number", "email", "tel", "password", "digit", "digit3"].includes(type) ? "ltr" : null, ...style }}
                         inputProps={{ readOnly: readOnly ? "true" : null, maxLength: maxLength, ...inputProps }}
-                        multiline={Boolean(rows)}
+                        multiline={(rows || 0) > 0}
                         rows={rows || 0}
                         error={hasError}
                         onInput={(e) => {
