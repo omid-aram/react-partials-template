@@ -14,6 +14,9 @@ import confirmService from "../partials/content/ConfirmService";
 import objectPath from "object-path";
 import { passIdsActions } from "../store/ducks/passIds.duck";
 
+/**
+* PopupCrud.js - 1401/11/17
+*/
 
 const PopupCurd = (props) => {
 
