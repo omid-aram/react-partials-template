@@ -62,7 +62,7 @@ const InputSelect = (props) => {
             })
             .finally(() => isMounted && setLoading(false));
         } else if (apiUrl) {
-            baseService.post(apiUrl, apiFilter || {})
+            baseService.post(apiUrl, JSON.parse(apiFilter || "{}"))
                 .then(res => {
                     if (!isMounted) return;
                 

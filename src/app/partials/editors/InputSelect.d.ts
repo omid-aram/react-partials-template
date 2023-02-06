@@ -3,71 +3,79 @@
 */
 
 export interface InputSelectProps {
+
   /**
    * نام فیلد
    */
   name: string;
+
   /**
    * شرح نمایش داده شده در بالای فیلد
    */
   label: string;
+
   /**
    * در صورت تعریف، مقدار آن به عنوان اولین آیتم نمایش داده میشود
    * 
    * - مثال: انتخاب کنید
    */
   placeholder?: string;
+
   /**
    * لیست آیتم ها
    */
   items?: Object[];
+
   /**
    * آیتم ها را از سرور فراخوانی میکند
    * 
    * baseService.post("/Common/GetEnumSelectData", { enumType });
    */
   enumType: string;
+
   /**
    * آیتم ها را از سرور فراخوانی میکند
    * 
    * baseService.post("/Lookup/GetLookupSelectData", { lookupType });
    */
   lookupType: string;
+
   /**
    * آیتم ها را از سرور فراخوانی میکند
    * 
    * baseService.post(apiUrl, apiFilter || {})
    */
   apiUrl: string;
+
   /**
   * تابعی که در صورت تغییر مقدار فراخوانی میشود
+  * - onChange(value, text);
   */
-  onChange;
+  onChange(value: string, text: string);
+
   /**
    * نام فیلد شناسه آیتم
    */
   valueField;
+
   /**
    * نام فیلد شرح آیتم
    */
   textField;
+
   /**
    * در این حالت چنانچه یکبار مقداردهی شده باشد، دیگر اجازه تغییر نمی دهد
    */
   readOnly?: boolean;
+
   /**
    * ⚠️Caution
-   * - Never use apiFilter like this: 
+   * - Its value must be a stringified json:
    * 
-   * ⛔ apiFilter = {{ CompanyId: company.id }}
-   * 
-   * - Instead, declare a const outside of the function and use that:
-   * 
-   * ✔️ const sthFilter = { CompanyId: company.id };
-   * ... 
-   * apiFilter={sthFilter}
-   * 
-   * - در غیر این صورت ممکن است منجر به فراخوانی های تکراری و ناخواسته شود
+   * - ✔️ apiFilter={JSON.stringify({ CompanyId: company.id })}
+   * - ✔️ apiFilter={\`{ "CompanyId": ${company.id} }\`}
+   * - 
+   * - ⛔ NOT apiFilter = {{ CompanyId: company.id }}
    */
   apiFilter?: object;
 }
