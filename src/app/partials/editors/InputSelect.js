@@ -106,7 +106,7 @@ const InputSelect = (props) => {
                         size="small"
                         //defaultValue={value}
                         name={name}
-                        value={data && data.some(x => x.id.toString() === value.toString()) ? (value || '') : ''}
+                        value={value && data && data.some(x => x.id.toString() === value.toString()) ? (value || '') : ''}
                         {...rest}
                     >
 
@@ -123,7 +123,7 @@ const InputSelect = (props) => {
                         }
 
                         {data && data.map(item =>
-                            (!readOnly || (!value) || (item.id === value)) &&
+                            (!readOnly || (!value) || (item.id.toString() === value.toString())) &&
                             (<MenuItem value={item.id || ''} key={item.id}>{item.desc}</MenuItem>)
                         )}
                     </Select>
