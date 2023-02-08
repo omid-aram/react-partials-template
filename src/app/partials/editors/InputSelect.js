@@ -1,5 +1,5 @@
 /**
-* InputSelect.js - 1401/11/17
+* InputSelect.js - 1401/11/19
 */
 
 import React, { useState, useEffect } from "react"
@@ -29,49 +29,55 @@ const InputSelect = (props) => {
         let isMounted = true;
         setLoading(true);
 
+        const createItem = (item) => {
+            const val = item[valueField || 'id'];
+            let text = textField ? "" : item['desc'];
+
+            if (textField) {
+                const words = textField ? textField.split(' ') : [];
+                for (let i = 0; i < words.length; i++) {
+                    let word = words[i];
+
+                    if (word[0] === '@') {
+                        const indexOfSecondSign = word.indexOf('@', 1);//میتونه @ انتهایی هم داشته باشه. برای حالتی که نمیخوایم فاصله داشته باشیم بعدش
+                        word = item[word.substring(1, indexOfSecondSign < 0 ? undefined : indexOfSecondSign)] + (indexOfSecondSign < 0 ? "" : word.substring(indexOfSecondSign + 1));
+                    } else if (words.length === 1) {
+                        //میخوام اگه فقط یک فیلد منظورش باشه لازم نباشه حتما @ بذاره
+                        word = item[word];
+                    }
+                    text += word + ' ';
+                }
+            }
+
+            return {
+                id: val,
+                desc: (text || "").trim()
+            }
+        }
+
         if (items) {
-            setData(items.map(r => (
-                {
-                    id: r[valueField || 'id'],
-                    desc: r[textField || 'desc']
-                })
-            ));
+            setData(items.map(r => createItem(r)));
             setLoading(false);
         } else if (enumType) {
             getEnumSelectData(enumType).then(x => {
                 if (!isMounted) return;
-                
-                setData(x.data.map(r => (
-                    {
-                        id: r[valueField || 'id'],
-                        desc: r[textField || 'desc']
-                    })
-                ));
+
+                setData(x.data.map(r => createItem(r)));
             })
-            .finally(() => isMounted && setLoading(false));
+                .finally(() => isMounted && setLoading(false));
         } else if (lookupType) {
             getLookupSelectData(lookupType).then(x => {
                 if (!isMounted) return;
-                
-                setData(x.data.map(r => (
-                    {
-                        id: r[valueField || 'id'],
-                        desc: r[textField || 'desc']
-                    })
-                ));
+
+                setData(x.data.map(r => createItem(r)));
             })
-            .finally(() => isMounted && setLoading(false));
+                .finally(() => isMounted && setLoading(false));
         } else if (apiUrl) {
             baseService.post(apiUrl, JSON.parse(apiFilter || "{}"))
                 .then(res => {
                     if (!isMounted) return;
-                
-                    setData(res.data.map(r => (
-                        {
-                            id: r[valueField || 'id'],
-                            desc: r[textField || 'desc']
-                        })
-                    ));
+
+                    setData(res.data.map(r => createItem(r)));
                 })
                 .catch()
                 .finally(() => isMounted && setLoading(false));

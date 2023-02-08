@@ -1,5 +1,5 @@
 /**
-* PopupCrud.js - 1401/11/17
+* PopupCrud.js - 1401/11/19
 */
 
 import React, { useState, useRef, useEffect } from "react"
@@ -146,14 +146,18 @@ const PopupCurd = (props) => {
         }
 
         let detailTitleText = "";
-        const detailTitleWords = detailTitle ? detailTitle.split(' ') : [];
-        for (let i = 0; i < detailTitleWords.length; i++) {
-            let word = detailTitleWords[i];
+        const words = detailTitle ? detailTitle.split(' ') : [];
+        for (let i = 0; i < words.length; i++) {
+            let word = words[i];
 
-            if (word[0] === '@') {//we should get value from item
-                word = item[word.substr(1)];
+            if (word[0] === '@') {
+                const indexOfSecondSign = word.indexOf('@', 1);//میتونه @ انتهایی هم داشته باشه. برای حالتی که نمیخوایم فاصله داشته باشیم بعدش
+                word = item[word.substring(1, indexOfSecondSign < 0 ? undefined : indexOfSecondSign)] + (indexOfSecondSign < 0 ? "" : word.substring(indexOfSecondSign + 1));
+            } else if (words.length === 1) {
+                //میخوام اگه فقط یک فیلد منظورش باشه لازم نباشه حتما @ بذاره
+                word = item[word];
             }
-            detailTitleText += word + ' ';
+        detailTitleText += word + ' ';
         }
         setModalTitle(detailTitleText);
 

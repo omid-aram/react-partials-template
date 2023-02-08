@@ -1,5 +1,5 @@
 /**
-* PopupCrud.d.ts - 1401/11/17
+* PopupCrud.d.ts - 1401/11/19
 */
 
 export interface PopupCrudProps {
@@ -115,7 +115,7 @@ export interface PopupCrudProps {
   /**
    * - عنوان پنجره جزئیات
    * - میتواند ثابت یا ترکیبی از مقادیر ردیف انتخاب شده باشد
-   * - e.g. detailTitle = \`${company.name} : \@assemblyTypeDesc - شماره \@assemNo\`
+   * - e.g. detailTitle = \`${company.name} : @assemblyTypeDesc - شماره @assemNo\`
    */
   detailTitle: string;
 
