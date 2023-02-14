@@ -56,12 +56,6 @@ const PopupSelect = (props) => {
 
     }, [apiUrl, apiFilter, valueField, getValues, namePath]);
 
-    // const handleChange = (e) => {
-    //     if (typeof (onChange) === "function") {
-    //         onChange(e.target.value);
-    //     }
-    // };
-
     const handleKeyPress = (e) => {
         if (e.key === 'Enter') {
             e.preventDefault();
@@ -103,6 +97,8 @@ const PopupSelect = (props) => {
     }
 
     const setItem = (item) => {
+        if (readOnly) return;
+
         const id = item[valueField || "id"];
         setDisplayText(getDisplayText(id, item));
         setData([...data, item]);
@@ -111,9 +107,15 @@ const PopupSelect = (props) => {
         if (mappingFields) {
             mappingFields.map(x => setValue(x.to, item[x.from]));
         }
+
+        if (typeof (onChange) === "function") {
+            onChange(item);
+        }
     }
 
     const search = () => {
+        if (readOnly) return;
+        
         setLoading(true);
 
         const payload = JSON.parse(apiFilter || "{}");
@@ -132,6 +134,8 @@ const PopupSelect = (props) => {
     }
 
     const openDialog = () => {
+        if (readOnly) return;
+        
         setShowModal(true);
     }
 
@@ -145,13 +149,14 @@ const PopupSelect = (props) => {
             <Controller
                 render={({ onChange, value, onBlur, name }) => (
                     <>
-                        <input type="hidden" name={name} value={value || ""} onChange={(e) => { onChange(e); getDisplayText(e.target.value); }} />
+                        <input type="hidden" name={name} value={value || ""} />
                         <OutlinedInput
                             type="text"
                             label={label}
                             //name={`${name}_InnerText`}
                             value={(isInitialLoad ? getDisplayText(value) : displayText) || ""}
                             onChange={(e) => { setIsInitialLoad(false); setDisplayText(e.target.value); }}
+                            onBlur={(e) => { if (!isInitialLoad) setDisplayText(getDisplayText(value)); }}
 
                             style={{ ...style }}
                             inputProps={{ readOnly: readOnly ? "true" : null, ...inputProps }}
