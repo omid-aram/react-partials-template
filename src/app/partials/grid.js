@@ -1,5 +1,5 @@
 /**
-* grid.js - 1401/11/17
+* grid.js - 1401/11/24
 */
 
 import React, { useState, useEffect, useMemo } from 'react';
@@ -12,6 +12,10 @@ import objectPath from 'object-path';
 import Pagination from '@material-ui/lab/Pagination';
 import { dynamicSort } from '../utils/helper'
 
+import FirstPageIcon from '@material-ui/icons/FirstPage';
+import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
+import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
+import LastPageIcon from '@material-ui/icons/LastPage';
 
 export default function Grid(props) {
     const {
@@ -28,7 +32,8 @@ export default function Grid(props) {
         fixHeight,
         hideRowsPerPage,
         paginationBtnCount,
-        addEmptyRow
+        addEmptyRow,
+        hidePageNumbers
     } = props;
     const classes = useStyles2();
     const [page, setPage] = useState(0);
@@ -167,9 +172,9 @@ export default function Grid(props) {
                 <TableRow key={i} style={{ backgroundColor: row[keyColumn] === props.clickedRowId ? 'gold' : i % 2 ? '#f5f5f5' : 'white' }}>
                     {selectable ? (<TableCell key={0} >
                         {singleSelect ?
-                            <Radio onChange={(event) => { onSelectChange(row, event.target.checked) }} checked={selectedItems && selectedItems[keyColumn] === row[keyColumn]} />
+                            <Radio className={classes.noPadding} onChange={(event) => { onSelectChange(row, event.target.checked) }} checked={selectedItems ? selectedItems[keyColumn] === row[keyColumn] : false} />
                             :
-                            <Checkbox onChange={(event) => { onSelectChange(row, event.target.checked) }} checked={selectedItems && selectedItems.some(x => x === row[keyColumn])} />
+                            <Checkbox onChange={(event) => { onSelectChange(row, event.target.checked) }} checked={selectedItems ? selectedItems.some(x => x === row[keyColumn]) : false} />
                         }
                     </TableCell>) : null}
 
@@ -196,7 +201,7 @@ export default function Grid(props) {
                 </TableRow>
             )}
         </TableBody>
-    ), [columns, emptyRows, keyColumn, onSelectChange, props.clickedRowId, records, selectable, selectedItems, singleSelect])
+    ), [classes.noPadding, columns, emptyRows, keyColumn, onSelectChange, props.clickedRowId, records, selectable, selectedItems, singleSelect])
     //), [records, selectedItems])
 
 
@@ -256,7 +261,7 @@ export default function Grid(props) {
                                 page={page}
                                 onChangePage={handleChangePage}
                                 onChangeRowsPerPage={handleChangeRowsPerPage}
-                                ActionsComponent={(defaultProps) => <TablePaginationActions {...defaultProps} btnCount={paginationBtnCount} loading={loading} refreshHandler={reafreshData} />}
+                                ActionsComponent={(defaultProps) => <TablePaginationActions {...defaultProps} btnCount={paginationBtnCount} loading={loading} refreshHandler={reafreshData} hidePageNumbers={hidePageNumbers} />}
                             />
                         </TableRow>
                     </TableFooter>
@@ -268,7 +273,7 @@ export default function Grid(props) {
 
 function TablePaginationActions(props) {
 
-    const { count, page, rowsPerPage, onChangePage, loading, refreshHandler/*, btnCount*/ } = props;
+    const { count, page, rowsPerPage, onChangePage, loading, refreshHandler/*, btnCount*/, hidePageNumbers } = props;
 
     // const ref = useRef()
     // const [containerWidth, setContainerWidth] = useState(0);
@@ -290,6 +295,22 @@ function TablePaginationActions(props) {
     };
     const classes = useStyles2();
 
+    const handleFirstPageButtonClick = (event) => {
+        onChangePage(event, 0);
+    };
+
+    const handleBackButtonClick = (event) => {
+        onChangePage(event, page - 1);
+    };
+
+    const handleNextButtonClick = (event) => {
+        onChangePage(event, page + 1);
+    };
+
+    const handleLastPageButtonClick = (event) => {
+        onChangePage(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
+    };
+
     return (
         <>
             <IconButton
@@ -300,14 +321,44 @@ function TablePaginationActions(props) {
                 <i className={"fa fa-sync " + (loading ? "fa-spin" : "")}></i>
             </IconButton>
 
-            <Pagination
-                //ref={ref}
-                variant="outlined"
-                siblingCount={1} boundaryCount={1}
-                count={pageCount}
-                //showFirstButton showLastButton
-                page={page + 1}
-                onChange={handleChange} />
+            {!hidePageNumbers &&
+                <Pagination
+                    //ref={ref}
+                    variant="outlined"
+                    siblingCount={1}
+                    boundaryCount={1}
+                    count={pageCount}
+                    //showFirstButton showLastButton
+                    page={page + 1}
+                    onChange={handleChange} />
+            }
+            {hidePageNumbers &&
+                <>
+                    <IconButton
+                        onClick={handleFirstPageButtonClick}
+                        disabled={page === 0}
+                        aria-label="first page"
+                    >
+                        <LastPageIcon />
+                    </IconButton>
+                    <IconButton variant="outlined" onClick={handleBackButtonClick} disabled={page === 0} aria-label="previous page">
+                        <KeyboardArrowRight />
+                    </IconButton>
+                    <IconButton
+                        onClick={handleNextButtonClick}
+                        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+                        aria-label="next page">
+                        <KeyboardArrowLeft />
+                    </IconButton>
+                    <IconButton
+                        onClick={handleLastPageButtonClick}
+                        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+                        aria-label="last page"
+                    >
+                        <FirstPageIcon />
+                    </IconButton>
+                </>
+            }
         </>
 
 
@@ -369,5 +420,7 @@ const useStyles2 = makeStyles({
         borderRadius: '4px',
         border: '1px solid #dedcdc'
     },
-
+    noPadding: {
+        padding: '0px',
+    }
 });

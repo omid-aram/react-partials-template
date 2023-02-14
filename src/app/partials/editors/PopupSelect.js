@@ -1,5 +1,5 @@
 /**
-* PopupSelect.js - 1401/11/19
+* PopupSelect.js - 1401/11/24
 */
 
 import React, { useState, useEffect } from "react"
@@ -7,15 +7,17 @@ import { OutlinedInput, InputLabel, InputAdornment, IconButton, Icon, FormContro
 import { Controller, useFormContext } from "react-hook-form"
 import objectPath from "object-path"
 import baseService from "../../services/base.service"
-//import baseService2 from "../../services/base.service2"
+import ModalSelector from '../ModalSelector';
 
 
 const PopupSelect = (props) => {
-    const { name, label, apiUrl, apiFilter, valueField, textField, onChange, style, readOnly, inputProps, ...rest } = props
+    const { name, label, apiUrl, apiFilter, valueField, textField, searchField, onChange, style, readOnly, inputProps,
+        mappingFields, columns, modalSize, pageSize, sortItem, ...rest } = props
 
     const [data, setData] = useState([])
     const [loading, setLoading] = useState(false);
-    const { control, errors, getValues } = useFormContext();
+    const [showModal, setShowModal] = useState();
+    const { control, errors, getValues, setValue } = useFormContext();
 
     const [isInitialLoad, setIsInitialLoad] = useState(true);
     const [displayText, setDisplayText] = useState();
@@ -30,7 +32,7 @@ const PopupSelect = (props) => {
         const val = getValues(namePath);
         //const item = data.length > 0 ? data.find(x => (x[valueField || 'id'] || '').toString() === val.toString()) : null;
 
-        if (!val) {
+        if (val) {
             setLoading(true);
 
             const payload = JSON.parse(apiFilter || "{}");
@@ -40,7 +42,7 @@ const PopupSelect = (props) => {
                 .then(res => {
                     if (!isMounted) return;
 
-                    setData(res.data);
+                    setData(res.data.items);
                 })
                 .catch()
                 .finally(() => isMounted && setLoading(false));
@@ -54,19 +56,32 @@ const PopupSelect = (props) => {
 
     }, [apiUrl, apiFilter, valueField, getValues, namePath]);
 
-    const handleChange = (e) => {
-        if (typeof (onChange) === "function") {
-            onChange(e.target.value);
-        }
-    };    
+    // const handleChange = (e) => {
+    //     if (typeof (onChange) === "function") {
+    //         onChange(e.target.value);
+    //     }
+    // };
 
-    const fillDisplayText = (val) => {
-        //debugger;
+    const handleKeyPress = (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+
+            if (displayText) {
+                search();
+            } else {
+                openDialog();
+            }
+        }
+    }
+
+    const getDisplayText = (id, item) => {
         let result = "";
 
-        if (val === undefined || val === null) return result;
+        if (!id && id !== 0) return result;
 
-        const item = data.length > 0 ? data.find(x => (x[valueField || 'id'] || '').toString() === val.toString()) : null;
+        if (!item) {
+            item = data.length > 0 ? data.find(x => (x[valueField || 'id'] || '').toString() === id.toString()) : null;
+        }
 
         if (item) {
             const words = textField ? textField.split(' ') : [];
@@ -87,34 +102,68 @@ const PopupSelect = (props) => {
         return result.trim();
     }
 
-    const search = (text) => {
+    const setItem = (item) => {
+        const id = item[valueField || "id"];
+        setDisplayText(getDisplayText(id, item));
+        setData([...data, item]);
+        setValue(namePath, id);
 
+        if (mappingFields) {
+            mappingFields.map(x => setValue(x.to, item[x.from]));
+        }
     }
-    
+
+    const search = () => {
+        setLoading(true);
+
+        const payload = JSON.parse(apiFilter || "{}");
+        payload[searchField || "id"] = displayText;
+
+        baseService.post(apiUrl, payload)
+            .then(res => {
+                if (res.data && res.data.items.length > 0) {
+                    setItem(res.data.items[0]);
+                } else {
+                    setItem({});
+                }
+            })
+            .catch()
+            .finally(() => setLoading(false));
+    }
+
+    const openDialog = () => {
+        setShowModal(true);
+    }
+
+    const confirmHandler = (item) => {
+        setItem(item);
+    }
+
     return (<>
         <FormControl variant="outlined" style={{ width: "100%" }} size="small">
             <InputLabel error={hasError} >{label}</InputLabel>
             <Controller
                 render={({ onChange, value, onBlur, name }) => (
                     <>
-                        <input type="hidden" name={name} value={value || ""} onChange={(e) => { onChange(e); fillDisplayText(e.target.value); }} />
+                        <input type="hidden" name={name} value={value || ""} onChange={(e) => { onChange(e); getDisplayText(e.target.value); }} />
                         <OutlinedInput
                             type="text"
                             label={label}
                             //name={`${name}_InnerText`}
-                            value={(isInitialLoad ? fillDisplayText(value) : displayText) || ""}
+                            value={(isInitialLoad ? getDisplayText(value) : displayText) || ""}
                             onChange={(e) => { setIsInitialLoad(false); setDisplayText(e.target.value); }}
 
                             style={{ ...style }}
                             inputProps={{ readOnly: readOnly ? "true" : null, ...inputProps }}
                             error={hasError}
                             //onInput={(e) => { }}
+                            onKeyPress={handleKeyPress}
                             endAdornment={
                                 <InputAdornment position="end">
                                     <IconButton
                                         color="primary"
                                         aria-label="انتخاب"
-                                        onClick={() => { alert("sadsadfa") }}
+                                        onClick={() => openDialog()}
                                         edge="end"
                                     >
                                         <Icon className="fa fa-search" />
@@ -135,6 +184,24 @@ const PopupSelect = (props) => {
                 {hasError && (error.message)}
             </FormHelperText>
         </FormControl>
+
+        {showModal &&
+            <ModalSelector
+                singleSelect={true}
+                isShow={showModal}
+                columns={columns}
+                //searchForm={searchForm}
+                title={label}
+                size={modalSize || "md"}
+                keyColumn={valueField}
+                onConfirm={confirmHandler}
+
+                onDismiss={() => setShowModal(false)}
+
+                initFilter={{ ...apiFilter, pageSize: pageSize || 10, sort: sortItem || null, page: 1 }}
+                url={apiUrl}
+            />
+        }
     </>);
 }
 
