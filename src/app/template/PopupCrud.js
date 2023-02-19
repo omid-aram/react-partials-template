@@ -157,7 +157,7 @@ const PopupCurd = (props) => {
                 //میخوام اگه فقط یک فیلد منظورش باشه لازم نباشه حتما @ بذاره
                 word = item[word];
             }
-        detailTitleText += word + ' ';
+            detailTitleText += word + ' ';
         }
         setModalTitle(detailTitleText);
 

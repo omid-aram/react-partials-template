@@ -41,7 +41,7 @@ const ModalSelector = props => {
         }
     }
 
-    const searchHandler = (searchData) => {
+    const searchHandler = (searchData, e) => {
         setFilter(prev => ({ ...prev, ...searchData }))
     }
 

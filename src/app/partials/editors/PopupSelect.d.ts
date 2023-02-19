@@ -19,10 +19,36 @@ export interface PopupSelectProps {
    * - baseService.post(apiUrl, apiFilter || {})
    * -
    * - ورودی و خروجی سمت سرور باید به این شکل باشد 
-   * - public PaginatedResult\<CompanyDTO> PopupCompanies(CompanySearch search)
-   * -
    * - Input: An instance of the BaseSearch class
    * - Output: A PaginatedResult object
+   * -
+   * - مثال
+   * -         public PaginatedResult<CompanyDTO> PopupCompanies(CompanySearch search)
+   * -         {
+   * -              var data = UnitOfWork.Repository<Company>().Get();
+   * -              if (search != null)
+   * -              {
+   * -                  if (search.Id > 0)
+   * -                  {
+   * -                      data = data.Where(x => x.Id == search.Id);
+   * -                  }
+   * -                  else if (!string.IsNullOrEmpty(search.Code))
+   * -                  {
+   * -                      data = data.Where(x => x.Code == search.Code);
+   * -                  }
+   * -                  else if (!string.IsNullOrEmpty(search.SearchText))
+   * -                  {
+   * -                      var words = search.SearchText.Trim().Split(' ');
+   * -                      for (int i = 0; i < words.Length; i++)
+   * -                      {
+   * -                          var word = words[i].Replace('ك', 'ک').Replace('ى', 'ي');
+   * -                          data = data.Where(x => x.Code.Contains(word)
+   * -                                              || x.Name.Replace('ك', 'ک').Replace('ى', 'ي').Contains(word));
+   * -                      }
+   * -                   }
+   * -              }
+   * -              return GetPaginated(search, data);
+   * -          }
    */
   apiUrl: string;
 
