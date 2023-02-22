@@ -1,10 +1,10 @@
 /**
-* PopupCrud.d.ts - 1401/11/19
+* PopupCrud.d.ts - 1401/12/03
 */
 
 export interface PopupCrudProps {
   title: string;
-  
+
   /**
    * - (اجباری) لیست ستون های نمایش داده شده در جدول
    * - const columns = [
@@ -27,7 +27,7 @@ export interface PopupCrudProps {
      - ]
    */
   columns: object[];
-  
+
   /**
    * - نام فیلد کلید
    * - defaultValue: "id"
@@ -153,7 +153,7 @@ export interface PopupCrudProps {
    * -
    * - ⚠️ No need to setTrigger(false); It happens inside the component after reloading the grid.
    */
-   trigger;
+  trigger;
 
   /**
    * - میتوانید در صورت نیاز، جدول را مجدداً بارگذاری کنید
@@ -177,7 +177,32 @@ export interface PopupCrudProps {
    * -
    * - ⚠️ No need to setTrigger(false); It happens inside the component after reloading the grid.
    */
-   setTrigger;
+  setTrigger;
+
+  /**
+   * - در صورتیکه در فرم ثبت، بارگذاری فایل وجود داشته باشد، از این مشخصه استفاده کنید  
+   * - 
+   * - اجباری است [FromForm] استفاده از 
+   * -
+   * - نمونه API:
+   * -         [HttpPost]
+   * -         public async Task<IActionResult> Update([FromForm] CompDocumentDTO dto)
+   * -         {
+   * -             var file = Request.Form.Files[0];
+   * -             var bytes = await GetBytes(file);
+   * -             ...
+   * -         }
+   * -
+   * -         private async Task<byte[]> GetBytes(IFormFile formFile)
+   * -         {
+   * -             await using var memoryStream = new MemoryStream();
+   * -             await formFile.CopyToAsync(memoryStream);
+   * -             return memoryStream.ToArray();
+   * -         }
+   * -
+   * - ⚠️ فایل های بزرگتر از 30 مگابایت خطا میدهند
+   */
+  hasFileUpload: boolean;
 }
 
 /**

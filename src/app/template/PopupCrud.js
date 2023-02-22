@@ -1,12 +1,12 @@
 /**
-* PopupCrud.js - 1401/11/19
+* PopupCrud.js - 1401/12/03
 */
 
 import React, { useState, useRef, useEffect } from "react"
 import Grid from "../partials/grid"
 import { DeleteButton, EditButton, DetailButton } from "../partials/content/UIHelper";
 import { Portlet, PortletHeader, PortletHeaderToolbar, PortletBody } from "../partials/content/Portlet";
-import { makeStyles } from "@material-ui/core";
+import { makeStyles, LinearProgress } from "@material-ui/core";
 import { useForm, FormProvider } from 'react-hook-form'
 import GenModal from "../partials/modal";
 import baseService from "../services/base.service";
@@ -22,7 +22,7 @@ const PopupCurd = (props) => {
 
     const { title, columns, keyColumn, urls, form, searchForm, detailForm, sortItem, initFormValues, //otherFormFields,
         pageSize, modalSize, detailSize, detailTitle, initSearchValues, onEditButtonClicked, onNewButtonClicked
-        , trigger, setTrigger } = props;
+        , trigger, setTrigger, hasFileUpload } = props;
 
     const [filter, setFilter] = useState({
         page: 1,
@@ -38,6 +38,9 @@ const PopupCurd = (props) => {
     const [editMode, setEditMode] = useState(false);
     const [detailMode, setDetailMode] = useState(false);
     const [detailItem, setDetailItem] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [submitProgress, setSubmitProgress] = useState(0);
+
     const searchMethods = useForm({ defaultValues: { ...initSearchValues } });
     const formMethods = useForm();
 
@@ -60,35 +63,9 @@ const PopupCurd = (props) => {
         }
     }, [initSearchValues, pageSize, sortItem, trigger, setTrigger]);
 
-    // const setUndefinedToEmptyString = (data) => {
-
-    //     if (!data) data = {};
-
-    //     const columnFields = (columns || []).map(x => x.field);
-    //     const fields2 = [...columnFields, ...(otherFormFields || [])];
-
-    //     fields2.forEach(x => {
-    //         //if (!data[x]) data[x] = "";
-    //         if (data[x] === null || data[x] === undefined) data[x] = "";
-    //     });
-    // }
-
-    // const setEmptyStringToUndefined = (data) => {
-
-    //     if (!data) data = {};
-
-    //     const columnFields = (columns || []).map(x => x.field);
-    //     const fields = [...columnFields, ...(otherFormFields || [])];
-
-    //     fields.forEach(x => {
-    //         if (data[x] === "") data[x] = undefined;
-    //     });
-    // }
-
     const editHandler = (item) => {
 
         dispatch(passIdsActions.fetchEditData(item));
-        //debugger;
         setEditMode(true);
         setModalTitle("به روز رسانی");
 
@@ -96,14 +73,10 @@ const PopupCurd = (props) => {
             dispatch(loaderActions.show())
             baseService.post(urls.getUrl, { id: item.id }).then(res => {
 
-                //setFormValues(res.data);
-                //formMethods.reset(res.data)
                 const data = { ...res.data, ...item };
                 if (typeof (onEditButtonClicked) === "function") {
                     onEditButtonClicked(data);
                 }
-
-                //setUndefinedToEmptyString(data);
 
                 formMethods.reset(data);
 
@@ -111,13 +84,10 @@ const PopupCurd = (props) => {
                 setShowModal(true);
             });
         } else {
-            //  setFormValues(item);
             const data = { ...item };
             if (typeof (onEditButtonClicked) === "function") {
                 onEditButtonClicked(data);
             }
-
-            //setUndefinedToEmptyString(data);
 
             formMethods.reset(data);
 
@@ -125,7 +95,6 @@ const PopupCurd = (props) => {
         }
     }
 
-    //let lastDetailItemId = -1;
     const [lastDetailItemId, setLastDetailItemId] = useState(-1);
     const detailHandler = (item) => {
 
@@ -133,13 +102,10 @@ const PopupCurd = (props) => {
         setDetailMode(true);
 
         if (urls.detailUrl === "sub") {
-            //debugger;
             if (lastDetailItemId === item[_keyColumn]) {
                 setDetailItem({});
-                //lastDetailItemId = -1;
                 setLastDetailItemId(-1);
             } else {
-                //lastDetailItemId = item[_keyColumn];
                 setLastDetailItemId(item[_keyColumn]);
             }
             return;
@@ -161,21 +127,6 @@ const PopupCurd = (props) => {
         }
         setModalTitle(detailTitleText);
 
-        // if (urls.getUrl) { //which means data is complexer than grid data and needs to be fetch
-        //     dispatch(loaderActions.show())
-        //     baseService.post(urls.getUrl, { id: item.id }).then(res => {
-
-        //         //setFormValues(res.data);
-        //         formMethods.reset(res.data)
-
-        //         dispatch(loaderActions.hide())
-        //         setShowModal(true);
-        //     });
-        // } else {
-        //     //  setFormValues(item);
-        //     formMethods.reset({ ...item })
-        //     setShowModal(true);
-        // }
         setShowModal(true);
     }
 
@@ -211,32 +162,38 @@ const PopupCurd = (props) => {
         }));
     }
 
+    const progressHandler = (ev) => {
+        const progress = ev.loaded / ev.total * 100;
+        setSubmitProgress(Math.round(progress));
+    }
+
     const formSubmitHandler = (data) => {
-
-        //setEmptyStringToUndefined(data);
-
         var url = editMode ? urls.editUrl : urls.createUrl;
         setFormError(null);
+        setLoading(true);
         dispatch(loaderActions.show())
-        baseService.post(url, data).then((result) => {
-            //debugger;
+
+        const api = hasFileUpload ? baseService.postFormData(url, data, progressHandler) :
+            baseService.post(url, data, progressHandler);
+
+        api.then((result) => {
             if (result.succeed) {
                 setShowModal(false);
                 dispatch(snackbarActions.success("با موفقیت ثبت شد"))
                 forceGridUpdate();
 
             } else {
-                //setFormError(result.errorMessage);
                 dispatch(snackbarActions.error(result.errorMessage))
             }
             dispatch(loaderActions.hide())
         })
+            .finally(() => { setLoading(false); setSubmitProgress(0) })
     }
     const addNewHandler = () => {
         let initVal = { ...initFormValues };
         let k = keyColumn || "id";
         objectPath.set(initVal, k, 0);//null id => server validation error
-        //setFormValues(initVal);
+
         if (typeof (onNewButtonClicked) === "function") {
             onNewButtonClicked(initVal);
         }
@@ -370,6 +327,9 @@ const PopupCurd = (props) => {
                             <form onSubmit={formMethods.handleSubmit(formSubmitHandler)} ref={formRef} >
                                 {form(formMethods)}
                             </form>
+                            <div style={{ position: "relative", top: "17px" }}>
+                                {loading && <LinearProgress style={{ height: "2px" }} variant="determinate" value={submitProgress} />}
+                            </div>
                         </FormProvider >
                     )
                 }
