@@ -73,7 +73,7 @@ const PopupCurd = (props) => {
             dispatch(loaderActions.show())
             baseService.post(urls.getUrl, { id: item.id }).then(res => {
 
-                const data = { ...res.data, ...item };
+                const data = { ...item, ...res.data };
                 if (typeof (onEditButtonClicked) === "function") {
                     onEditButtonClicked(data);
                 }
