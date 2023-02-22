@@ -118,7 +118,6 @@ class BaseService {
     postFormData(path, payload, progressHandler) {
         const authToken = this.store.getState().auth.authToken;
 
-        debugger;
         const formData = new FormData();
         this.buildFormData(formData, payload);
 
