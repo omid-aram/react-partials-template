@@ -41,6 +41,13 @@ const InputFile = forwardRef((props, ref) => {
         setValue(name, null);
     }
 
+    const fileChange = (file) => {
+        setIsInitialLoad(false);
+        setFile(file);
+        setValue(name, file)
+
+    }
+
     useImperativeHandle(ref, () => ({
         clear() {
             removeHandler();
@@ -69,7 +76,7 @@ const InputFile = forwardRef((props, ref) => {
                             endAdornment={
                                 <InputAdornment position="end">
                                     <IconButton
-                                        style={{ display: (isInitialLoad || file) ? "" : "none" }}
+                                        style={{ display: ((isInitialLoad && value) || file) ? "" : "none" }}
                                         color="primary"
                                         aria-label="انتخاب"
                                         onClick={(e) => removeHandler(e)}
@@ -87,9 +94,7 @@ const InputFile = forwardRef((props, ref) => {
                             style={{ display: "none" }}
                             onChange={(e) => {
                                 if (e.target.files && e.target.files.length > 0) {
-                                    setIsInitialLoad(false);
-                                    setFile(e.target.files[0]);
-                                    setValue(name, e.target.files[0])
+                                    fileChange(e.target.files[0]);
                                 }
                                 handleChange(e);
                             }} />
