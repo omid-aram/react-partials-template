@@ -1,5 +1,5 @@
 /**
-* InputText.js - 1401/12/03
+* InputText.js - 1401/12/05
 */
 
 import React, { useState, forwardRef, useImperativeHandle } from "react"
