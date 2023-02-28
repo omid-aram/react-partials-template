@@ -67,7 +67,7 @@ export interface InputSelectProps {
   textField;
 
   /**
-   * - در این حالت چنانچه یکبار مقداردهی شده باشد، دیگر اجازه تغییر نمی دهد
+   * در صورت تعریف، کنترل غیر قابل تغییر می شود
    */
   readOnly?: boolean;
 

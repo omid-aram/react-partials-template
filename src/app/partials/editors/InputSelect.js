@@ -129,7 +129,7 @@ const InputSelect = (props) => {
                         }
 
                         {data && data.map(item =>
-                            (!readOnly || (!value) || (item.id.toString() === value.toString())) &&
+                            (!readOnly || /*(!value) ||*/ (item.id.toString() === (value || "").toString())) &&
                             (<MenuItem value={item.id || ''} key={item.id}>{item.desc}</MenuItem>)
                         )}
                     </Select>
