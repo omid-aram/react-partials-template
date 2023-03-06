@@ -1,5 +1,5 @@
 /**
-* PopupCrud.d.ts - 1401/12/03
+* PopupCrud.d.ts - 1401/12/15
 */
 
 export interface PopupCrudProps {
@@ -15,11 +15,14 @@ export interface PopupCrudProps {
      -      sortField: string,    //فیلد مرتب سازی در صورتیکه با فیلد اصلی یکسان نباشد
      -      e.g. (1) "companyType"
      -      e.g. (2) "code.Length, code" //در مواقعی که تایپ فیلد رشته ای باشد ولی محتوای عددی دارد
+     -
      -      align: string,        
      -      width: number,        //عرض ستون را تعیین میکند
-     -      style: object,
-     -      e.g. {color: 'green', fontWeight: 'bold'}
+     -      style: object,        //e.g. {color: 'green', fontWeight: 'bold'}
+     -      headerStyle: object,
+     -
      -      comma1000: boolean,   //جداسازی 3 رقمی اعداد
+     -      slashDate: boolean,   //نمایش عدد به صورت تاریخ
      -      template: function,   //تابع محاسبه مقدار ستون با در اختیار داشتن مقادیر کل ردیف
      -      filterable: true,     //قابلیت فیلتر کردن - Not OK
      -   },
@@ -230,6 +233,34 @@ export interface PopupCrudProps {
    * - ⚠️ فایل های بزرگتر از 30 مگابایت خطا میدهند
    */
   hasFileUpload: boolean;
+
+  /**
+   * - topButtons={[
+   * -              { type: "excel", text: "خروجی اکسل", icon: "far fa-file-excel", className: "btn-success", disabled: true },
+   * -              { type: "create", text: "افزودن شرکت" },
+   * -            ]}
+   */
+  topButtons: Array;
+
+  /**
+   * - rowButtons={[
+   * -              { type: "custom", tooltip: "نمایش شناسه", icon: "fa fa-bell", className0: "btn-secondary", style: { fontSize: "1.4rem", color: "rgba(0, 0, 0, 0.54)", padding: "0px 0.8rem" }, onClick: actionClickTest },
+   * -              { type: "detail", tooltip: "جزئیات شرکت", text: "جزئیات", icon: "fa fa-list-alt", className: "btn-outline-dark", disabledIf: { code: "100" } },
+   * -              { type: "edit", tooltip: "ویرایش اطلاعات شرکت", className: "btn-outline-success", firstColumn: true, hidden: false, hiddenIf: { registerNo: "89219" } },
+   * -              { type: "delete", tooltip: "حذف شرکت", text0: "حذف", icon: "fa fa-trash", className: "btn-outline-danger" },
+   * -            ]}
+   */
+   rowButtons: Array;
+
+  /**
+   * - formButtons={[
+   * -               { type: "custom", text: "تایید کارتابل", icon: "far fa-check-circle", className: "btn-success", hiddenIf: { id: 0 } },
+   * -               { type: "custom", text: "عدم تایید کارتابل", icon: "fa fa-times", className: "btn-danger", hiddenIf: { id: 0 }, disabledIf: { code: "100" } },
+   * -               { type: "confirm", text: "تایید", icon: "fa fa-check", className: "btn-primary", hiddenIf: { registerNo: "171318" } },
+   * -               { type: "dismiss", text: "انصراف", icon: "fa fa-times", className: "btn-outline-secondary", disabledIf: { code: "100" } },
+   * -             ]}
+   */
+   formButtons: Array;
 }
 
 /**

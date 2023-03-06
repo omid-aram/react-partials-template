@@ -1,5 +1,5 @@
 /**
-* grid.js - 1401/11/24
+* grid.js - 1401/12/10
 */
 
 import React, { useState, useEffect, useMemo } from 'react';
@@ -189,8 +189,13 @@ export default function Grid(props) {
                             if (cell && col.comma1000) {
                                 cell = cell.toLocaleString('en-US');
                             }
+                            if (cell && col.slashDate && cell.length >= 6) {
+                                cell = cell.substr(0, cell.length - 4) + '/' + cell.substr(cell.length - 4, 2) + '/' + cell.substr(cell.length - 2);
+                            }
                         }
-                        return (<TableCell key={j} align={col.align ? col.align : "inherit"} style={col.style}>{cell}</TableCell>);
+                        return (<TableCell key={j} align={col.align ? col.align : "inherit"} style={col.style}
+                        //width={ col.width || 'auto' }
+                        >{cell}</TableCell>);
                     })}
 
                 </TableRow>
@@ -213,7 +218,7 @@ export default function Grid(props) {
             {/* <div className={classes.loader}>
                 {loading ? <CircularProgress size={20} /> : null}
             </div> */}
-            <Table stickyHeader={(fixHeight || data) ? true : false} className={classes.table} style={{ tableLayout: 'fixed' }} size="small">
+            <Table stickyHeader={(fixHeight || data) ? true : false} className={classes.table} style={{ tableLayout: 'auto' }} size="small">
                 <TableHead>
                     <TableRow className={classes.header}>
                         {selectable ? (<TableCell key={0} style={{ width: 50 }} >انتخاب</TableCell>) : null}
@@ -221,7 +226,8 @@ export default function Grid(props) {
                         {columns.map((col, i) =>
                             <TableCell
                                 key={i}
-                                style={{ width: col.width || 'auto' }}
+                                style={col.headerStyle}
+                                width={col.width || 'auto'}
                                 className={classes.headerCell + ' ' + col.filterable ? classes.headerCellWithFilter : ''}>
                                 {col.sortable ?
                                     (
