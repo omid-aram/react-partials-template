@@ -4,9 +4,8 @@
 
 import React, { useState, useRef, useEffect } from "react"
 import Grid from "../partials/grid"
-//import { DeleteButton, EditButton, DetailButton } from "../partials/content/UIHelper";
 import { Portlet, PortletHeader, PortletHeaderToolbar, PortletBody } from "../partials/content/Portlet";
-import { makeStyles, LinearProgress, Tooltip/*, IconButton, Icon, Button*/ } from "@material-ui/core";
+import { makeStyles, LinearProgress, Tooltip } from "@material-ui/core";
 import { useForm, FormProvider } from 'react-hook-form'
 import GenModal from "../partials/modal";
 import baseService from "../services/base.service";
@@ -41,10 +40,8 @@ const PopupCurd = (props) => {
     const [loading, setLoading] = useState(false);
     const [submitProgress, setSubmitProgress] = useState(0);
 
-    //const [finalColumns, setFinalColumns] = useState([...columns]);
     const [finalTopBtns, setFinalTopBtns] = useState([]);
     const [finalFormBtns, setFinalFormBtns] = useState([]);
-    //const [isInitialLoad, setIsInitialLoad] = useState(true);
 
     const searchMethods = useForm({ defaultValues: { ...initSearchValues } });
     const formMethods = useForm();
@@ -75,18 +72,6 @@ const PopupCurd = (props) => {
             type: "create", text: "ثبت مورد جدید", icon: "fa fa-plus", className: "btn-outline-success", disabled: !urls.createUrl,
             //onClick: addNewHandler
         };
-        // const defaultEditButton = {
-        //     type: "edit", tooltip: "ویرایش", icon: "fa fa-pen", className: "btn-outline-warning", disabled: !urls.editUrl,
-        //     //onClick: editHandler
-        // };
-        // const defaultDeleteButton = {
-        //     type: "delete", tooltip: "حذف", icon: "fa fa-trash", className: "btn-outline-danger", disabled: !urls.createUrl,
-        //     //onClick: deleteHandler
-        // };
-        // const defaultDetailButton = {
-        //     type: "detail", tooltip: "جزئیات", icon: "fa fa-list-alt", className: "btn-outline-dark", disabled: !urls.createUrl,
-        //     //onClick: detailHandler
-        // };
 
         const _topButtons = [...(topButtons || [])];
         const createBtn = _topButtons.find(x => x.type === "create");
@@ -101,27 +86,6 @@ const PopupCurd = (props) => {
         }
 
         setFinalTopBtns([..._topButtons]);
-
-        // debugger;
-        // const _columns = [...(columns || [])];
-        // const editBtn = _topButtons.find(x => x.type === "edit");
-        // if (editBtn) {
-        //     editBtn.tooltip = editBtn.tooltip || defaultEditButton.tooltip;
-        //     editBtn.icon = editBtn.icon || defaultEditButton.icon;
-        //     editBtn.className = editBtn.className || defaultEditButton.className;
-        //     editBtn.disabled = editBtn.disabled || defaultEditButton.disabled;
-
-        //     if (editBtn.firstColumn) {
-        //         _columns.unshift(editBtn);
-        //     } else {
-        //         _columns.push(editBtn);
-        //     }
-        // }
-        // else {
-        //     _columns.push({ ...defaultEditButton });
-        // }
-
-        //setFinalColumns([..._columns]);
     }, [topButtons, urls.createUrl])
 
     const addNewHandler = () => {
@@ -131,8 +95,6 @@ const PopupCurd = (props) => {
         if (typeof (onNewButtonClicked) === "function") {
             onNewButtonClicked(initVal);
         }
-
-        //setUndefinedToEmptyString(initVal);
 
         checkFormButtonsIfs(initVal);
 
@@ -307,11 +269,11 @@ const PopupCurd = (props) => {
     const checkFormButtonsIfs = (item) => {
         const _buttons = [...(formButtons || [])];
         const defaultConfirmButton = {
-            type: "confirm", text: "تایید", icon: "fa fa-check", className: "btn-primary", style: {}, //disabled: false, hidden: false,
+            type: "confirm", text: "تایید", icon: "fa fa-check", className: "btn-primary", style: {}, 
             onClick: modalConfirmHandler
         };
         const defaultDismissButton = {
-            type: "dismiss", text: "انصراف", icon: "", className: "btn-secondary", style: {}, //disabled: false, hidden: false,
+            type: "dismiss", text: "انصراف", icon: "", className: "btn-secondary", style: {}, 
             onClick: modalDismissHandler
         };
 
