@@ -68,12 +68,28 @@ const PopupCurd = (props) => {
     }, [initSearchValues, pageSize, sortItem, trigger, setTrigger]);
 
     useEffect(() => {
+        const defaultExcelButton = {
+            type: "excel", text: "خروجی اکسل", icon: "fa fa-file-excel", className: "btn-success", disabled: !urls.excelUrl,
+            //onClick: excelHandler
+        };
         const defaultCreateButton = {
             type: "create", text: "ثبت مورد جدید", icon: "fa fa-plus", className: "btn-outline-success", disabled: !urls.createUrl,
             //onClick: addNewHandler
         };
 
         const _topButtons = [...(topButtons || [])];
+
+        const excelBtn = _topButtons.find(x => x.type === "excel");
+        if (excelBtn) {
+            excelBtn.text = excelBtn.text || defaultExcelButton.text;
+            excelBtn.icon = excelBtn.icon || defaultExcelButton.icon;
+            excelBtn.className = excelBtn.className || defaultExcelButton.className;
+            excelBtn.disabled = excelBtn.disabled || defaultExcelButton.disabled;
+        }
+        else if (urls.excelUrl) {
+            _topButtons.push({ ...defaultExcelButton });
+        }
+
         const createBtn = _topButtons.find(x => x.type === "create");
         if (createBtn) {
             createBtn.text = createBtn.text || defaultCreateButton.text;
@@ -81,12 +97,12 @@ const PopupCurd = (props) => {
             createBtn.className = createBtn.className || defaultCreateButton.className;
             createBtn.disabled = createBtn.disabled || defaultCreateButton.disabled;
         }
-        else {
+        else if (urls.createUrl) {
             _topButtons.push({ ...defaultCreateButton });
         }
 
         setFinalTopBtns([..._topButtons]);
-    }, [topButtons, urls.createUrl])
+    }, [topButtons, urls.createUrl, urls.excelUrl])
 
     const addNewHandler = () => {
         let initVal = { ...initFormValues };
@@ -108,6 +124,10 @@ const PopupCurd = (props) => {
         setModalTitle(createBtn.tooltip || createBtn.text || "ثبت مورد جدید");
 
         setShowModal(true);
+    }
+
+    const excelHandler = () => {
+
     }
 
     const editHandler = (item) => {
@@ -240,7 +260,7 @@ const PopupCurd = (props) => {
             .finally(() => { setLoading(false); setSubmitProgress(0) })
     }
 
-    const modalConfirmHandler = () => {
+    const modalSaveHandler = () => {
         //تا وقتی فرم معتبر نباشد همه ورودی ها صدا زده نمیشود
         formRef.current.dispatchEvent(new Event('submit'));
     }
@@ -268,25 +288,25 @@ const PopupCurd = (props) => {
 
     const checkFormButtonsIfs = (item) => {
         const _buttons = [...(formButtons || [])];
-        const defaultConfirmButton = {
-            type: "confirm", text: "تایید", icon: "fa fa-check", className: "btn-primary", style: {}, 
-            onClick: modalConfirmHandler
+        const defaultSaveButton = {
+            type: "save", text: "ثبت", icon: "fa fa-save", className: "btn-primary", style: {},
+            onClick: modalSaveHandler
         };
         const defaultDismissButton = {
-            type: "dismiss", text: "انصراف", icon: "", className: "btn-secondary", style: {}, 
+            type: "dismiss", text: "انصراف", icon: "", className: "btn-secondary", style: {},
             onClick: modalDismissHandler
         };
 
-        let confirmBtn = _buttons.find(x => x.type === "confirm");
-        if (confirmBtn) {
-            confirmBtn.text = confirmBtn.text || defaultConfirmButton.text;
-            confirmBtn.icon = confirmBtn.icon || defaultConfirmButton.icon;
-            confirmBtn.className = confirmBtn.className || defaultConfirmButton.className;
-            confirmBtn.style = confirmBtn.style || defaultConfirmButton.style;
-            confirmBtn.onClick = confirmBtn.onClick || defaultConfirmButton.onClick;
+        let saveBtn = _buttons.find(x => x.type === "save");
+        if (saveBtn) {
+            saveBtn.text = saveBtn.text || defaultSaveButton.text;
+            saveBtn.icon = saveBtn.icon || defaultSaveButton.icon;
+            saveBtn.className = saveBtn.className || defaultSaveButton.className;
+            saveBtn.style = saveBtn.style || defaultSaveButton.style;
+            saveBtn.onClick = saveBtn.onClick || defaultSaveButton.onClick;
         }
         else {
-            _buttons.push({ ...defaultConfirmButton });
+            _buttons.push({ ...defaultSaveButton });
         }
 
         let dismissBtn = _buttons.find(x => x.type === "dismiss");
@@ -381,7 +401,7 @@ const PopupCurd = (props) => {
                 template: (item) => (
                     <Tooltip title={(x.disabled || checkIf(item, x.disabledIf)) ? "" : (x.tooltip || "")} arrow placement="top">
                         <button
-                            onClick={() => x.onClick(item)}
+                            onClick={() => typeof (x.onClick) === "function" ? x.onClick(item) : console.error("onClick Method is not defined")}
                             type="button"
                             disabled={x.disabled || checkIf(item, x.disabledIf)}
                             hidden={x.hidden || checkIf(item, x.hiddenIf)}
@@ -411,30 +431,33 @@ const PopupCurd = (props) => {
                 <PortletHeader
                     title={title}
                     toolbar={
-                        urls.createUrl ?
-                            (
-                                <PortletHeaderToolbar>
-                                    <>
-                                        {finalTopBtns.map((x, i) => (
-                                            <Tooltip title={x.disabled ? "" : (x.tooltip || "")} arrow placement="top" key={i}>
-                                                <button
-                                                    onClick={() => x.type === "create" ? addNewHandler() : x.onClick()}
-                                                    type="button"
-                                                    disabled={x.disabled}
-                                                    hidden={x.hidden}
-                                                    style={{ whiteSpace: "nowrap", marginRight: "6px", padding: x.text ? "0.4rem 0.8rem" : "0.2rem 0.8rem 0.1rem 0.8rem", fontSize: x.text ? "" : "1.2rem", ...x.style }}
-                                                    className={`btn btn-sm ${x.className}`}
-                                                >
-                                                    <i className={x.icon} style={{ marginLeft: (x.text && x.icon) ? "0.35rem" : 0, fontSize: "inherit" }} />
-                                                    {x.text}
-                                                </button>
-                                            </Tooltip>
-                                        )
-                                        )}
-                                    </>
-                                </PortletHeaderToolbar>
-                            ) : null}
-
+                        // urls.createUrl ?
+                        //     (
+                        <PortletHeaderToolbar>
+                            <>
+                                {finalTopBtns.map((x, i) => {
+                                    if (x.type === "create") x.onClick = addNewHandler;
+                                    if (x.type === "excel") x.onClick = excelHandler;
+                                    return (
+                                        <Tooltip title={x.disabled ? "" : (x.tooltip || "")} arrow placement="top" key={i}>
+                                            <button
+                                                onClick={() => typeof (x.onClick) === "function" ? x.onClick() : console.error("onClick Method is not defined")}
+                                                type="button"
+                                                disabled={x.disabled}
+                                                hidden={x.hidden}
+                                                style={{ whiteSpace: "nowrap", marginRight: "6px", padding: x.text ? "0.4rem 0.8rem" : "0.2rem 0.8rem 0.1rem 0.8rem", fontSize: x.text ? "" : "1.2rem", ...x.style }}
+                                                className={`btn btn-sm ${x.className}`}
+                                            >
+                                                <i className={x.icon} style={{ marginLeft: (x.text && x.icon) ? "0.35rem" : 0, fontSize: "inherit" }} />
+                                                {x.text}
+                                            </button>
+                                        </Tooltip>
+                                    )
+                                })}
+                            </>
+                        </PortletHeaderToolbar>
+                        //    ) : null
+                    }
                 />
 
                 <PortletBody>
@@ -470,10 +493,7 @@ const PopupCurd = (props) => {
                 isShow={showModal}
                 size={detailMode ? detailSize : modalSize}
                 onDismiss={modalDismissHandler}
-                //onConfirm={modalConfirmHandler}
                 buttons={detailMode ? [{ type: "dismiss", text: "بستن", className: "btn-secondary", onClick: modalDismissHandler }] : finalFormBtns}
-            //item={formMethods}
-            //checkIfFunc={checkIfFunc}
             >
                 {formError && (
                     <Alert severity="error">{formError}</Alert>
