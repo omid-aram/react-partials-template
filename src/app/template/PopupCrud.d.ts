@@ -256,7 +256,7 @@ export interface PopupCrudProps {
    * - formButtons={[
    * -               { type: "custom", text: "تایید کارتابل", icon: "far fa-check-circle", className: "btn-success", hiddenIf: { id: 0 } },
    * -               { type: "custom", text: "عدم تایید کارتابل", icon: "fa fa-times", className: "btn-danger", hiddenIf: { id: 0 }, disabledIf: { code: "100" } },
-   * -               { type: "confirm", text: "تایید", icon: "fa fa-check", className: "btn-primary", hiddenIf: { registerNo: "171318" } },
+   * -               { type: "save", text: "ثبت", icon: "fa fa-check", className: "btn-primary", hiddenIf: { registerNo: "171318" } },
    * -               { type: "dismiss", text: "انصراف", icon: "fa fa-times", className: "btn-outline-secondary", disabledIf: { code: "100" } },
    * -             ]}
    */
