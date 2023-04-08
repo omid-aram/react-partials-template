@@ -29,6 +29,9 @@ class BaseService {
 
     baseFileUrl = this.baseUrl + 'api/file/getFile/';
 
+    baseApiUrl = () => {
+        return this.baseUrl + 'api';
+    }
     // constructor() {
     //     let service = axios.create();
     //     this.service = service;
@@ -147,6 +150,33 @@ class BaseService {
             formData.append(parentKey, value);
         }
     }
+
+    downloadFile(path, payload, fileName){
+        const authToken = this.store.getState().auth.authToken;
+
+        return axios({
+            headers: { Authorization: `Bearer ${authToken}` },
+            method: 'POST',
+            url: this.baseUrl + 'api' + path,
+            data: payload,
+            responseType: 'blob', // important
+        }).then((response) => {
+            // create file link in browser's memory
+            const href = URL.createObjectURL(response.data);
+        
+            // create "a" HTML element with href to file & click
+            const link = document.createElement('a');
+            link.href = href;
+            link.setAttribute('download', fileName); //or any other extension
+            document.body.appendChild(link);
+            link.click();
+        
+            // clean up "a" element & remove ObjectURL
+            document.body.removeChild(link);
+            URL.revokeObjectURL(href);
+        });
+    }
+
 }
 
 

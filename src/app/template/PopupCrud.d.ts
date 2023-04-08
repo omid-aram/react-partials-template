@@ -43,6 +43,7 @@ export interface PopupCrudProps {
    * - {{
    * -        readUrl:  "/Company/GetPaginated",//نتیجه در جدول نمایش داده میشود
    * -      createUrl:  "/Company/Create",      //متد تایید مورد جدید
+   * -       excelUrl:  "/Company/ExcelExport", //متد خروجی اکسل
    * -      deleteUrl:  "/Company/Delete",      //متد حذف ردیف
    * -        editUrl:  "/Company/Update",      //متد تایید ویرایش
    * -         getUrl:  "/Company/GetRow",      //به هنگام بازکردن فرم ویرایش فراخوانی میشود

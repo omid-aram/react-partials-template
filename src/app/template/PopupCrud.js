@@ -127,7 +127,18 @@ const PopupCurd = (props) => {
     }
 
     const excelHandler = () => {
+        dispatch(loaderActions.show())
+        
+        var excelParams = {
+            filter: JSON.stringify({...filter, page: 1, pageSize: 1000000}), 
+            columns: JSON.stringify(columns),
+            fileName: title
+        };
 
+        baseService.downloadFile(urls.excelUrl, excelParams, title + ".xlsx")
+            .finally(() => {
+                dispatch(loaderActions.hide())
+            })
     }
 
     const editHandler = (item) => {
@@ -431,8 +442,6 @@ const PopupCurd = (props) => {
                 <PortletHeader
                     title={title}
                     toolbar={
-                        // urls.createUrl ?
-                        //     (
                         <PortletHeaderToolbar>
                             <>
                                 {finalTopBtns.map((x, i) => {
@@ -442,7 +451,7 @@ const PopupCurd = (props) => {
                                         <Tooltip title={x.disabled ? "" : (x.tooltip || "")} arrow placement="top" key={i}>
                                             <button
                                                 onClick={() => typeof (x.onClick) === "function" ? x.onClick() : console.error("onClick Method is not defined")}
-                                                type="button"
+                                                type={x.type === "excel" ? "submit" : "button"}
                                                 disabled={x.disabled}
                                                 hidden={x.hidden}
                                                 style={{ whiteSpace: "nowrap", marginRight: "6px", padding: x.text ? "0.4rem 0.8rem" : "0.2rem 0.8rem 0.1rem 0.8rem", fontSize: x.text ? "" : "1.2rem", ...x.style }}
@@ -456,7 +465,6 @@ const PopupCurd = (props) => {
                                 })}
                             </>
                         </PortletHeaderToolbar>
-                        //    ) : null
                     }
                 />
 
@@ -472,6 +480,8 @@ const PopupCurd = (props) => {
 
                     <Grid
                         filter={filter}
+                        setFilter={setFilter}
+                        defaultSort={sortItem}
                         url={urls.readUrl}
                         columns={_finalColumns}
                         keyColumn={_keyColumn}

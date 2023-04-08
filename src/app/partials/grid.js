@@ -22,6 +22,7 @@ export default function Grid(props) {
         columns, //required
         url, data, // one required 
         filter,
+        setFilter,
 
         keyColumn,
         selectable,
@@ -78,15 +79,28 @@ export default function Grid(props) {
                 });
             }
 
+            //debugger;
             let f = { ...filter, ...localFilter, Filters: omidFilters }
             f.page = page + 1;
             f.pageSize = isShowAll() ? 10000 : rowsPerPage;
+
+            //columns.forEach(col => col.sortIncluded = false);
+
             if (orderby) {
                 //f.sort = orderby + ' == null, ' + orderby + ' ' + orderDir;
                 f.sort = "";
                 const orderbyArray = orderby.split(',');
                 orderbyArray.forEach(x => {
-                    f.sort += (f.sort.length > 0 ? ", " : "") + x + ' == null, ' + x + ' ' + orderDir;
+                    const _fieldDirArray = x.trim().split(' ');
+                    const _field = _fieldDirArray[0];
+                    const _orderDir = _fieldDirArray.length > 1 ? _fieldDirArray[_fieldDirArray.length - 1] : orderDir;
+                    f.sort += (f.sort.length > 0 ? ", " : "") + _field + ' == null, ' + _field + ' ' + _orderDir;
+
+                    // const col = columns.find(x => x.sortField ? x.sortField === _field : x.field === _field);
+                    // if (col) {
+                    //     col.sortIncluded = true;
+                    //     col.sortDirection = _orderDir;
+                    // }
                 });
             }
 
@@ -150,9 +164,11 @@ export default function Grid(props) {
 
     const sortHandler = (field) => {
         const isAsc = orderby === field && orderDir === 'asc';
-        setOrderDir(isAsc ? 'desc' : 'asc');
+        const _direction = isAsc ? 'desc' : 'asc';
+        setOrderDir(_direction);
         setOrderby(field);
         setPage(0);
+        setFilter({...filter, sort: `${field} ${_direction}`});
     }
 
     const localFilterChange = (field, input) => {
@@ -233,7 +249,9 @@ export default function Grid(props) {
                                     (
                                         <TableSortLabel
                                             active={orderby === (col.sortField || col.field)}
+                                            //active={col.sortIncluded}
                                             direction={orderby === (col.sortField || col.field) ? orderDir : 'asc'}
+                                            //direction={col.sortDirection}
                                             onClick={() => sortHandler(col.sortField || col.field)}
                                             style={{ "fontWeight": orderby === (col.sortField || col.field) ? "bold" : null }}
                                         >
