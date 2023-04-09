@@ -1,5 +1,5 @@
 /**
-* PopupCrud.js - 1401/12/15
+* PopupCrud.js - 1402/01/20
 */
 
 import React from "react"
@@ -8,7 +8,7 @@ import { Modal } from "react-bootstrap";
 //generic modal
 const GenModal = props => {
 
-    const { isShow, size, onDismiss, title, buttons } = props
+    const { isShow, size, onDismiss, title, onConfirm, confirmText, buttons } = props
 
     return (
         <Modal
@@ -25,7 +25,7 @@ const GenModal = props => {
             </Modal.Header>
             <Modal.Body>{props.children}</Modal.Body>
             <Modal.Footer>
-                {buttons.map((x, i) => (
+                {buttons && buttons.map((x, i) => (
                     <button
                         onClick={x.onClick}
                         type="button"
@@ -39,6 +39,18 @@ const GenModal = props => {
                         {x.text}
                     </button>
                 ))}
+                {!buttons &&
+                    <>
+                        {onConfirm &&
+                            <button className="btn btn-primary" onClick={onConfirm}>
+                                {confirmText || 'تایید'}
+                            </button>
+                        }
+                        <button className="btn btn-secondary" onClick={onDismiss}>
+                            بستن
+                        </button>
+                    </>
+                }
             </Modal.Footer>
         </Modal>
     );
