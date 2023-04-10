@@ -1,5 +1,5 @@
 /**
-* PopupCrud.js - 1401/12/15
+* PopupCrud.js - 1402/01/21
 */
 
 import React, { useState, useRef, useEffect } from "react"
@@ -128,9 +128,9 @@ const PopupCurd = (props) => {
 
     const excelHandler = () => {
         dispatch(loaderActions.show())
-        
+
         var excelParams = {
-            filter: JSON.stringify({...filter, page: 1, pageSize: 1000000}), 
+            filter: JSON.stringify({ ...filter, page: 1, pageSize: 1000000 }),
             columns: JSON.stringify(columns),
             fileName: title
         };
@@ -297,6 +297,14 @@ const PopupCurd = (props) => {
         return true;
     }
 
+    const formActions = {
+        closeModal: () => { modalDismissHandler(); },
+        showLoading: () => { dispatch(loaderActions.show()); },
+        hideLoading: () => { dispatch(loaderActions.hide()); },
+        showMessage: (msg) => { dispatch(snackbarActions.success(msg)); },
+        showError: (msg) => { dispatch(snackbarActions.error(msg)); },
+        refreshGrid: () => { forceGridUpdate(); },
+    }
     const checkFormButtonsIfs = (item) => {
         const _buttons = [...(formButtons || [])];
         const defaultSaveButton = {
@@ -335,6 +343,9 @@ const PopupCurd = (props) => {
         _buttons.forEach(x => {
             if (x.disabledIf) { x.disabled = checkIf(item, x.disabledIf) }
             if (x.hiddenIf) { x.hidden = checkIf(item, x.hiddenIf) }
+
+            const buttonClickHandler = x.onClick;
+            x.onClick = () => { buttonClickHandler(formMethods.getValues(), formActions); }
         });
 
         setFinalFormBtns([..._buttons]);

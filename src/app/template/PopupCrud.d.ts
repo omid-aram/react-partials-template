@@ -1,5 +1,5 @@
 /**
-* PopupCrud.d.ts - 1401/12/15
+* PopupCrud.d.ts - 1402/01/21
 */
 
 export interface PopupCrudProps {
@@ -255,11 +255,27 @@ export interface PopupCrudProps {
 
   /**
    * - formButtons={[
-   * -               { type: "custom", text: "تایید کارتابل", icon: "far fa-check-circle", className: "btn-success", hiddenIf: { id: 0 } },
+   * -               { type: "custom", text: "تایید کارتابل", icon: "far fa-check-circle", className: "btn-success", hiddenIf: { id: 0 }, onClick: confirmClick },
    * -               { type: "custom", text: "عدم تایید کارتابل", icon: "fa fa-times", className: "btn-danger", hiddenIf: { id: 0 }, disabledIf: { code: "100" } },
    * -               { type: "save", text: "ثبت", icon: "fa fa-check", className: "btn-primary", hiddenIf: { registerNo: "171318" } },
    * -               { type: "dismiss", text: "انصراف", icon: "fa fa-times", className: "btn-outline-secondary", disabledIf: { code: "100" } },
    * -             ]}
+   * -
+   * -
+   * -     const confirmClick = (item, actions) => {
+   * -        actions.showLoading();
+   * -        const api = baseService.post("/Company/Update", item);
+   * -
+   * -        api.then((result) => {
+   * -        if (result.succeed) {
+   * -            actions.closeModal();
+   * -            actions.showMessage("با موفقیت ثبت شد");
+   * -            actions.refreshGrid();
+   * -        } else {
+   * -            actions.showError(result.errorMessage);
+   * -        }
+   * -        actions.hideLoading();
+   * -     })
    */
    formButtons: Array;
 }
