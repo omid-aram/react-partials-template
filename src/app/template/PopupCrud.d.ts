@@ -262,20 +262,21 @@ export interface PopupCrudProps {
    * -             ]}
    * -
    * -
-   * -     const confirmClick = (item, actions) => {
+   * -    const confirmClick = (item, actions) => {
    * -        actions.showLoading();
    * -        const api = baseService.post("/Company/Update", item);
    * -
    * -        api.then((result) => {
-   * -        if (result.succeed) {
-   * -            actions.closeModal();
-   * -            actions.showMessage("با موفقیت ثبت شد");
-   * -            actions.refreshGrid();
-   * -        } else {
-   * -            actions.showError(result.errorMessage);
-   * -        }
-   * -        actions.hideLoading();
-   * -     })
+   * -            if (result.succeed) {
+   * -                actions.closeModal();
+   * -                actions.showMessage("با موفقیت ثبت شد");
+   * -                actions.refreshGrid();
+   * -            } else {
+   * -                actions.showError(result.errorMessage);
+   * -            }
+   * -            actions.hideLoading();
+   * -        })
+   * -    }
    */
    formButtons: Array;
 }
