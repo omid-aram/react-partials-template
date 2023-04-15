@@ -145,6 +145,10 @@ const PopupSelect = (props) => {
     const openDialog = () => {
         if (readOnly) return;
 
+        const val = getValues(namePath);
+        const _valueField = valueField || "id";
+        setSelected(val ? data.find(x => x[_valueField] === val) : {});
+
         setShowModal(true);
     }
 
