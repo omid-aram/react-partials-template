@@ -1,5 +1,5 @@
 /**
-* PopupSelect.js - 1401/11/24
+* PopupSelect.js - 1402/01/26
 */
 
 import React, { useState, useEffect } from "react"
@@ -11,6 +11,7 @@ import baseService from "../../services/base.service"
 import GenModal from "../modal";
 import Grid from "../grid";
 import { Row, Col } from "react-bootstrap";
+import DeleteIcon from '@material-ui/icons/Delete';
 import InputText from "./InputText";
 
 const PopupSelect = (props) => {
@@ -165,8 +166,13 @@ const PopupSelect = (props) => {
         setShowModal(false);
     }
     const confirmHandler = () => {
-        setItem(selected);
+        setItem(selected || {});
         dismissHandler();
+    }
+
+    const removeHandler = (e) => {
+        //e.stopPropagation();
+        setItem({});
     }
 
     const searchForm = (
@@ -218,16 +224,28 @@ const PopupSelect = (props) => {
                             //onInput={(e) => { }}
                             onKeyPress={handleKeyPress}
                             endAdornment={
-                                <InputAdornment position="end">
-                                    <IconButton
-                                        color="primary"
-                                        aria-label="انتخاب"
-                                        onClick={() => openDialog()}
-                                        edge="end"
-                                    >
-                                        <Icon className="fa fa-search" />
-                                    </IconButton>
-                                </InputAdornment>
+                                <>
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            style={{ display: value ? "" : "none" }}
+                                            aria-label="لغو انتخاب"
+                                            onClick={(e) => removeHandler(e)}
+                                            edge="end"
+                                        >
+                                            <DeleteIcon />
+                                        </IconButton>
+                                    </InputAdornment>
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            color="primary"
+                                            aria-label="انتخاب"
+                                            onClick={() => openDialog()}
+                                            edge="end"
+                                        >
+                                            <Icon className="fa fa-search" />
+                                        </IconButton>
+                                    </InputAdornment>
+                                </>
                             }
                             {...rest} />
                     </>
