@@ -1,10 +1,11 @@
 /**
-* InputSelect.js - 1401/11/19
+* InputSelect.js - 1402/01/26
 */
 
 import React, { useState, useEffect } from "react"
 import { getEnumSelectData, getLookupSelectData } from "../../services/common.service"
 import { MenuItem, Select, InputLabel, FormControl, FormHelperText } from "@material-ui/core"
+import { Radio, RadioGroup, FormControlLabel, FormLabel } from '@material-ui/core';
 import { Controller, useFormContext } from "react-hook-form"
 import objectPath from "object-path"
 import baseService from "../../services/base.service"
@@ -13,6 +14,7 @@ import baseService from "../../services/base.service"
 
 const InputSelect = (props) => {
     const {
+        type, /* select or radio */
         items, enumType, lookupType, apiUrl, /* one of this */
         apiFilter, valueField, textField, readOnly,
         name, label, placeholder, onChange, ...rest } = props;
@@ -101,38 +103,82 @@ const InputSelect = (props) => {
         }
     };
 
+    const radioStyle = {
+        borderWidth: "1px",
+        borderStyle: "solid",
+        borderRadius: "4px",
+        margin: "-3px 0 6px 0",
+        borderColor: "rgba(0, 0, 0, 0.23)",
+    };
+
+    const radioLegendStyle = {
+        marginRight: "6px",
+        fontSize: "0.75em",
+        width: "auto",
+        padding: "0 5px",
+    }
+
     return (<>
-        <FormControl variant="outlined" style={{ width: "100%" }} size="small">
-            <InputLabel error={hasError}>{label}</InputLabel>
+        <FormControl variant="outlined" style={{ width: "100%", ...(type === "radio" ? radioStyle : {}) }} size="small" component={type === "radio" ? "fieldset" : undefined}>
+            {(!type || type === "select") &&
+                <InputLabel error={hasError}>{label}</InputLabel>
+            }
+            {type === "radio" &&
+                <FormLabel component="legend" style={radioLegendStyle}>{label}</FormLabel>
+            }
             <Controller
                 render={({ onChange, value, onBlur, name }) => (
-                    <Select
-                        onChange={(e) => { onChange(e); handleChange(e); }}
-                        label={label}
-                        size="small"
-                        //defaultValue={value}
-                        name={name}
-                        value={value && data && data.some(x => x.id.toString() === value.toString()) ? (value || '') : ''}
-                        {...rest}
-                    >
+                    <>
+                        {(!type || type === "select") &&
+                            <Select
+                                onChange={(e) => { onChange(e); handleChange(e); }}
+                                label={label}
+                                size="small"
+                                //defaultValue={value}
+                                name={name}
+                                value={value && data && data.some(x => x.id.toString() === value.toString()) ? (value || '') : ''}
+                                {...rest}
+                            >
 
-                        {!readOnly &&
-                            (placeholder ?
-                                <MenuItem value="" disabled>
-                                    {placeholder}
-                                </MenuItem>
-                                :
-                                <MenuItem value="" style={{ height: '5px' }}>
-                                    &nbsp;
-                                </MenuItem>
-                            )
+                                {!readOnly &&
+                                    (placeholder ?
+                                        <MenuItem value="" disabled>
+                                            {placeholder}
+                                        </MenuItem>
+                                        :
+                                        <MenuItem value="" style={{ height: '5px' }}>
+                                            &nbsp;
+                                        </MenuItem>
+                                    )
+                                }
+
+                                {data && data.map(item =>
+                                    (!readOnly || (!value) || (item.id.toString() === value.toString())) &&
+                                    (<MenuItem value={item.id || ''} key={item.id}>{item.desc}</MenuItem>)
+                                )}
+                            </Select>
                         }
-
-                        {data && data.map(item =>
-                            (!readOnly || (!value) || (item.id.toString() === value.toString())) &&
-                            (<MenuItem value={item.id || ''} key={item.id}>{item.desc}</MenuItem>)
-                        )}
-                    </Select>
+                        {type === "radio" &&
+                            <RadioGroup
+                                onChange={(e) => { onChange(e); handleChange(e); }}
+                                label={label}
+                                name={name}
+                                value={value && data && data.some(x => x.id.toString() === value.toString()) ? (value.toString() || '') : ''}
+                                {...rest}
+                            >
+                                {data && data.map(item =>
+                                    (!readOnly || (!value) || (item.id.toString() === value.toString())) &&
+                                    (<FormControlLabel
+                                        value={item.id.toString() || ''}
+                                        key={item.id}
+                                        control={<Radio color="primary" value={item.id.toString() || ''} style={{ padding: "3px" }} />}
+                                        label={item.desc}
+                                        style={{ marginRight: "6px", marginLeft: "6px" }}
+                                    />)
+                                )}
+                            </RadioGroup>
+                        }
+                    </>
                 )}
 
                 // as={

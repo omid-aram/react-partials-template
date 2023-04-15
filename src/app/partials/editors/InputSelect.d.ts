@@ -1,5 +1,5 @@
 /**
-* InputSelect.d.ts - 1401/11/19
+* InputSelect.d.ts - 1402/01/26
 */
 
 export interface InputSelectProps {
@@ -81,12 +81,23 @@ export interface InputSelectProps {
    * - ⛔ NOT apiFilter = {{ CompanyId: company.id }}
    */
   apiFilter?: object;
+
+  /**
+   * نوع نمایش: select | radio
+   */
+  type?: 'select' | 'radio';
+
+  /**
+   * در صورت ست شدن، آیتم ها در یک خط قرار میگیرند. در غیر اینصورت زیرهم چیده میشوند
+   */
+  row?: boolean;
+
 }
 
 /**
  * - آیتم ها را از طریق یکی از موارد زیر نمایش دهید
  * -
- * - [items](http://saipacorp.com): To show constant menu items
+ * - [items](http://saipacorp.com): To show constant menu items (items={[ {id: 1, desc: "آیتم اول"}, ... ]})
  * - [enumType](http://saipacorp.com): To show items of an Enum (/Common/GetEnumSelectData)
  * - [lookupType](http://saipacorp.com): To show lookup items (/Lookup/GetLookupSelectData)
  * - [apiUrl](http://saipacorp.com): baseService.post(apiUrl, apiFilter)
