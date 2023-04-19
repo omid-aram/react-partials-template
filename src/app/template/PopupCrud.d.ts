@@ -1,9 +1,15 @@
 /**
-* PopupCrud.d.ts - 1402/01/21
+* PopupCrud.d.ts - 1402/01/30
 */
 
 export interface PopupCrudProps {
-  title: string;
+  
+  /**
+   * نوع نمایش کامپوننت: grid | form
+   */
+   type?: 'grid' | 'form';
+   
+   title: string;
 
   /**
    * - (اجباری) لیست ستون های نمایش داده شده در جدول
@@ -47,8 +53,20 @@ export interface PopupCrudProps {
    * -      deleteUrl:  "/Company/Delete",      //متد حذف ردیف
    * -        editUrl:  "/Company/Update",      //متد تایید ویرایش
    * -         getUrl:  "/Company/GetRow",      //به هنگام بازکردن فرم ویرایش فراخوانی میشود
-   * -      detailUrl:  "modal" | "sub",        //در صورت وجود جزئیات، موقعیت نمایش آن را تعیین میکند
    * - }}
+   * -
+   * - back-end API : نمونه کد خروجی اکسل  
+   * -  [HttpPost]
+   * -  public FileResult ExcelExport(dynamic excelParams)
+   * -  {
+   * -      var filter = JsonConvert.DeserializeObject<CompanySearch>((string)excelParams.filter);
+   * -      var columns = JsonConvert.DeserializeObject<List<ExcelColumn>>((string)excelParams.columns);
+   * -      var fileName = (string)excelParams.fileName;
+   * -  
+   * -      var data = _companyBiz.GetPaginated(filter).Items;
+   * -      var fileContent = data.ToExcel(columns, fileName);
+   * -      return File(fileContent, "multipart/form-data");
+   * -  }
    */
   urls: object;
 
@@ -103,6 +121,12 @@ export interface PopupCrudProps {
    * - e.g. modalSize = 'sm' | 'lg' | 'xl';
    */
   modalSize: string;
+
+  /**
+   * - با هر مقداری دکمه جزئیات نمایش داده میشود
+   * - مقادیر قابل قبول: 'modal' | 'sub' | 'sub-auto'
+   */
+  detailType?: 'modal' | 'sub';
 
   /**
    * - کامپوننت جزئیات
@@ -237,7 +261,7 @@ export interface PopupCrudProps {
 
   /**
    * - topButtons={[
-   * -              { type: "excel", text: "خروجی اکسل", icon: "far fa-file-excel", className: "btn-success", disabled: true },
+   * -              { type: "excel", text: "خروجی اکسل" },
    * -              { type: "create", text: "افزودن شرکت" },
    * -            ]}
    */
@@ -279,6 +303,15 @@ export interface PopupCrudProps {
    * -    }
    */
    formButtons: Array;
+
+   /**
+    * - [Form Mode]
+    * - const [isEditingForm, setIsEditingForm] = useState(false);
+    * - 
+    * - Use this state to make input components readOnly, 
+    * - and send 'setIsEditingForm' to PopupCrud
+    */
+   setIsEditingForm?: Boolean;
 }
 
 /**

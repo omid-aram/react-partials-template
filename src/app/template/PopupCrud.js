@@ -1,11 +1,11 @@
 /**
-* PopupCrud.js - 1402/01/21
+* PopupCrud.js - 1402/01/30
 */
 
-import React, { useState, useRef, useEffect } from "react"
+import React, { useState, useRef, useEffect, useCallback } from "react"
 import Grid from "../partials/grid"
 import { Portlet, PortletHeader, PortletHeaderToolbar, PortletBody } from "../partials/content/Portlet";
-import { makeStyles, LinearProgress, Tooltip } from "@material-ui/core";
+import { makeStyles, LinearProgress, Tooltip, IconButton } from "@material-ui/core";
 import { useForm, FormProvider } from 'react-hook-form'
 import GenModal from "../partials/modal";
 import baseService from "../services/base.service";
@@ -17,15 +17,20 @@ import confirmService from "../partials/content/ConfirmService";
 import objectPath from "object-path";
 import { passIdsActions } from "../store/ducks/passIds.duck";
 
+import FirstPageIcon from '@material-ui/icons/FirstPage';
+import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
+import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
+import LastPageIcon from '@material-ui/icons/LastPage';
+
 const PopupCurd = (props) => {
 
-    const { title, columns, keyColumn, urls, form, searchForm, detailForm, sortItem, initFormValues, //otherFormFields,
-        pageSize, modalSize, detailSize, detailTitle, initSearchValues, onEditButtonClicked, onNewButtonClicked
-        , trigger, setTrigger, hasFileUpload, topButtons, rowButtons, formButtons } = props;
+    const { type, title, columns, keyColumn, urls, form, searchForm, detailForm, sortItem, initFormValues, //otherFormFields,
+        pageSize, modalSize, detailType, detailSize, detailTitle, initSearchValues, onEditButtonClicked, onNewButtonClicked
+        , trigger, setTrigger, hasFileUpload, topButtons, rowButtons, formButtons, setIsEditingForm } = props;
 
     const [filter, setFilter] = useState({
         page: 1,
-        pageSize: pageSize || 10,
+        pageSize: type === "form" ? 1 : (pageSize || 10),
         sort: sortItem || null,
         ...initSearchValues,
     });
@@ -35,6 +40,7 @@ const PopupCurd = (props) => {
     const [formError, setFormError] = useState("");
     //const [formValues, setFormValues] = useState();
     const [editMode, setEditMode] = useState(false);
+    const [createMode, setCreateMode] = useState(false);
     const [detailMode, setDetailMode] = useState(false);
     const [detailItem, setDetailItem] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -43,16 +49,86 @@ const PopupCurd = (props) => {
     const [finalTopBtns, setFinalTopBtns] = useState([]);
     const [finalFormBtns, setFinalFormBtns] = useState([]);
 
+    const [hideForm, setHideForm] = useState(false);
+    const [formItem, setFormItem] = useState([]);
+    const [formPageNo, setFormPageNo] = useState(1);
+    const [formTotalCount, setFormTotalCount] = useState(0);
+
     const searchMethods = useForm({ defaultValues: { ...initSearchValues } });
-    const formMethods = useForm();
+    const formMethods = useForm({});
 
     const classes = useStyle();
 
     const formRef = useRef();
+    const formItemButtonRef = useRef();
 
     const dispatch = useDispatch();
 
     const _keyColumn = keyColumn || "id";
+
+    const modalDismissHandler = useCallback(() => {
+        setShowModal(false);
+        setFormError("");
+        if (type !== "form") {
+            setDetailItem({});
+            setLastDetailItemId(-1);
+        }
+        setCreateMode(false);
+        setEditMode(false);
+        setDetailMode(false);
+        setFinalFormBtns([]);
+
+        if (typeof (setIsEditingForm) === "function") {
+            setIsEditingForm(false);
+        }
+        if (type === "form") {
+            formItemButtonRef.current.click();
+        }
+    }, [setIsEditingForm, type]);
+
+    useEffect(() => {
+        if (type !== "form") return;
+
+        let isMounted = true;
+        setLoading(true);
+
+        let f = { ...filter }
+
+        if (sortItem) {
+            //f.sort = orderby + ' == null, ' + orderby + ' ' + orderDir;
+            f.sort = "";
+            const orderbyArray = sortItem.split(',');
+            orderbyArray.forEach(x => {
+                const _fieldDirArray = x.trim().split(' ');
+                const _field = _fieldDirArray[0];
+                const _orderDir = _fieldDirArray.length > 1 ? _fieldDirArray[_fieldDirArray.length - 1] : "asc";
+                f.sort += (f.sort.length > 0 ? ", " : "") + _field + ' == null, ' + _field + ' ' + _orderDir;
+            });
+        }
+
+        modalDismissHandler();
+        baseService.post(urls.readUrl, f).then(({ data }) => {
+            if (!isMounted) return;
+
+            if (data.errors) {
+                //alert or something
+            } else {
+                if (data.items.length > 0) {
+                    setFormItem(data.items[0]);
+                    setFormTotalCount(data.totalCount);
+
+                    formItemButtonRef.current.click();
+                }
+            }
+        }).finally(() => isMounted && setLoading(false));
+
+        const cleanUp = () => {
+            isMounted = false;
+        };
+
+        return cleanUp;
+
+    }, [filter, modalDismissHandler, sortItem, type, urls.readUrl])
 
     useEffect(() => {
         if (trigger) {
@@ -114,16 +190,29 @@ const PopupCurd = (props) => {
 
         checkFormButtonsIfs(initVal);
 
-        formMethods.reset(initVal);
+        formMethods.reset(initVal, { keepValues: false });
 
         setFormError(null);
 
         setEditMode(false);
+        setCreateMode(true);
 
         const createBtn = (topButtons || []).find(x => x.type === "create") || {};
         setModalTitle(createBtn.tooltip || createBtn.text || "ثبت مورد جدید");
 
         setShowModal(true);
+
+        if (typeof (setIsEditingForm) === "function") {
+            setIsEditingForm(true);
+        }
+        if (type === "form") {
+            //اگه فرم دوباره ساخته نشه مقادیرش به درستی ریست نمیشه
+            setHideForm(true);
+            setTimeout(() => { setHideForm(false); }, 0);
+
+            setLastDetailItemId(-1);
+            setDetailItem({});
+        }
     }
 
     const excelHandler = () => {
@@ -141,8 +230,14 @@ const PopupCurd = (props) => {
             })
     }
 
-    const editHandler = (item) => {
+    const resetFormItem = () => {
+        setFinalFormBtns([]);
 
+        formMethods.reset(formItem, { keepValues: false });
+        detailHandler(formItem);
+    }
+
+    const editHandler = (item) => {
         dispatch(passIdsActions.fetchEditData(item));
         setEditMode(true);
 
@@ -177,41 +272,48 @@ const PopupCurd = (props) => {
 
             setShowModal(true);
         }
+
+        if (typeof (setIsEditingForm) === "function") {
+            setIsEditingForm(true);
+        }
     }
 
     const [lastDetailItemId, setLastDetailItemId] = useState(-1);
     const detailHandler = (item) => {
-
-        setDetailItem(item);
         setDetailMode(true);
 
-        if (urls.detailUrl === "sub") {
+        if (detailType === "sub") {
             if (lastDetailItemId === item[_keyColumn]) {
-                setDetailItem({});
-                setLastDetailItemId(-1);
+                if (type !== "form") {
+                    setLastDetailItemId(-1);
+                    setDetailItem({});
+                }
             } else {
                 setLastDetailItemId(item[_keyColumn]);
+                setDetailItem({});
+                setTimeout(() => { setDetailItem(item); }, 0);
             }
-            return;
         }
+        else { //if (detailType === "modal")
+            setDetailItem(item);
+            let detailTitleText = "";
+            const words = detailTitle ? detailTitle.split(' ') : [];
+            for (let i = 0; i < words.length; i++) {
+                let word = words[i];
 
-        let detailTitleText = "";
-        const words = detailTitle ? detailTitle.split(' ') : [];
-        for (let i = 0; i < words.length; i++) {
-            let word = words[i];
-
-            if (word[0] === '@') {
-                const indexOfSecondSign = word.indexOf('@', 1);//میتونه @ انتهایی هم داشته باشه. برای حالتی که نمیخوایم فاصله داشته باشیم بعدش
-                word = item[word.substring(1, indexOfSecondSign < 0 ? undefined : indexOfSecondSign)] + (indexOfSecondSign < 0 ? "" : word.substring(indexOfSecondSign + 1));
-            } else if (words.length === 1) {
-                //میخوام اگه فقط یک فیلد منظورش باشه لازم نباشه حتما @ بذاره
-                word = item[word];
+                if (word[0] === '@') {
+                    const indexOfSecondSign = word.indexOf('@', 1);//میتونه @ انتهایی هم داشته باشه. برای حالتی که نمیخوایم فاصله داشته باشیم بعدش
+                    word = item[word.substring(1, indexOfSecondSign < 0 ? undefined : indexOfSecondSign)] + (indexOfSecondSign < 0 ? "" : word.substring(indexOfSecondSign + 1));
+                } else if (words.length === 1) {
+                    //میخوام اگه فقط یک فیلد منظورش باشه لازم نباشه حتما @ بذاره
+                    word = item[word];
+                }
+                detailTitleText += word + ' ';
             }
-            detailTitleText += word + ' ';
-        }
-        setModalTitle(detailTitleText);
+            setModalTitle(detailTitleText);
 
-        setShowModal(true);
+            setShowModal(true);
+        }
     }
 
     const deleteHandler = (item) => {
@@ -261,7 +363,14 @@ const PopupCurd = (props) => {
             if (result.succeed) {
                 setShowModal(false);
                 dispatch(snackbarActions.success("با موفقیت ثبت شد"))
-                forceGridUpdate();
+                if (type === "form") {
+                    setFormItem(result.data);
+                    setFormTotalCount(formTotalCount + (editMode ? 0 : 1));
+                    
+                    modalDismissHandler();
+                } else {
+                    forceGridUpdate();
+                }
 
             } else {
                 dispatch(snackbarActions.error(result.errorMessage))
@@ -274,14 +383,6 @@ const PopupCurd = (props) => {
     const modalSaveHandler = () => {
         //تا وقتی فرم معتبر نباشد همه ورودی ها صدا زده نمیشود
         formRef.current.dispatchEvent(new Event('submit'));
-    }
-
-    const modalDismissHandler = () => {
-        setShowModal(false);
-        setFormError("");
-        setDetailItem({});
-        setLastDetailItemId(-1);
-        setDetailMode(false);
     }
 
     const forceGridUpdate = () => {
@@ -352,11 +453,14 @@ const PopupCurd = (props) => {
     }
 
     let _finalColumns = [...columns];
+    let _rowButtons = [];
+    let editButton = {};
+    let deleteButton = {};
+    let detailButton = {};
 
     const appendButtons = () => {
-        let _rowButtons = [];
 
-        let editButton = (rowButtons || []).find(x => x.type === "edit") || {};
+        editButton = (rowButtons || []).find(x => x.type === "edit") || {};
         if (urls.editUrl && !editButton.type) {
             _rowButtons.push({ type: "edit" });
         }
@@ -375,7 +479,7 @@ const PopupCurd = (props) => {
             onClick: editHandler
         };
 
-        let deleteButton = (rowButtons || []).find(x => x.type === "delete") || {};
+        deleteButton = (rowButtons || []).find(x => x.type === "delete") || {};
         if (urls.deleteUrl && !deleteButton.type) {
             _rowButtons.push({ type: "delete" });
         }
@@ -394,8 +498,8 @@ const PopupCurd = (props) => {
             onClick: deleteHandler
         };
 
-        let detailButton = (rowButtons || []).find(x => x.type === "detail") || {};
-        if (urls.detailUrl && !detailButton.type) {
+        detailButton = (rowButtons || []).find(x => x.type === "detail") || {};
+        if (detailType && !detailButton.type) {
             _rowButtons.push({ type: "detail" });
         }
         detailButton = {
@@ -405,7 +509,7 @@ const PopupCurd = (props) => {
             icon: detailButton.icon || "fa fa-list-alt",
             className: detailButton.className || "btn-outline-dark",
             style: detailButton.style || {},
-            disabled: detailButton.disabled || !urls.detailUrl,
+            disabled: detailButton.disabled || !detailType,
             disabledIf: detailButton.disabledIf,
             hidden: detailButton.hidden || false,
             hiddenIf: detailButton.hiddenIf,
@@ -445,6 +549,26 @@ const PopupCurd = (props) => {
         });
     }
 
+    const handleFirstPageButtonClick = () => {
+        setFormPageNo(1);
+        setFilter({ ...filter, page: 1 });
+    };
+
+    const handleBackButtonClick = () => {
+        setFormPageNo(formPageNo - 1);
+        setFilter({ ...filter, page: formPageNo - 1 });
+    };
+
+    const handleNextButtonClick = () => {
+        setFormPageNo(formPageNo + 1);
+        setFilter({ ...filter, page: formPageNo + 1 });
+    };
+
+    const handleLastPageButtonClick = () => {
+        setFormPageNo(formTotalCount);
+        setFilter({ ...filter, page: formTotalCount });
+    };
+
     appendButtons();
 
     return (
@@ -455,6 +579,62 @@ const PopupCurd = (props) => {
                     toolbar={
                         <PortletHeaderToolbar>
                             <>
+                                <button style={{ display: "none" }} ref={formItemButtonRef} onClick={resetFormItem}></button>
+                                {(type === "form" && (!createMode)) &&
+                                    <>
+                                        <IconButton
+                                            className={classes.syncBtn}
+                                            hidden={!loading} >
+                                            <i className={"fa fa-spinner " + (loading ? "fa-spin" : "")}></i>
+                                        </IconButton>
+                                        <span>رکورد <strong>{formPageNo}</strong> از <strong>{formTotalCount}</strong></span>
+
+                                        <IconButton
+                                            onClick={handleFirstPageButtonClick}
+                                            disabled={formPageNo === 1}
+                                            aria-label="first page"
+                                        >
+                                            <LastPageIcon />
+                                        </IconButton>
+                                        <IconButton variant="outlined" onClick={handleBackButtonClick} disabled={formPageNo === 1} aria-label="previous page">
+                                            <KeyboardArrowRight />
+                                        </IconButton>
+                                        <IconButton
+                                            onClick={handleNextButtonClick}
+                                            disabled={formPageNo >= formTotalCount}
+                                            aria-label="next page">
+                                            <KeyboardArrowLeft />
+                                        </IconButton>
+                                        <IconButton
+                                            onClick={handleLastPageButtonClick}
+                                            disabled={formPageNo >= formTotalCount}
+                                            aria-label="last page"
+                                        >
+                                            <FirstPageIcon />
+                                        </IconButton>
+                                        {_rowButtons.map((x, i) => {
+                                            if (x.type === "edit") x = editButton;
+                                            if (x.type === "delete") x = deleteButton;
+                                            if (x.type === "detail") return (<i key={i} />);
+                                            return (
+                                                <Tooltip title={x.disabled ? "" : (x.tooltip || "")} arrow placement="top" key={i}>
+                                                    <button
+                                                        onClick={() => typeof (x.onClick) === "function" ? x.onClick(formItem) : console.error("onClick Method is not defined")}
+                                                        type="button"
+                                                        disabled={x.disabled}
+                                                        hidden={x.hidden}
+                                                        style={{ whiteSpace: "nowrap", marginRight: "6px", padding: x.text ? "0.4rem 0.8rem" : "0.2rem 0.8rem 0.1rem 0.8rem", fontSize: x.text ? "" : "1.2rem", ...x.style }}
+                                                        className={`btn btn-sm ${x.className}`}
+                                                        ref={x.ref}
+                                                    >
+                                                        <i className={x.icon} style={{ marginLeft: (x.text && x.icon) ? "0.35rem" : 0, fontSize: "inherit" }} />
+                                                        {x.text}
+                                                    </button>
+                                                </Tooltip>
+                                            )
+                                        })}
+                                    </>
+                                }
                                 {finalTopBtns.map((x, i) => {
                                     if (x.type === "create") x.onClick = addNewHandler;
                                     if (x.type === "excel") x.onClick = excelHandler;
@@ -480,7 +660,6 @@ const PopupCurd = (props) => {
                 />
 
                 <PortletBody>
-
                     {searchForm && (
                         <FormProvider  {...searchMethods}>
                             <form onSubmit={searchMethods.handleSubmit(searchHandler)} className={classes.form}>
@@ -488,20 +667,51 @@ const PopupCurd = (props) => {
                             </form>
                         </FormProvider >
                     )}
-
-                    <Grid
-                        filter={filter}
-                        setFilter={setFilter}
-                        defaultSort={sortItem}
-                        url={urls.readUrl}
-                        columns={_finalColumns}
-                        keyColumn={_keyColumn}
-                        clickedRowId={detailItem[_keyColumn] || -1}
-                    />
+                    {(type === "form" && !hideForm) &&
+                        <>
+                            <FormProvider  {...formMethods}>
+                                <form onSubmit={formMethods.handleSubmit(formSubmitHandler)} ref={formRef} >
+                                    {form(formMethods)}
+                                </form>
+                            </FormProvider >
+                            {finalFormBtns && finalFormBtns.length > 0 &&
+                                <div style={{ textAlign: "left" }}>
+                                    <hr />
+                                    {finalFormBtns.map((x, i) => (
+                                        <button
+                                            onClick={x.onClick}
+                                            type="button"
+                                            key={i}
+                                            disabled={x.disabled}
+                                            hidden={x.hidden}
+                                            style={{ whiteSpace: "nowrap", marginRight: "3px", ...x.style }}
+                                            className={`btn ${x.className}`}
+                                        >
+                                            <i className={x.icon} style={{ paddingLeft: (x.text && x.icon) ? "0.5rem" : 0, fontSize: "inherit" }} />
+                                            {x.text}
+                                        </button>
+                                    ))}
+                                </div>
+                            }
+                        </>
+                    }
+                    {(!type || type === "grid") &&
+                        <Grid
+                            filter={filter}
+                            setFilter={setFilter}
+                            defaultSort={sortItem}
+                            url={urls.readUrl}
+                            columns={_finalColumns}
+                            keyColumn={_keyColumn}
+                            clickedRowId={detailItem[_keyColumn] || -1}
+                        //hidePageNumbers={type === "form"}
+                        //hideRowsPerPage={type === "form"}
+                        />
+                    }
                 </PortletBody>
             </Portlet>
 
-            {urls.detailUrl === 'sub' && detailItem[_keyColumn] ?
+            {detailType === 'sub' && detailItem[_keyColumn] ?
                 <>
                     {React.cloneElement(detailForm, { ...detailItem })}
                 </>
@@ -509,34 +719,36 @@ const PopupCurd = (props) => {
                 <></>
             }
 
-            <GenModal
-                title={modalTitle}
-                isShow={showModal}
-                size={detailMode ? detailSize : modalSize}
-                onDismiss={modalDismissHandler}
-                buttons={detailMode ? [{ type: "dismiss", text: "بستن", className: "btn-secondary", onClick: modalDismissHandler }] : finalFormBtns}
-            >
-                {formError && (
-                    <Alert severity="error">{formError}</Alert>
-                )}
+            {(!type || type === "grid") &&
+                <GenModal
+                    title={modalTitle}
+                    isShow={showModal}
+                    size={detailMode ? detailSize : modalSize}
+                    onDismiss={modalDismissHandler}
+                    buttons={detailMode ? [{ type: "dismiss", text: "بستن", className: "btn-secondary", onClick: modalDismissHandler }] : finalFormBtns}
+                >
+                    {formError && (
+                        <Alert severity="error">{formError}</Alert>
+                    )}
 
-                {showModal &&
-                    (detailMode ?
-                        <>
-                            {React.cloneElement(detailForm, { ...detailItem })}
-                        </>
-                        :
-                        <FormProvider  {...formMethods}>
-                            <form onSubmit={formMethods.handleSubmit(formSubmitHandler)} ref={formRef} >
-                                {form(formMethods)}
-                            </form>
-                            <div style={{ position: "relative", top: "17px" }}>
-                                {loading && <LinearProgress style={{ height: "2px" }} variant="determinate" value={submitProgress} />}
-                            </div>
-                        </FormProvider >
-                    )
-                }
-            </GenModal >
+                    {showModal &&
+                        (detailMode ?
+                            <>
+                                {React.cloneElement(detailForm, { ...detailItem })}
+                            </>
+                            :
+                            <FormProvider  {...formMethods}>
+                                <form onSubmit={formMethods.handleSubmit(formSubmitHandler)} ref={formRef} >
+                                    {form(formMethods)}
+                                </form>
+                                <div style={{ position: "relative", top: "17px" }}>
+                                    {loading && <LinearProgress style={{ height: "2px" }} variant="determinate" value={submitProgress} />}
+                                </div>
+                            </FormProvider >
+                        )
+                    }
+                </GenModal >
+            }
         </>
     );
 }

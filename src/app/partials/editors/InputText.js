@@ -43,7 +43,7 @@ const InputText = (props) => {
                         onChange={(e) => { onChange(e); handleChange(e); }}
 
                         style={{ direction: ["number", "email", "tel", "password", "digit", "digit3"].includes(type) ? "ltr" : null, ...style }}
-                        inputProps={{ readOnly: readOnly ? "true" : null, maxLength: maxLength, ...inputProps }}
+                        inputProps={{ readOnly: readOnly ? true : null, maxLength: maxLength, ...inputProps }}
                         multiline={(rows || 0) > 0}
                         rows={rows || 0}
                         error={hasError}
