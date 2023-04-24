@@ -1,8 +1,8 @@
 /**
-* grid.js - 1401/12/10
+* grid.js - 1402/02/04
 */
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core';
 import { Table, TableBody, TableHead, TableRow, TableCell, TableFooter, TablePagination } from '@material-ui/core';
@@ -16,6 +16,7 @@ import FirstPageIcon from '@material-ui/icons/FirstPage';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
+import { FormProvider } from 'react-hook-form';
 
 export default function Grid(props) {
     const {
@@ -34,7 +35,15 @@ export default function Grid(props) {
         hideRowsPerPage,
         paginationBtnCount,
         addEmptyRow,
-        hidePageNumbers
+        hidePageNumbers,
+
+        clickedRowId,
+        isInlineForm,
+        isEditing,
+        formRef,
+        formMethods,
+        formSubmitHandler,
+
     } = props;
     const classes = useStyles2();
     const [page, setPage] = useState(0);
@@ -134,13 +143,6 @@ export default function Grid(props) {
 
     }, [page, rowsPerPage, filter, orderby, orderDir, offlineData, forceUpdate, localFilter, offline, url])
 
-    // useEffect(() => {
-    //     let temp = [...records];
-    //     setRecords(temp);
-    // }, [clickedRowId])
-
-    //console.log(selectedItems);
-
     useEffect(() => {
         setOfflineData(data);
     }, [data])
@@ -162,14 +164,14 @@ export default function Grid(props) {
     //     return { background: rowId === props.clickedRowId ? 'gold' : index % 2 ? '#f5f5f5' : 'white' };
     // }
 
-    const sortHandler = (field) => {
+    const sortHandler = useCallback((field) => {
         const isAsc = orderby === field && orderDir === 'asc';
         const _direction = isAsc ? 'desc' : 'asc';
         setOrderDir(_direction);
         setOrderby(field);
         setPage(0);
-        setFilter({...filter, sort: `${field} ${_direction}`});
-    }
+        setFilter({ ...filter, sort: `${field} ${_direction}` });
+    }, [filter, orderDir, orderby, setFilter]);
 
     const localFilterChange = (field, input) => {
         setLocalFilter(prev => {
@@ -183,9 +185,26 @@ export default function Grid(props) {
 
     const dataBody = useMemo(() => (
         <TableBody>
+            {isInlineForm && isEditing && clickedRowId === -1 &&
+                <TableRow style={{ backgroundColor: '#D1FFBD' }}>
+                    {selectable ? (<TableCell></TableCell>) : null}
+                    {columns.map((col, j) => (
+                        <TableCell
+                            key={j}
+                            align={col.align ? col.align : "inherit"}
+                            hidden={col.hidden}
+                            style={{ padding: 0, ...col.style }}>
+
+                            {col.input}
+
+                        </TableCell>
+                    )
+                    )}
+                </TableRow>
+            }
             {records.map((row, i) => (
                 //<TableRow key={i} style={{ ...getStripedStyle(i, row[keyColumn]) }}>
-                <TableRow key={i} style={{ backgroundColor: row[keyColumn] === props.clickedRowId ? 'gold' : i % 2 ? '#f5f5f5' : 'white' }}>
+                <TableRow key={i} style={{ backgroundColor: row[keyColumn] === clickedRowId ? '#D1FFBD' : i % 2 ? '#f5f5f5' : 'white' }}>
                     {selectable ? (<TableCell key={0} >
                         {singleSelect ?
                             <Radio className={classes.noPadding} onChange={(event) => { onSelectChange(row, event.target.checked) }} checked={selectedItems ? selectedItems[keyColumn] === row[keyColumn] : false} />
@@ -209,9 +228,19 @@ export default function Grid(props) {
                                 cell = cell.substr(0, cell.length - 4) + '/' + cell.substr(cell.length - 4, 2) + '/' + cell.substr(cell.length - 2);
                             }
                         }
-                        return (<TableCell key={j} align={col.align ? col.align : "inherit"} style={col.style}
-                        //width={ col.width || 'auto' }
-                        >{cell}</TableCell>);
+                        return (
+                            <TableCell
+                                key={j}
+                                align={col.align ? col.align : "inherit"}
+                                hidden={col.hidden}
+                                style={{ padding: (isInlineForm && isEditing && row[keyColumn] === clickedRowId && col.input) ? 0 : null, ...col.style }}>
+                                {isInlineForm && isEditing && row[keyColumn] === clickedRowId ? //اگر در حالت ویرایش باشیم
+                                    col.input || cell
+                                    :
+                                    cell
+                                }
+                            </TableCell>
+                        );
                     })}
 
                 </TableRow>
@@ -222,56 +251,57 @@ export default function Grid(props) {
                 </TableRow>
             )}
         </TableBody>
-    ), [classes.noPadding, columns, emptyRows, keyColumn, onSelectChange, props.clickedRowId, records, selectable, selectedItems, singleSelect])
+    ), [isInlineForm, isEditing, clickedRowId, selectable, columns, records, emptyRows, keyColumn, singleSelect, classes.noPadding, selectedItems, onSelectChange])
     //), [records, selectedItems])
 
-
-    return (
+    const gridTable = useMemo(() => (
         <TableContainer className={classes.root} style={{ height: fixHeight || "auto" }}>
             <div>
                 {loading ? <LinearProgress style={{ height: "2px" }} /> : null}
             </div>
-            {/* <div className={classes.loader}>
-                {loading ? <CircularProgress size={20} /> : null}
-            </div> */}
             <Table stickyHeader={(fixHeight || data) ? true : false} className={classes.table} style={{ tableLayout: 'auto' }} size="small">
                 <TableHead>
                     <TableRow className={classes.header}>
                         {selectable ? (<TableCell key={0} style={{ width: 50 }} >انتخاب</TableCell>) : null}
 
-                        {columns.map((col, i) =>
-                            <TableCell
-                                key={i}
-                                style={col.headerStyle}
-                                width={col.width || 'auto'}
-                                className={classes.headerCell + ' ' + col.filterable ? classes.headerCellWithFilter : ''}>
-                                {col.sortable ?
-                                    (
-                                        <TableSortLabel
-                                            active={orderby === (col.sortField || col.field)}
-                                            //active={col.sortIncluded}
-                                            direction={orderby === (col.sortField || col.field) ? orderDir : 'asc'}
-                                            //direction={col.sortDirection}
-                                            onClick={() => sortHandler(col.sortField || col.field)}
-                                            style={{ "fontWeight": orderby === (col.sortField || col.field) ? "bold" : null }}
-                                        >
+                        {columns.map((col, i) => {
+                            return (
+                                <TableCell
+                                    key={i}
+                                    style={col.headerStyle}
+                                    width={col.width || 'auto'}
+                                    hidden={col.hidden}
+                                    className={classes.headerCell + ' ' + col.filterable ? classes.headerCellWithFilter : ''}>
+                                    {col.sortable ?
+                                        (
+                                            <TableSortLabel
+                                                active={orderby === (col.sortField || col.field)}
+                                                //active={col.sortIncluded}
+                                                direction={orderby === (col.sortField || col.field) ? orderDir : 'asc'}
+                                                //direction={col.sortDirection}
+                                                onClick={() => sortHandler(col.sortField || col.field)}
+                                                style={{ "fontWeight": orderby === (col.sortField || col.field) ? "bold" : null }}
+                                            >
+                                                {col.title}
+                                            </TableSortLabel>
+                                        )
+                                        :
+                                        <>
                                             {col.title}
-                                        </TableSortLabel>
-                                    )
-                                    :
-                                    <>
-                                        {col.title}
-                                    </>
-                                }
-                                {col.filterable &&
-                                    <div className={classes.filterInputCon}>
-                                        <input className={classes.filterInput} type="text" onChange={(e) => localFilterChange(col.field, e.target.value)} />
-                                    </div>
-                                }
-                            </TableCell>
+                                        </>
+                                    }
+                                    {col.filterable &&
+                                        <div className={classes.filterInputCon}>
+                                            <input className={classes.filterInput} type="text" onChange={(e) => localFilterChange(col.field, e.target.value)} />
+                                        </div>
+                                    }
+                                </TableCell>
+                            )
+                        }
                         )}
                     </TableRow>
                 </TableHead>
+
                 {dataBody}
                 {!offline && (
                     <TableFooter>
@@ -292,6 +322,21 @@ export default function Grid(props) {
                 )}
             </Table>
         </TableContainer>
+    ), [classes.filterInput, classes.filterInputCon, classes.header, classes.headerCell, classes.headerCellWithFilter, classes.root, classes.stickyFooter, classes.table,
+        columns, data, dataBody, fixHeight, hidePageNumbers, hideRowsPerPage, loading, offline,
+        orderDir, orderby, page, paginationBtnCount, rowsPerPage, selectable, sortHandler, total])
+
+    return (
+        isInlineForm ?
+            <FormProvider {...formMethods} >
+                <form onSubmit={formMethods.handleSubmit(formSubmitHandler)} ref={formRef} >
+                    {gridTable}
+                </form>
+            </FormProvider >
+            :
+            <>
+                {gridTable}
+            </>
     );
 }
 

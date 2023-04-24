@@ -1,5 +1,5 @@
 /**
-* PopupCrud.js - 1402/01/30
+* PopupCrud.js - 1402/02/04
 */
 
 import React, { useState, useRef, useEffect, useCallback } from "react"
@@ -205,7 +205,7 @@ const PopupCurd = (props) => {
         if (typeof (setIsEditingForm) === "function") {
             setIsEditingForm(true);
         }
-        if (type === "form") {
+        if (type === "form" || type === "grid-inline") {
             //اگه فرم دوباره ساخته نشه مقادیرش به درستی ریست نمیشه
             setHideForm(true);
             setTimeout(() => { setHideForm(false); }, 0);
@@ -240,6 +240,7 @@ const PopupCurd = (props) => {
     const editHandler = (item) => {
         dispatch(passIdsActions.fetchEditData(item));
         setEditMode(true);
+        setDetailItem(item);
 
         const editBtn = (rowButtons || []).find(x => x.type === "edit") || {};
         setModalTitle(editBtn.tooltip || editBtn.text || "ویرایش");
@@ -366,7 +367,7 @@ const PopupCurd = (props) => {
                 if (type === "form") {
                     setFormItem(result.data);
                     setFormTotalCount(formTotalCount + (editMode ? 0 : 1));
-                    
+
                     modalDismissHandler();
                 } else {
                     forceGridUpdate();
@@ -476,7 +477,27 @@ const PopupCurd = (props) => {
             hidden: editButton.hidden || false,
             hiddenIf: editButton.hiddenIf,
             firstColumn: editButton.firstColumn || false,
-            onClick: editHandler
+            onClick: editHandler,
+
+            input:
+                <div style={{ whiteSpace: "nowrap" }}>
+                    <button
+                        onClick={() => { modalSaveHandler(); modalDismissHandler()} }
+                        type="button"
+                        style={{ margin: "0 0 0 4px", padding: "0.2rem 0.5rem 0.1rem", fontSize: "1.2rem" }}
+                        className={`btn btn-sm btn-success`}
+                    >
+                        <i className={"fa fa-check"} style={{ marginLeft: 0, fontSize: "inherit" }} />
+                    </button>
+                    <button
+                        onClick={modalDismissHandler}
+                        type="button"
+                        style={{ margin: "0 0 0 4px", padding: "0.2rem 0.6rem 0.1rem", fontSize: "1.2rem" }}
+                        className={`btn btn-sm btn-outline-secondary`}
+                    >
+                        <i className={"fa fa-times"} style={{ marginLeft: 0, fontSize: "inherit" }} />
+                    </button>
+                </div>
         };
 
         deleteButton = (rowButtons || []).find(x => x.type === "delete") || {};
@@ -514,7 +535,7 @@ const PopupCurd = (props) => {
             hidden: detailButton.hidden || false,
             hiddenIf: detailButton.hiddenIf,
             firstColumn: detailButton.firstColumn || false,
-            onClick: detailHandler
+            onClick: detailHandler,
         };
         _rowButtons = [..._rowButtons, ...(rowButtons || [])];
 
@@ -524,6 +545,7 @@ const PopupCurd = (props) => {
             if (x.type === "detail") x = detailButton;
             const col = {
                 title: "",
+                input: x.input,
                 template: (item) => (
                     <Tooltip title={(x.disabled || checkIf(item, x.disabledIf)) ? "" : (x.tooltip || "")} arrow placement="top">
                         <button
@@ -695,7 +717,7 @@ const PopupCurd = (props) => {
                             }
                         </>
                     }
-                    {(!type || type === "grid") &&
+                    {(!type || type === "grid" || type === "grid-inline") &&
                         <Grid
                             filter={filter}
                             setFilter={setFilter}
@@ -704,8 +726,12 @@ const PopupCurd = (props) => {
                             columns={_finalColumns}
                             keyColumn={_keyColumn}
                             clickedRowId={detailItem[_keyColumn] || -1}
-                        //hidePageNumbers={type === "form"}
-                        //hideRowsPerPage={type === "form"}
+
+                            isInlineForm={type === "grid-inline"}
+                            isEditing={editMode || createMode}
+                            formRef={formRef}
+                            formMethods={formMethods}
+                            formSubmitHandler={formSubmitHandler}
                         />
                     }
                 </PortletBody>

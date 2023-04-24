@@ -1,62 +1,44 @@
 /**
-* InputDate.js - 1401/11/17
+* InputDate.js - 1402/02/04
 */
 
-import React, { useEffect, useState } from "react"
+import React from "react"
 import { InputLabel, FormControl, OutlinedInput, FormHelperText } from "@material-ui/core"
 import { Controller, useFormContext } from "react-hook-form"
 import objectPath from "object-path";
 import DatePicker from "react-datepicker2";
 import moment from "moment-jalaali"
-//import { toPersianDateTime } from "../../utils/helper";
-
-
 
 const InputDate = (props) => {
-    const { name, label, time, ...rest } = props
+    const { name, label, time, onChange, style, readOnly, inputProps, ...rest } = props
     const { control, errors } = useFormContext();
 
 
-    //simple name : "title" 
-    //path name : "items[1].title"
     let namePath = name.replace(/\[(\w+)\]/g, '.$1') //items[1] => items.1
     let error = objectPath.get(errors, namePath);
     let hasError = !!error;
-    //let value = values ? objectPath.get(values, namePath) : null;
-    //let persianValue = value ? moment(value) : null;
-
-
-    // const handleInnerChange = (event) => {
-    //     console.log(event)
-    //     return event[0].target.value.gVal;
-    // }
 
     return (<>
-
         <FormControl variant="outlined" style={{ width: "100%" }} size="small">
             <InputLabel error={hasError} >{label}</InputLabel>
             <Controller
-                // render={({ onChange, value }) => (
-                //     <OutlinedInput
-                //         type="text" label={label} error={hasError}
-                //         style={{ direction: "ltr" }}
-                //         inputProps={{ showTime: (time == true), onValueChange: onChange }}
-                //         inputComponent={DatePickerCustom}
-                //     />)}
-                as={
+                render={({ onChange, value, onBlur, name }) => (
                     <OutlinedInput
-                        type="text" label={label} error={hasError}
-                        style={{ direction: "ltr" }}
-                        inputProps={{ showTime: (time === true) }}
-                        inputComponent={DatePickerCustom}
-                    />
-                }
+                        type="text"
+                        label={label}
+                        name={name}
+                        value={value ? (!readOnly ? value : moment(value).format('jYYYY/jM/jD')) : ""}
+                        onChange={(gVal/*, jVal*/) => { onChange(gVal/*, jVal*/); }}
+
+                        error={hasError}
+                        style={{ direction: "ltr", ...style }}
+                        inputProps={{ showTime: !readOnly ? (time === true) : undefined, readOnly: readOnly ? true : null, ...inputProps }}
+                        inputComponent={!readOnly ? DatePickerCustom : undefined}
+                        {...rest} />
+                )}
                 control={control}
                 name={name}
-                defaultValue={''}
-                //onChange={handleInnerChange}
-                {...rest}
-
+                defaultValue={""}
             />
             <FormHelperText>
                 {hasError && (error.message)}
@@ -71,33 +53,25 @@ function DatePickerCustom(props) {
     const { inputRef, onChange, showTime, value } = props;
 
     //just for init value
-    const [initValue, setInitValue] = useState();
-    useEffect(() => {
-        setInitValue(value ? moment(value, 'YYYY/M/D HH:mm:ss') : null);
-    }, [value])
+    // const [initValue, setInitValue] = useState();
+    // useEffect(() => {
+    //     setInitValue(value ? moment(value, 'YYYY/M/D HH:mm:ss') : null);
+    // }, [value])
 
     return (
         <DatePicker
-            value={initValue}
+            //value={initValue}
+            value={value ? moment(value, 'YYYY/M/D HH:mm:ss') : null}
             timePicker={showTime}
             isGregorian={false}
             setTodayOnBlur={false}
             ref={r => inputRef(r != null ? r.input : null)}
             onChange={(val) => {
-                if (!val) {
-                    return;
-                }
-                //let jVal = val.format('jYYYY/jM/jD');
-                let gVal = val.format('YYYY/M/D HH:mm:ss');
+                //if (!val) { return; }
+                const gVal = val ? val.format('YYYY/M/D HH:mm:ss') : '';
+                //const jVal = val ? val.format('jYYYY/jM/jD') : '';
 
-                onChange(gVal);
-                //older version
-                // onChange({
-                //     target: {
-                //         name: "main input", // no matter only one here
-                //         value: { jVal, gVal },
-                //     },
-                // });
+                onChange(gVal/*, jVal*/);
             }}
         />
 

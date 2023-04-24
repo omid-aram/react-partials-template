@@ -1,5 +1,5 @@
 /**
-* PopupCrud.d.ts - 1402/01/30
+* PopupCrud.d.ts - 1402/02/04
 */
 
 export interface PopupCrudProps {
@@ -23,6 +23,7 @@ export interface PopupCrudProps {
      -      e.g. (2) "code.Length, code" //در مواقعی که تایپ فیلد رشته ای باشد ولی محتوای عددی دارد
      -
      -      align: string,        
+     -      hidden: boolean,      //نمایش یا عدم نمایش ستون
      -      width: number,        //عرض ستون را تعیین میکند
      -      style: object,        //e.g. {color: 'green', fontWeight: 'bold'}
      -      headerStyle: object,
