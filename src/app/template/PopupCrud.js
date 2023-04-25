@@ -38,11 +38,13 @@ const PopupCurd = (props) => {
     const [showModal, setShowModal] = useState(false);
     const [modalTitle, setModalTitle] = useState("");
     const [formError, setFormError] = useState("");
-    //const [formValues, setFormValues] = useState();
-    const [editMode, setEditMode] = useState(false);
-    const [createMode, setCreateMode] = useState(false);
-    const [detailMode, setDetailMode] = useState(false);
-    const [detailItem, setDetailItem] = useState([]);
+    // const [editMode, setEditMode] = useState(false);
+    // const [createMode, setCreateMode] = useState(false);
+    // const [detailMode, setDetailMode] = useState(false);
+    const [formMode, setFormMode] = useState("none");
+    //const [detailItem, setDetailItem] = useState([]);
+    const [showSubDetail, setShowSubDetail] = useState(false);
+
     const [loading, setLoading] = useState(false);
     const [submitProgress, setSubmitProgress] = useState(0);
 
@@ -69,13 +71,10 @@ const PopupCurd = (props) => {
     const modalDismissHandler = useCallback(() => {
         setShowModal(false);
         setFormError("");
-        if (type !== "form") {
-            setDetailItem({});
-            setLastDetailItemId(-1);
-        }
-        setCreateMode(false);
-        setEditMode(false);
-        setDetailMode(false);
+        // setCreateMode(false);
+        // setEditMode(false);
+        // setDetailMode(false);
+        setFormMode("none");
         setFinalFormBtns([]);
 
         if (typeof (setIsEditingForm) === "function") {
@@ -194,8 +193,9 @@ const PopupCurd = (props) => {
 
         setFormError(null);
 
-        setEditMode(false);
-        setCreateMode(true);
+        // setEditMode(false);
+        // setCreateMode(true);
+        setFormMode("create");
 
         const createBtn = (topButtons || []).find(x => x.type === "create") || {};
         setModalTitle(createBtn.tooltip || createBtn.text || "ثبت مورد جدید");
@@ -209,10 +209,9 @@ const PopupCurd = (props) => {
             //اگه فرم دوباره ساخته نشه مقادیرش به درستی ریست نمیشه
             setHideForm(true);
             setTimeout(() => { setHideForm(false); }, 0);
-
-            setLastDetailItemId(-1);
-            setDetailItem({});
         }
+
+        setFormItem({});
     }
 
     const excelHandler = () => {
@@ -239,8 +238,15 @@ const PopupCurd = (props) => {
 
     const editHandler = (item) => {
         dispatch(passIdsActions.fetchEditData(item));
-        setEditMode(true);
-        setDetailItem(item);
+        //setEditMode(true);
+        setFormMode("edit");
+
+        if (showSubDetail && detailType === 'sub') {
+            setFormItem({});
+            setTimeout(() => { setFormItem(item); }, 0);
+        } else {
+            setFormItem(item);
+        }
 
         const editBtn = (rowButtons || []).find(x => x.type === "edit") || {};
         setModalTitle(editBtn.tooltip || editBtn.text || "ویرایش");
@@ -279,24 +285,17 @@ const PopupCurd = (props) => {
         }
     }
 
-    const [lastDetailItemId, setLastDetailItemId] = useState(-1);
     const detailHandler = (item) => {
-        setDetailMode(true);
+        //setDetailMode(true);
+        setFormMode("detail");
 
         if (detailType === "sub") {
-            if (lastDetailItemId === item[_keyColumn]) {
-                if (type !== "form") {
-                    setLastDetailItemId(-1);
-                    setDetailItem({});
-                }
-            } else {
-                setLastDetailItemId(item[_keyColumn]);
-                setDetailItem({});
-                setTimeout(() => { setDetailItem(item); }, 0);
-            }
+            setShowSubDetail(true);
+            setFormItem({});
+            setTimeout(() => { setFormItem(item); }, 0);
         }
         else { //if (detailType === "modal")
-            setDetailItem(item);
+            setFormItem(item);
             let detailTitleText = "";
             const words = detailTitle ? detailTitle.split(' ') : [];
             for (let i = 0; i < words.length; i++) {
@@ -352,7 +351,10 @@ const PopupCurd = (props) => {
     }
 
     const formSubmitHandler = (data) => {
-        var url = editMode ? urls.editUrl : urls.createUrl;
+        //var url = editMode ? urls.editUrl : urls.createUrl;
+        var url = "";
+        if (formMode === "edit") url = urls.editUrl;
+        if (formMode === "create") url = urls.createUrl;
         setFormError(null);
         setLoading(true);
         dispatch(loaderActions.show())
@@ -364,9 +366,9 @@ const PopupCurd = (props) => {
             if (result.succeed) {
                 setShowModal(false);
                 dispatch(snackbarActions.success("با موفقیت ثبت شد"))
+                setFormItem(result.data);
                 if (type === "form") {
-                    setFormItem(result.data);
-                    setFormTotalCount(formTotalCount + (editMode ? 0 : 1));
+                    setFormTotalCount(formTotalCount + ((formMode === "create") ? 1 : 0));
 
                     modalDismissHandler();
                 } else {
@@ -482,7 +484,7 @@ const PopupCurd = (props) => {
             input:
                 <div style={{ whiteSpace: "nowrap" }}>
                     <button
-                        onClick={() => { modalSaveHandler(); modalDismissHandler()} }
+                        onClick={() => { modalSaveHandler(); modalDismissHandler() }}
                         type="button"
                         style={{ margin: "0 0 0 4px", padding: "0.2rem 0.5rem 0.1rem", fontSize: "1.2rem" }}
                         className={`btn btn-sm btn-success`}
@@ -549,7 +551,7 @@ const PopupCurd = (props) => {
                 template: (item) => (
                     <Tooltip title={(x.disabled || checkIf(item, x.disabledIf)) ? "" : (x.tooltip || "")} arrow placement="top">
                         <button
-                            onClick={() => typeof (x.onClick) === "function" ? x.onClick(item) : console.error("onClick Method is not defined")}
+                            onClick={() => { if (typeof (x.onClick) === "function") { setFormItem(item); x.onClick(item); } else console.error("onClick Method is not defined"); }}
                             type="button"
                             disabled={x.disabled || checkIf(item, x.disabledIf)}
                             hidden={x.hidden || checkIf(item, x.hiddenIf)}
@@ -602,7 +604,7 @@ const PopupCurd = (props) => {
                         <PortletHeaderToolbar>
                             <>
                                 <button style={{ display: "none" }} ref={formItemButtonRef} onClick={resetFormItem}></button>
-                                {(type === "form" && (!createMode)) &&
+                                {(type === "form" && formMode !== "create") &&
                                     <>
                                         <IconButton
                                             className={classes.syncBtn}
@@ -725,10 +727,10 @@ const PopupCurd = (props) => {
                             url={urls.readUrl}
                             columns={_finalColumns}
                             keyColumn={_keyColumn}
-                            clickedRowId={detailItem[_keyColumn] || -1}
+                            clickedRowId={formItem[_keyColumn] || -1}
 
                             isInlineForm={type === "grid-inline"}
-                            isEditing={editMode || createMode}
+                            isEditing={formMode === "edit" || formMode === "create"}
                             formRef={formRef}
                             formMethods={formMethods}
                             formSubmitHandler={formSubmitHandler}
@@ -737,30 +739,28 @@ const PopupCurd = (props) => {
                 </PortletBody>
             </Portlet>
 
-            {detailType === 'sub' && detailItem[_keyColumn] ?
+            {showSubDetail && detailType === 'sub' && formItem[_keyColumn] &&
                 <>
-                    {React.cloneElement(detailForm, { ...detailItem })}
+                    {React.cloneElement(detailForm, { ...formItem })}
                 </>
-                :
-                <></>
             }
 
             {(!type || type === "grid") &&
                 <GenModal
                     title={modalTitle}
                     isShow={showModal}
-                    size={detailMode ? detailSize : modalSize}
+                    size={formMode === "detail" ? detailSize : modalSize}
                     onDismiss={modalDismissHandler}
-                    buttons={detailMode ? [{ type: "dismiss", text: "بستن", className: "btn-secondary", onClick: modalDismissHandler }] : finalFormBtns}
+                    buttons={formMode === "detail" ? [{ type: "dismiss", text: "بستن", className: "btn-secondary", onClick: modalDismissHandler }] : finalFormBtns}
                 >
                     {formError && (
                         <Alert severity="error">{formError}</Alert>
                     )}
 
                     {showModal &&
-                        (detailMode ?
+                        (formMode === "detail" ?
                             <>
-                                {React.cloneElement(detailForm, { ...detailItem })}
+                                {React.cloneElement(detailForm, { ...formItem })}
                             </>
                             :
                             <FormProvider  {...formMethods}>

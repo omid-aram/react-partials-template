@@ -32,7 +32,9 @@ const InputDate = (props) => {
 
                         error={hasError}
                         style={{ direction: "ltr", ...style }}
-                        inputProps={{ showTime: !readOnly ? (time === true) : undefined, readOnly: readOnly ? true : null, ...inputProps }}
+                        inputProps={{
+                            readOnly: readOnly ? true : null, ...inputProps, ...(!readOnly && {showTime: (time === true)})
+                        }}
                         inputComponent={!readOnly ? DatePickerCustom : undefined}
                         {...rest} />
                 )}
