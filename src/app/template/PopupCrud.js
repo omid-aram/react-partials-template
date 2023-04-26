@@ -52,6 +52,7 @@ const PopupCurd = (props) => {
     const [finalFormBtns, setFinalFormBtns] = useState([]);
 
     const [hideForm, setHideForm] = useState(false);
+    const [beforeItem, setBeforeItem] = useState([]);
     const [formItem, setFormItem] = useState([]);
     const [formPageNo, setFormPageNo] = useState(1);
     const [formTotalCount, setFormTotalCount] = useState(0);
@@ -71,10 +72,6 @@ const PopupCurd = (props) => {
     const modalDismissHandler = useCallback(() => {
         setShowModal(false);
         setFormError("");
-        // setCreateMode(false);
-        // setEditMode(false);
-        // setDetailMode(false);
-        setFormMode("none");
         setFinalFormBtns([]);
 
         if (typeof (setIsEditingForm) === "function") {
@@ -83,6 +80,7 @@ const PopupCurd = (props) => {
         if (type === "form") {
             formItemButtonRef.current.click();
         }
+        setFormMode("none");
     }, [setIsEditingForm, type]);
 
     useEffect(() => {
@@ -105,7 +103,7 @@ const PopupCurd = (props) => {
             });
         }
 
-        modalDismissHandler();
+        //modalDismissHandler();
         baseService.post(urls.readUrl, f).then(({ data }) => {
             if (!isMounted) return;
 
@@ -197,6 +195,8 @@ const PopupCurd = (props) => {
         // setCreateMode(true);
         setFormMode("create");
 
+        setBeforeItem(formItem);
+
         const createBtn = (topButtons || []).find(x => x.type === "create") || {};
         setModalTitle(createBtn.tooltip || createBtn.text || "ثبت مورد جدید");
 
@@ -230,10 +230,13 @@ const PopupCurd = (props) => {
     }
 
     const resetFormItem = () => {
+        //debugger;
         setFinalFormBtns([]);
 
-        formMethods.reset(formItem, { keepValues: false });
-        detailHandler(formItem);
+        const item = formItem && formItem[_keyColumn] ? formItem : beforeItem;
+
+        formMethods.reset(item, { keepValues: false });
+        detailHandler(item);
     }
 
     const editHandler = (item) => {
@@ -241,12 +244,7 @@ const PopupCurd = (props) => {
         //setEditMode(true);
         setFormMode("edit");
 
-        if (showSubDetail && detailType === 'sub') {
-            setFormItem({});
-            setTimeout(() => { setFormItem(item); }, 0);
-        } else {
-            setFormItem(item);
-        }
+        //setBeforeItem(formItem);
 
         const editBtn = (rowButtons || []).find(x => x.type === "edit") || {};
         setModalTitle(editBtn.tooltip || editBtn.text || "ویرایش");
@@ -366,11 +364,14 @@ const PopupCurd = (props) => {
             if (result.succeed) {
                 setShowModal(false);
                 dispatch(snackbarActions.success("با موفقیت ثبت شد"))
-                setFormItem(result.data);
+
+                if (result.data && result.data[_keyColumn]) {
+                    setFormItem(result.data);
+                }
                 if (type === "form") {
                     setFormTotalCount(formTotalCount + ((formMode === "create") ? 1 : 0));
 
-                    modalDismissHandler();
+                    modalDismissHandler(true);
                 } else {
                     forceGridUpdate();
                 }
@@ -477,7 +478,6 @@ const PopupCurd = (props) => {
     }
 
     const checkIf = (item, itemIfs) => {
-        debugger;
         //آرایه ای از شروط میگیریم که هر کدام برقرار بود صحیح برمیگردونیم 
         //فقط همه آیتم های آن شرط باید برقرار باشد
         if (!itemIfs) return false;
@@ -648,7 +648,20 @@ const PopupCurd = (props) => {
                 template: (item) => (
                     <Tooltip title={(x.disabled || checkIf(item, x.disabledIf)) ? "" : (x.tooltip || "")} arrow placement="top">
                         <button
-                            onClick={() => { if (typeof (x.onClick) === "function") { setFormItem(item); x.onClick(item); } else console.error("onClick Method is not defined"); }}
+                            onClick={() => {
+                                if (typeof (x.onClick) === "function") {
+                                    //setFormItem(item);
+                                    if (showSubDetail && detailType === 'sub' && formItem[_keyColumn] !== item[_keyColumn]) {
+                                        setFormItem({});
+                                        setTimeout(() => { setFormItem(item); }, 0);
+                                    } else {
+                                        setFormItem(item);
+                                    }
+
+                                    x.onClick(item);
+                                }
+                                else console.error("onClick Method is not defined");
+                            }}
                             type="button"
                             disabled={x.disabled || checkIf(item, x.disabledIf)}
                             hidden={x.hidden || checkIf(item, x.hiddenIf)}
