@@ -204,7 +204,7 @@ export default function Grid(props) {
             }
             {records.map((row, i) => (
                 //<TableRow key={i} style={{ ...getStripedStyle(i, row[keyColumn]) }}>
-                <TableRow key={i} style={{ backgroundColor: row[keyColumn] === clickedRowId ? '#D1FFBD' : i % 2 ? '#f5f5f5' : 'white' }}>
+                <TableRow key={i} style={{ backgroundColor: (keyColumn && row[keyColumn] === clickedRowId) ? '#D1FFBD' : i % 2 ? '#f5f5f5' : 'white' }}>
                     {selectable ? (<TableCell key={0} >
                         {singleSelect ?
                             <Radio className={classes.noPadding} onChange={(event) => { onSelectChange(row, event.target.checked) }} checked={selectedItems ? selectedItems[keyColumn] === row[keyColumn] : false} />

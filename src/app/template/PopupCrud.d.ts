@@ -1,5 +1,5 @@
 /**
-* PopupCrud.d.ts - 1402/02/04
+* PopupCrud.d.ts - 1402/02/06
 */
 
 export interface PopupCrudProps {
@@ -271,8 +271,8 @@ export interface PopupCrudProps {
   /**
    * - rowButtons={[
    * -              { type: "custom", tooltip: "نمایش شناسه", icon: "fa fa-bell", className0: "btn-secondary", style: { fontSize: "1.4rem", color: "rgba(0, 0, 0, 0.54)", padding: "0px 0.8rem" }, onClick: actionClickTest },
-   * -              { type: "detail", tooltip: "جزئیات شرکت", text: "جزئیات", icon: "fa fa-list-alt", className: "btn-outline-dark", disabledIf: { code: "100" } },
-   * -              { type: "edit", tooltip: "ویرایش اطلاعات شرکت", className: "btn-outline-success", firstColumn: true, hidden: false, hiddenIf: { registerNo: "89219" } },
+   * -              { type: "detail", tooltip: "جزئیات شرکت", text: "جزئیات", icon: "fa fa-list-alt", className: "btn-outline-dark", disabledIf: ["id > 0 && id == [12432, 12446] && st != null", "id == 0 && st == [1, 4]"] },
+   * -              { type: "edit", tooltip: "ویرایش اطلاعات شرکت", className: "btn-outline-success", firstColumn: true, hidden: false, hiddenIf: ["registerNo == 89219"] },
    * -              { type: "delete", tooltip: "حذف شرکت", text0: "حذف", icon: "fa fa-trash", className: "btn-outline-danger" },
    * -            ]}
    */
@@ -280,10 +280,10 @@ export interface PopupCrudProps {
 
   /**
    * - formButtons={[
-   * -               { type: "custom", text: "تایید کارتابل", icon: "far fa-check-circle", className: "btn-success", hiddenIf: { id: 0 }, onClick: confirmClick },
-   * -               { type: "custom", text: "عدم تایید کارتابل", icon: "fa fa-times", className: "btn-danger", hiddenIf: { id: 0 }, disabledIf: { code: "100" } },
-   * -               { type: "save", text: "ثبت", icon: "fa fa-check", className: "btn-primary", hiddenIf: { registerNo: "171318" } },
-   * -               { type: "dismiss", text: "انصراف", icon: "fa fa-times", className: "btn-outline-secondary", disabledIf: { code: "100" } },
+   * -               { type: "custom", text: "تایید کارتابل", icon: "far fa-check-circle", className: "btn-success", hiddenIf: ["id == 0"], onClick: confirmClick },
+   * -               { type: "custom", text: "عدم تایید کارتابل", icon: "fa fa-times", className: "btn-danger", hiddenIf: "id == 0", disabledIf: ["code == 100"] },
+   * -               { type: "save", text: "ثبت", icon: "fa fa-check", className: "btn-primary", hiddenIf: "registerNo <= 171318" },
+   * -               { type: "dismiss", text: "انصراف", icon: "fa fa-times", className: "btn-outline-secondary" },
    * -             ]}
    * -
    * -

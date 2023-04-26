@@ -1,5 +1,5 @@
 /**
-* PopupCrud.js - 1402/02/04
+* PopupCrud.js - 1402/02/06
 */
 
 import React, { useState, useRef, useEffect, useCallback } from "react"
@@ -392,13 +392,110 @@ const PopupCurd = (props) => {
         setFilter(prev => ({ ...prev }));
     }
 
-    const checkIf = (item, itemIf) => {
-        if (!itemIf) return false;
+    const checkIfOperator = (a, op, b) => {
+        if (op === "==") return a === b;
+        if (op === "!=") return a !== b;
+        if (op === "<=") return a <= b;
+        if (op === ">=") return a >= b;
+        if (op === "<") return a < b;
+        if (op === ">") return a > b;
+    }
 
-        for (const key in itemIf) {
-            if (item[key] !== itemIf[key]) return false;
+    const checkIfParseValue = (valueStr) => {
+        valueStr = valueStr.trim();
+
+        if (valueStr.toLowerCase() === 'null')
+            return null;
+
+        if (valueStr[0] === "'" || valueStr[0] === '"')
+            return valueStr.substring(1, valueStr.length - 1);
+
+        return parseInt(valueStr);
+    }
+
+    const checkIfSingle = (item, itemIf) => {
+        //Sample itemIf: "id > 0 && id != [12432, 12446] && st != null && type == 'form'"
+        if (!itemIf) return true;
+
+        const conditions = itemIf.split("&&");
+        for (let c = 0; c < conditions.length; c++) {
+            //فاصله های اضافه رو از اول و آخر و وسطش حذف میکنیم
+            const condition = conditions[c].replace(/\s+/g, ' ').trim();
+
+            const words = condition.split(" ");
+
+            const fieldName = words[0];//اولین کلمه انتظار داریم اسم فیلد باشه
+            const operator = words[1];//دومین کلمه عملگر مقایسه هست
+            let valueStr = condition.substring(words[0].length + 1 + words[1].length + 1);//بقیه اش مقدار شرط هست
+            let condValue = null;
+
+            if (valueStr[0] === "[") {
+                //آرایه
+                valueStr = valueStr.substring(1, valueStr.length - 1);
+                condValue = [];
+
+                const array = valueStr.split(",");
+                for (let i = 0; i < array.length; i++) {
+                    condValue.push(checkIfParseValue(array[i]));
+                }
+            } else {
+                condValue = checkIfParseValue(valueStr);
+            }
+
+            if (Array.isArray(condValue)) {
+                //وقتی آرایه داریم، باید همه مقادیر شرط برقرار باشند
+                //به غیر از شرط تساوی که اگه یکی از مقادیر هم برقرار بود حله
+                if (operator === "==") {
+                    let isMatchAny = false;
+                    for (let i = 0; i < condValue.length; i++) {
+                        const val = condValue[i];
+                        if (checkIfOperator(item[fieldName], operator, val)) {
+                            isMatchAny = true;
+                            break;
+                        }
+                    }
+                    if (!isMatchAny) return false;
+                } else {
+                    let isMatchAll = true;
+                    for (let i = 0; i < condValue.length; i++) {
+                        const val = condValue[i];
+                        if (!checkIfOperator(item[fieldName], operator, val)) {
+                            isMatchAll = false;
+                            break;
+                        }
+                    }
+                    if (!isMatchAll) return false;
+                }
+
+            } else {
+                if (!checkIfOperator(item[fieldName], operator, condValue)) return false;
+            }
+
         }
+
         return true;
+    }
+
+    const checkIf = (item, itemIfs) => {
+        debugger;
+        //آرایه ای از شروط میگیریم که هر کدام برقرار بود صحیح برمیگردونیم 
+        //فقط همه آیتم های آن شرط باید برقرار باشد
+        if (!itemIfs) return false;
+
+        if (Array.isArray(itemIfs)) {
+            let isMatchAny = false;
+
+            for (let i = 0; i < itemIfs.length; i++) {
+                if (checkIfSingle(item, itemIfs[i])) {
+                    isMatchAny = true;
+                    break;
+                }
+            }
+
+            return isMatchAny;
+        } else {
+            return checkIfSingle(item, itemIfs)
+        }
     }
 
     const formActions = {
