@@ -1,5 +1,5 @@
 /**
-* base.service.js - 1402/02/18
+* base.service.js - 1401/12/02
 */
 
 import axios from 'axios';
@@ -40,8 +40,11 @@ class BaseService {
 
     handleError = (error) => {
         this.store.dispatch(loaderActions.hide());
-        //this.store.dispatch(snackbarActions.error("خطا در اتصال به سرور "));
-        this.store.dispatch(snackbarActions.error(error.response.data.Message));
+        if (error.response.data) {
+            this.store.dispatch(snackbarActions.error(error.response.data.Message));
+        } else {
+            this.store.dispatch(snackbarActions.error("خطا در اتصال به سرور "));
+        }
         //console.log(error);
         if (error.response) {
             switch (error.response.status) {
@@ -152,7 +155,7 @@ class BaseService {
         }
     }
 
-    downloadFile(path, payload, fileName){
+    downloadFile(path, payload, fileName) {
         const authToken = this.store.getState().auth.authToken;
 
         return axios({
@@ -164,14 +167,14 @@ class BaseService {
         }).then((response) => {
             // create file link in browser's memory
             const href = URL.createObjectURL(response.data);
-        
+
             // create "a" HTML element with href to file & click
             const link = document.createElement('a');
             link.href = href;
             link.setAttribute('download', fileName); //or any other extension
             document.body.appendChild(link);
             link.click();
-        
+
             // clean up "a" element & remove ObjectURL
             document.body.removeChild(link);
             URL.revokeObjectURL(href);
