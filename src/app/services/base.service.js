@@ -40,8 +40,9 @@ class BaseService {
 
     handleError = (error) => {
         this.store.dispatch(loaderActions.hide());
-        this.store.dispatch(snackbarActions.error("خطا در اتصال به سرور "));
-        console.log(error);
+        //this.store.dispatch(snackbarActions.error("خطا در اتصال به سرور "));
+        this.store.dispatch(snackbarActions.error(error.response.data.Message));
+        //console.log(error);
         if (error.response) {
             switch (error.response.status) {
                 case 401:
@@ -52,11 +53,11 @@ class BaseService {
                     this.store.dispatch(snackbarActions.error("دسترسی ندارید"));
                     break;
                 case 404:
-                    console.log(error);
+                    //console.log(error);
                     break;
                 default:
                     //this.redirectTo(document, '/500')
-                    console.log(error);
+                    //console.log(error);
                     break;
             }
         }
