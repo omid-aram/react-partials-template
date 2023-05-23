@@ -313,6 +313,17 @@ export interface PopupCrudProps {
     * - and send 'setIsEditingForm' to PopupCrud
     */
    setIsEditingForm?: Boolean;
+
+   /**
+    * در صورت تنظیم شدن، یک چک باکس در هر ردیف نمایش داده میشود و آن را قابل انتخاب میکند
+    */
+   selectable?: Boolean;
+   
+  /**
+   * - تابعی که در صورت انتخاب ردیف ها فراخوانی میشود
+   * @param selectedItems
+   */
+   onSelectChange;
 }
 
 /**

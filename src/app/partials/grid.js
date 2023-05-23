@@ -28,6 +28,7 @@ export default function Grid(props) {
         keyColumn,
         selectable,
         selectedItems,
+        selectedItemsCount,
         singleSelect,
         onSelectChange,
         defaultSort,
@@ -209,7 +210,7 @@ export default function Grid(props) {
                         {singleSelect ?
                             <Radio className={classes.noPadding} onChange={(event) => { onSelectChange(row, event.target.checked) }} checked={selectedItems ? selectedItems[keyColumn] === row[keyColumn] : false} />
                             :
-                            <Checkbox onChange={(event) => { onSelectChange(row, event.target.checked) }} checked={selectedItems ? selectedItems.some(x => x === row[keyColumn]) : false} />
+                            <Checkbox onChange={(event) => { onSelectChange(row, event.currentTarget.checked) }} checked={selectedItems ? selectedItems.some(x => x[keyColumn] === row[keyColumn]) : false} />
                         }
                     </TableCell>) : null}
 
@@ -251,7 +252,7 @@ export default function Grid(props) {
                 </TableRow>
             )}
         </TableBody>
-    ), [isInlineForm, isEditing, clickedRowId, selectable, columns, records, emptyRows, keyColumn, singleSelect, classes.noPadding, selectedItems, onSelectChange])
+    ), [isInlineForm, isEditing, clickedRowId, selectable, columns, records, emptyRows, keyColumn, singleSelect, classes.noPadding, selectedItems, selectedItemsCount, onSelectChange])
     //), [records, selectedItems])
 
     const gridTable = useMemo(() => (

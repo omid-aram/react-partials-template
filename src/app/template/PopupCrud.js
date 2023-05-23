@@ -26,7 +26,7 @@ const PopupCurd = (props) => {
 
     const { type, title, columns, keyColumn, urls, form, searchForm, detailForm, sortItem, initFormValues, //otherFormFields,
         pageSize, modalSize, detailType, detailSize, detailTitle, initSearchValues, onEditButtonClicked, onNewButtonClicked
-        , trigger, setTrigger, hasFileUpload, topButtons, rowButtons, formButtons, setIsEditingForm } = props;
+        , trigger, setTrigger, hasFileUpload, topButtons, rowButtons, formButtons, setIsEditingForm, selectable, onSelectChange } = props;
 
     const [filter, setFilter] = useState({
         page: 1,
@@ -56,6 +56,8 @@ const PopupCurd = (props) => {
     const [formItem, setFormItem] = useState([]);
     const [formPageNo, setFormPageNo] = useState(1);
     const [formTotalCount, setFormTotalCount] = useState(0);
+    const [gridSelectedItems, setGridSelectedItems] = useState([]);
+    const [gridSelectedItemsCount, setGridSelectedItemsCount] = useState(0);
 
     const searchMethods = useForm({ defaultValues: { ...initSearchValues } });
     const formMethods = useForm({});
@@ -387,6 +389,21 @@ const PopupCurd = (props) => {
     const modalSaveHandler = () => {
         //تا وقتی فرم معتبر نباشد همه ورودی ها صدا زده نمیشود
         formRef.current.dispatchEvent(new Event('submit'));
+    }
+
+    const onGridSelectChange = (item, isCheck) => {
+        let _items = gridSelectedItems;
+        if (isCheck) {
+            _items.push(item);
+        } else {
+            _items = _items.filter(x=> x[_keyColumn] !== item[_keyColumn]);
+        }
+        setGridSelectedItems(_items);
+        setGridSelectedItemsCount(_items.length);
+
+        if (typeof (onSelectChange) === "function") {
+            onSelectChange(_items);
+        }
     }
 
     const forceGridUpdate = () => {
@@ -831,6 +848,11 @@ const PopupCurd = (props) => {
                     }
                     {(!type || type === "grid" || type === "grid-inline") &&
                         <Grid
+                            selectable={selectable}
+                            singleSelect={false}
+                            selectedItems={gridSelectedItems}
+                            selectedItemsCount = {gridSelectedItemsCount}
+                            onSelectChange={onGridSelectChange}
                             filter={filter}
                             setFilter={setFilter}
                             defaultSort={sortItem}
