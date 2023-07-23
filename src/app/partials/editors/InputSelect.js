@@ -153,7 +153,7 @@ const InputSelect = (props) => {
                                 }
 
                                 {data && data.map(item =>
-                                    (!readOnly || (!value) || (item.id.toString() === value.toString())) &&
+                                    (!readOnly || (value !== null && value !== undefined && item.id.toString() === value.toString())) &&
                                     (<MenuItem value={item.id || ''} key={item.id}>{item.desc}</MenuItem>)
                                 )}
                             </Select>
@@ -167,11 +167,11 @@ const InputSelect = (props) => {
                                 {...rest}
                             >
                                 {data && data.map(item =>
-                                    (!readOnly || (!value) || (item.id.toString() === value.toString())) &&
+                                    //(!readOnly || (!value) || (item.id.toString() === value.toString())) &&
                                     (<FormControlLabel
                                         value={item.id.toString() || ''}
                                         key={item.id}
-                                        control={<Radio color="primary" value={item.id.toString() || ''} style={{ padding: "3px" }} />}
+                                        control={<Radio color="primary" value={item.id.toString() || ''} style={{ padding: "3px" }} disabled={(readOnly && (value === null || value === undefined || item.id.toString() !== value.toString()))} />}
                                         label={item.desc}
                                         style={{ marginRight: "6px", marginLeft: "6px" }}
                                     />)

@@ -9,17 +9,17 @@ import { snackbarActions } from '../store/ducks/snackbar.duck';
 
 class BaseService {
 
-    baseUrl = 'https://localhost:44336/';
     store = null; // may came from parent project
-
-    // baseUrl = (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') ? // dev code
-    //     this._baseUrllocal : this._baseUrlserver
-
-    // constructor() {
-    //     let service = axios.create();
-    //     this.service = service;
-    // }
-
+    _baseUrllocal = 'https://localhost:44336/'
+    _baseUrlserver = 'https://totalapi.saipacorp.com/sps/'
+    baseFileUrl = this.baseUrl + 'api/file/getFile/'
+  
+  
+    baseUrl =
+    !process.env.NODE_ENV || process.env.NODE_ENV === 'development'
+      ? this._baseUrllocal
+      : this._baseUrlserver
+  
     init = (store, url) => {
         if (url)
             this.baseUrl = url;

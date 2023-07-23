@@ -233,7 +233,8 @@ const PopupCurd = (props) => {
 
     const resetFormItem = () => {
         //debugger;
-        setFinalFormBtns([]);
+        //setFinalFormBtns([]);
+        modalDismissHandler();
 
         const item = formItem && formItem[_keyColumn] ? formItem : beforeItem;
 
