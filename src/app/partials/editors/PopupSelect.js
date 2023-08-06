@@ -1,5 +1,5 @@
 /**
-* PopupSelect.js - 1402/01/26
+* PopupSelect.js - 1402/05/15
 */
 
 import React, { useState, useEffect } from "react"
@@ -27,7 +27,7 @@ const PopupSelect = (props) => {
     const [displayText, setDisplayText] = useState();
     const [searchText, setSearchText] = useState();
 
-    const [filter, setFilter] = useState({ ...apiFilter, pageSize: pageSize || 10, sort: sortItem || null, page: 1 });
+    const [filter, setFilter] = useState({ ...(JSON.parse(apiFilter || "{}")), pageSize: pageSize || 10, sort: sortItem || null, page: 1 });
     const [selected, setSelected] = useState();
 
     const searchMethods = useForm();
@@ -38,6 +38,8 @@ const PopupSelect = (props) => {
 
     useEffect(() => {
         let isMounted = true;
+
+        setFilter(x=> ({...x, ...(JSON.parse(apiFilter || "{}"))}));
 
         const val = getValues(namePath);
 
